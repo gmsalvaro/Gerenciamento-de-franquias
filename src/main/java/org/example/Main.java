@@ -1,6 +1,6 @@
 package org.example;
 import tela.*;
-
+import java.lang.*;
 import javax.swing.*;
 import java.awt.event.*;
 

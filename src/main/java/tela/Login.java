@@ -6,56 +6,80 @@ import java.awt.event.ActionListener;
 
 public class Login {
 
-    public Login(String[] args) {
+    public Login() {
 
         JFrame janela = new JFrame();
 
         // metodo para parar a execução ao fechar a janela
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         janela.setVisible(true);
+        janela.setLayout(null);
 
         // tamanho da janela(Relativo a minha resolução 1920x1080
-        janela.setBounds(750, 250, 500, 700);
+        janela.setBounds(750, 250, 700, 700);
 
 
-        //Label
+        //Label's
         JLabel usuario = new JLabel("Usuario:");
-        usuario.setBounds(70,50,100,30);
+        usuario.setBounds(100,50,100,30);
         janela.add(usuario);
 
-        JLabel senha = new JLabel("senha:");
-        senha.setBounds(70,150,100,30);
+        JLabel senha = new JLabel("senha: ");
+        senha.setBounds(100,150,100,30);
         janela.add(senha);
 
+        JLabel cadas = new JLabel("Nao possui Cadastro?");
+        cadas.setBounds(300, 200, 180, 30);
+        janela.add(cadas);
+
+
+        //Tanto o JtextFIeld quanto JPassword irao ser a parte da entrada/inserção dos dados seja usuario/CPF e senha
+
         //Text
-        JTextField inserirUser = new JTextField();
-        inserirUser.setBounds(70, 80, 150, 30);
-        janela.add(inserirUser);
+        JTextField insereUser = new JTextField();
+        insereUser.setBounds(100, 80, 150, 30);
+        janela.add(insereUser);
 
         //JPassword
-        JPasswordField inserirSenha = new JPasswordField();
-        inserirSenha.setBounds(70,180,150,30);
-        janela.add(inserirSenha);
+        JPasswordField inserePass = new JPasswordField();
+        inserePass.setBounds(100,180,150,30);
+        janela.add(inserePass);
 
         //Cria Botao Login
         JButton Login = new JButton("Entrar");
         janela.add(Login);
-        Login.setBounds(70,250,200,30);
+        Login.setBounds(100,250,150,30);
         Login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String user = inserirUser.getText();
-                String password = new String(inserirSenha.getPassword());
-
+                String user = insereUser.getText();
+                String password = new String(inserePass.getPassword());
                 System.out.println("Entrando com o usuario: " + user);
                 System.out.println("Senha: " + password);
+                insereUser.setText("");
+                inserePass.setText("");
 
-                inserirUser.setText("");
-                inserirSenha.setText("");
+                //implementar o redirecionamento da interfaceLogin para a interface correta
+
+
             }
         });
 
-        janela.setLayout(null);
+        //botao Cadastro
+        JButton Cadastro = new JButton("Cadastro");
+        janela.add(Cadastro);
+        Cadastro.setBounds(300,250,150,30);
+        Cadastro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Tentando Fazer Cadastro!");
+                //Adicionar implementação para redirecionar para a interface de cadastro?
+                //Nova Classe?? ou apenas a funcionalidade aqui?
+                //Dependendo do caso pode ser ruim para a legebilidade do codigo ou para a memoria do programa!
+            }
+        });
+
+
     }
 
 }
