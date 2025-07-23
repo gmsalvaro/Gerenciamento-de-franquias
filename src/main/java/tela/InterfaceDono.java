@@ -16,6 +16,34 @@ public class InterfaceDono {
 
         janelaDono.setBounds(850, 250, 1280, 720);
 
+
+        // Aprendendo o Menu --->
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("Arquivo");
+        JMenuItem openItem = new JMenuItem("Abrir");
+        JMenuItem saveItem = new JMenuItem("Salvar");
+        JMenuItem exitItem = new JMenuItem("Sair");
+
+        fileMenu.add(openItem);
+        fileMenu.add(saveItem);
+        fileMenu.addSeparator();
+        fileMenu.add(exitItem);
+
+        menuBar.add(fileMenu);
+
+        janelaDono.setJMenuBar(menuBar);
+
+        exitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+
+        // Final do Menu <---
+
         //Label's
         JLabel userDono = new JLabel("Usuario: " + "150.521.376-21");
         userDono.setBounds(100,50,200,50);
