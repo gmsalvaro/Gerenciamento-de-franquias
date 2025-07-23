@@ -3,12 +3,14 @@ package tela;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.example.Main;
 
 public class Login {
 
     public Login() {
 
         JFrame janela = new JFrame();
+        janela.setTitle("Tela inicial!");
 
         // metodo para parar a execução ao fechar a janela
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,11 +58,24 @@ public class Login {
                 String password = new String(inserePass.getPassword());
                 System.out.println("Entrando com o usuario: " + user);
                 System.out.println("Senha: " + password);
+
+
+                // Redirecionar utilizando o JSON (ainda nao entendi como e nem tenho arquivo)
+                if(user.equals("150.521.376-21") && password.equals("ADMINadmin@123")){
+                    JOptionPane.showMessageDialog(null, "Bem vindo!");
+                    new InterfaceDono();
+                    janela.dispose();
+                } else if(user.equals("111.333.666-77") && password.equals("gerente#45")){
+                    new InterfaceGerente();
+                    janela.dispose();
+                } else if(user.equals("222.444.555-88") && password.equals("vendeDOR*%")){
+                    new InterfaceVendedor();
+                    janela.dispose();
+                } else
+                    JOptionPane.showMessageDialog(janela, "Usuario ou senha incorretos");
+
                 insereUser.setText("");
                 inserePass.setText("");
-
-                //implementar o redirecionamento da interfaceLogin para a interface correta
-
 
             }
         });
