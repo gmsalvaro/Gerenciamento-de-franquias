@@ -1,34 +1,24 @@
 package Model;
-
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "userType"
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Dono.class, name = "dono"),
-        @JsonSubTypes.Type(value = Gerente.class, name = "gerente"),
-        @JsonSubTypes.Type(value = Vendedor.class, name = "vendedor")
-})
+import java.util.UUID;
 
 public class Usuario {
     private String id;
     private String nome;
     private String email;
-    private String senha; // Adicionado para login
-    private String dataContratacao;
+    private String cpf;
+    private int permissao;
+    private String senha;
 
     // Construtor padrão
     public Usuario() {}
 
-    public Usuario(String nome, String email, String senha, String dataContratacao) {
+    public Usuario(String nome, String email, String senha, String cpf, int permissao) {
         this.nome = nome;
+        this.permissao = permissao;
         this.email = email;
         this.senha = senha;
-        this.dataContratacao = dataContratacao;
+        this.cpf = cpf;
+        this.id = UUID.randomUUID().toString();; // criar uma logica para gerar id aleatorio !
     }
 
     // Getters e Setters
@@ -38,6 +28,11 @@ public class Usuario {
     public void setId(String id) {
         this.id = id;
     }
+
+    public void setPermissao(int permissao) {
+        this.permissao = permissao;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -50,23 +45,23 @@ public class Usuario {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public  void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     public String getSenha() {
         return senha;
     }
     public void setSenha(String senha) {
         this.senha = senha;
     }
-    public String getDataContratacao() {
-        return dataContratacao;
-    }
-    public void setDataContratacao(String dataContratacao) {
-        this.dataContratacao = dataContratacao;
-    }
 
-    //Logica de autenticação;
-
-
-    public String exibirDetalhes() {
-        return "ID: " + id + ", Nome: " + nome + ", Email: " + email + ", Data Contratação: " + dataContratacao;
+    public int getPermissao() {
+        return permissao;
     }
 }
