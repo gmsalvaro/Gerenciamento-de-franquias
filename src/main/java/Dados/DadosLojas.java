@@ -1,0 +1,86 @@
+package Dados;
+import Model.Loja;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class DadosLojas {
+    private final String LOJAS_FILE;
+    private final ObjectMapper mapper;
+    private Map<String, Loja> lojasMap; // Memoria em execução
+
+    public DadosLojas(String filePath) {
+        this.LOJAS_FILE = filePath;
+        mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        carregar();
+    }
+
+    private void carregar() {
+        File file = new File(LOJAS_FILE);
+        if (!file.exists() || file.length() == 0) {
+            try {
+                Files.write(Paths.get(LOJAS_FILE), "[]".getBytes());
+            } catch (IOException e) {
+                System.err.println("Erro ao criar arquivo de lojas: " + e.getMessage());
+            }
+            lojasMap = new ConcurrentHashMap<>();
+            return;
+        }
+        try {
+            List<Loja> lista = mapper.readValue(file, new TypeReference<List<Loja>>() {});
+            lojasMap = new ConcurrentHashMap<>();
+            lista.forEach(loja -> lojasMap.put(loja.getId(), loja));
+        } catch (IOException e) {
+            System.err.println("Erro ao carregar lojas: " + e.getMessage());
+            lojasMap = new ConcurrentHashMap<>();
+        }
+    }
+
+    private void salvar() {
+        try {
+            mapper.writeValue(new File(LOJAS_FILE), new ArrayList<>(lojasMap.values()));
+        } catch (IOException e) {
+            System.err.println("Erro ao salvar lojas: " + e.getMessage());
+        }
+    }
+
+    public List<Loja> listarTodas() {
+        return new ArrayList<>(lojasMap.values());
+    }
+
+    public Optional<Loja> buscarPorId(String id) {
+        return Optional.ofNullable(lojasMap.get(id));
+    }
+
+    public void adicionar(Loja loja) {
+        lojasMap.put(loja.getId(), loja);
+        salvar();
+    }
+
+    public void atualizar(Loja lojaAtualizada) {
+        if (lojasMap.containsKey(lojaAtualizada.getId())) {
+            lojasMap.put(lojaAtualizada.getId(), lojaAtualizada);
+            salvar();
+        } else {
+            System.err.println("Loja com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
+        }
+    }
+
+    public void remover(String id) {
+        if (lojasMap.remove(id) != null) {
+            salvar();
+        } else {
+            System.err.println("Loja com ID " + id + " não encontrada para remoção.");
+        }
+    }
+}
