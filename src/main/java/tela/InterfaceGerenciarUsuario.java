@@ -7,7 +7,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.util.ArrayList; // Ainda necessário se você criar uma lista no main para teste
 import java.util.List;
 
 public class InterfaceGerenciarUsuario extends JFrame {
@@ -24,15 +23,11 @@ public class InterfaceGerenciarUsuario extends JFrame {
     private JButton btnRemover;
     private JButton btnEditar;
 
-    // private UserService userService;
-
-
     public InterfaceGerenciarUsuario(List<Usuario> usuariosIniciais) {
         super("Gerenciar Usuários");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(700, 500);
         setLocationRelativeTo(null);
-
 
         listModel = new DefaultListModel<>();
         listaUsuarios = new JList<>(listModel);
@@ -46,8 +41,6 @@ public class InterfaceGerenciarUsuario extends JFrame {
             }
         }
 
-
-
         listaUsuarios.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -58,13 +51,11 @@ public class InterfaceGerenciarUsuario extends JFrame {
                         habilitarCamposFormulario(true);
                         btnEditar.setEnabled(true);
                         btnRemover.setEnabled(true);
-                        btnAdicionar.setText("Adicionar"); // Garante que o texto volte ao normal
-                        // Remove e readiciona o listener para evitar múltiplos listeners em btnAdicionar
+                        btnAdicionar.setText("Adicionar");
                         for (java.awt.event.ActionListener al : btnAdicionar.getActionListeners()) {
                             btnAdicionar.removeActionListener(al);
                         }
                         btnAdicionar.addActionListener(event -> prepararParaAdicionarNovoUsuario());
-
                     } else {
                         limparCampos();
                         habilitarCamposFormulario(false);
@@ -143,7 +134,6 @@ public class InterfaceGerenciarUsuario extends JFrame {
                 listModel.addElement(u);
             }
         }
-        // Opcional: limpar campos e desabilitar botões após recarregar
         limparCampos();
         habilitarCamposFormulario(false);
         btnRemover.setEnabled(false);
@@ -154,8 +144,6 @@ public class InterfaceGerenciarUsuario extends JFrame {
     private void exibirDetalhesUsuario(Usuario usuario) {
         txtNome.setText(usuario.getNome());
         txtEmail.setText(usuario.getEmail());
-        //txtTelefone.setText(usuario.getTelefone());
-        //txtDescricao.setText(usuario.getDescricao());
     }
 
     private void limparCampos() {
@@ -201,14 +189,8 @@ public class InterfaceGerenciarUsuario extends JFrame {
         Usuario novoUsuario = new Vendedor(nome, email, telefone, descricao);
 
         try {
-            // userService.adicionarUsuario(novoUsuario); // Chame seu serviço AQUI
             JOptionPane.showMessageDialog(this, "Usuário '" + nome + "' adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-
-            // AVISO: A recarga da lista precisará vir do seu Service!
-            // Exemplo: recarregarListaUsuarios(userService.listarTodosUsuarios());
-            // Por enquanto, apenas para demonstrar a atualização visual, se você não tem o service:
-            listModel.addElement(novoUsuario); // Adiciona diretamente se não tem service real
-            // A linha acima só funciona se o objeto 'novoUsuario' for exatamente o que o listModel precisa.
+            listModel.addElement(novoUsuario);
 
             limparCampos();
             habilitarCamposFormulario(false);
@@ -236,12 +218,8 @@ public class InterfaceGerenciarUsuario extends JFrame {
 
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                // userService.removerUsuario(selecionado); // Chame seu serviço AQUI
                 JOptionPane.showMessageDialog(this, "Usuário '" + selecionado.getNome() + "' removido com sucesso.", "Removido", JOptionPane.INFORMATION_MESSAGE);
-
-                // AVISO: A recarga da lista precisará vir do seu Service!
-                // Exemplo: recarregarListaUsuarios(userService.listarTodosUsuarios());
-                listModel.removeElement(selecionado); // Remove diretamente se não tem service real
+                listModel.removeElement(selecionado);
 
                 limparCampos();
                 habilitarCamposFormulario(false);
@@ -274,14 +252,10 @@ public class InterfaceGerenciarUsuario extends JFrame {
 
         selecionado.setNome(nome);
         selecionado.setEmail(email);
-        //selecionado.setTelefone(telefone);
-        //selecionado.setDescricao(descricao);
 
         try {
-            // userService.atualizarUsuario(selecionado); // Chame seu serviço AQUI
             JOptionPane.showMessageDialog(this, "Usuário '" + selecionado.getNome() + "' atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
-            // Força a JList a atualizar a exibição do item
             int selectedIndex = listModel.indexOf(selecionado);
             if (selectedIndex != -1) {
                 listModel.setElementAt(selecionado, selectedIndex);
