@@ -1,0 +1,13 @@
+[ {
+  "id" : "fcbcf11e-f840-4ca4-8741-f0737967bca0",
+  "nome" : "mcc",
+  "endereco" : "dasdasdtttt",
+  "telefone" : "lerolero",
+  "idLojas" : [ "ce4a2a88-2ee7-4e10-ae62-17cc8b9204dd" ]
+}, {
+  "id" : "0271bd70-5986-4d07-95e6-10dea39e80c0",
+  "nome" : "mcc",
+  "endereco" : "tttt",
+  "telefone" : "lerolero",
+  "idLojas" : [ ]
+} ]
