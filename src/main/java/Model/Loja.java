@@ -1,4 +1,6 @@
 package Model;
+import exception.ValidacaoException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -61,6 +63,14 @@ public class Loja {
     }
     public void setIdProdutos(List<String> idProdutos) {
         this.idProdutos = idProdutos;
+    }
+
+    public void removerIdPedido(String pedidoId) throws ValidacaoException {
+        idPedidos.remove(pedidoId);
+    }
+
+    public void removerIdProduto(String produtoId) throws ValidacaoException {
+        idProdutos.remove(produtoId);
     }
 
     public void adicionarIdPedido(String pedidoId) {

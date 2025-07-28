@@ -54,6 +54,10 @@ public class DadosLojas {
         }
     }
 
+    public Map<String, Loja> getLojasMap() {
+        return lojasMap;
+    }
+
     public List<Loja> listarTodas() {
         return new ArrayList<>(lojasMap.values());
     }

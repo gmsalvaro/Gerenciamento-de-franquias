@@ -1,14 +1,19 @@
 package tela;
 
+import Dados.DadosUsuario;
+import Model.Usuario;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.example.Main;
+import java.util.List;
+import java.util.Map;
 
 public class Login {
+    DadosUsuario dadosUsuario;
 
-    public Login() {
-
+    public Login(String caminhoUsuario) {
+         this.dadosUsuario = new DadosUsuario(caminhoUsuario);
         JFrame janela = new JFrame();
         janela.setTitle("Tela inicial!");
 
@@ -38,9 +43,9 @@ public class Login {
         //Tanto o JtextFIeld quanto JPassword irao ser a parte da entrada/inserção dos dados seja usuario/CPF e senha
 
         //Text
-        JTextField insereUser = new JTextField();
-        insereUser.setBounds(100, 80, 150, 30);
-        janela.add(insereUser);
+        JTextField insereEmail = new JTextField();
+        insereEmail.setBounds(100, 80, 150, 30);
+        janela.add(insereEmail);
 
         //JPassword
         JPasswordField inserePass = new JPasswordField();
@@ -54,28 +59,35 @@ public class Login {
         Login.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String user = insereUser.getText();
+                String email = insereEmail.getText();
                 String password = new String(inserePass.getPassword());
-                System.out.println("Entrando com o usuario: " + user);
+                System.out.println("Entrando com o usuario: " + email);
                 System.out.println("Senha: " + password);
+                List<Usuario> usuarioList = dadosUsuario.listarTodas();
+                for (Usuario usuario : usuarioList) {
+                    if (usuario.getEmail().equals(email) && usuario.getSenha().equals(password)){
+                        switch (usuario.getPermissao()) {
+                            case 1:
+                                JOptionPane.showMessageDialog(null, "Bem vindo!");
+                                //new InterfaceDono();
+                                janela.dispose();
+                                break;
+                            case 2:
+                                //new InterfaceGerente();
+                                janela.dispose();
+                                break;
+                            case 3:
+                                //new InterfaceVendedor();
+                                janela.dispose();
+                                break;
+                        }
+                    } else { // Utilizar Excessoes
+                        JOptionPane.showMessageDialog(janela, "Usuario ou senha incorretos");
+                        insereEmail.setText("");
+                        inserePass.setText("");
+                    }
+                }
 
-
-                // Redirecionar utilizando o JSON (ainda nao entendi como e nem tenho arquivo)
-                if(user.equals("150.521.376-21") && password.equals("ADMINadmin@123")){
-                    JOptionPane.showMessageDialog(null, "Bem vindo!");
-                    new InterfaceDono();
-                    janela.dispose();
-                } else if(user.equals("111.333.666-77") && password.equals("gerente#45")){
-                    new InterfaceGerente();
-                    janela.dispose();
-                } else if(user.equals("222.444.555-88") && password.equals("vendeDOR*%")){
-                    new InterfaceVendedor();
-                    janela.dispose();
-                } else
-                    JOptionPane.showMessageDialog(janela, "Usuario ou senha incorretos");
-
-                insereUser.setText("");
-                inserePass.setText("");
 
             }
         });

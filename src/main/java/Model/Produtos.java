@@ -2,19 +2,28 @@ package Model;
 
 import java.util.UUID;
 
-public class Produto {
+public class Produtos {
     private String nome;
     private String id;
     private double preco;
     private int estoque;
+    String idLoja;
 
-    public Produto() {
+    public Produtos() {
     }
 
-    public Produto(String nome, double preco) {
+    public Produtos(String nome, double preco) {
         this.nome = nome;
         this.preco = preco;
         this.id = UUID.randomUUID().toString();
+    }
+
+    public void setIdLoja(String idLoja) {
+        this.idLoja = idLoja;
+    }
+
+    public String getIdLoja() {
+        return idLoja;
     }
 
     public String getNome() {

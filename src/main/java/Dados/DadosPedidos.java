@@ -1,6 +1,6 @@
 package Dados;
 
-import Model.Pedido;
+import Model.Produtos;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap; // Bom para uso multi-thread se a
 public class DadosPedidos {
     private final String LOJAS_FILE;
     private final ObjectMapper mapper;
-    private Map<String, Pedido> lojasMap;
+    private Map<String, Produtos> lojasMap;
 
     public DadosPedidos(String filePath) {
         this.LOJAS_FILE = filePath;
@@ -38,7 +38,7 @@ public class DadosPedidos {
             return;
         }
         try {
-            List<Pedido> lista = mapper.readValue(file, new TypeReference<List<Pedido>>() {});
+            List<Produtos> lista = mapper.readValue(file, new TypeReference<List<Produtos>>() {});
             lojasMap = new ConcurrentHashMap<>();
             lista.forEach(loja -> lojasMap.put(loja.getId(), loja));
         } catch (IOException e) {
@@ -55,20 +55,24 @@ public class DadosPedidos {
         }
     }
 
-    public List<Pedido> listarTodas() {
+    public Map<String, Produtos> getLojasMap() {
+        return lojasMap;
+    }
+
+    public List<Produtos> listarTodas() {
         return new ArrayList<>(lojasMap.values());
     }
 
-    public Optional<Pedido> buscarPorId(String id) {
+    public Optional<Produtos> buscarPorId(String id) {
         return Optional.ofNullable(lojasMap.get(id));
     }
 
-    public void adicionar(Pedido loja) {
+    public void adicionar(Produtos loja) {
         lojasMap.put(loja.getId(), loja);
         salvar();
     }
 
-    public void atualizar(Pedido lojaAtualizada) {
+    public void atualizar(Produtos lojaAtualizada) {
         if (lojasMap.containsKey(lojaAtualizada.getId())) {
             lojasMap.put(lojaAtualizada.getId(), lojaAtualizada);
             salvar();
