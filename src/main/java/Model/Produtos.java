@@ -2,69 +2,56 @@ package Model;
 
 import java.util.UUID;
 
-public class Produto {
-    private String cliente;
+public class Produtos {
     private String nome;
     private String id;
     private double preco;
-    private String data;
     private int estoque;
-    private String IdLoja;
+    String idLoja;
 
-    public Produtos(String cliente, String data, int estoque, String nome, double preco) {
-        this.cliente = cliente;
-        this.data = data;
-        this.nome = nome;
-        this.id = UUID.randomUUID().toString();
-        this.preco = preco;
-        this.estoque = estoque;
+    public Produtos() {
     }
 
-    public String getIdLoja() {
-        return IdLoja;
+    public Produtos(String nome, double preco) {
+        this.nome = nome;
+        this.preco = preco;
+        this.id = UUID.randomUUID().toString();
     }
 
     public void setIdLoja(String idLoja) {
-        IdLoja = idLoja;
+        this.idLoja = idLoja;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getIdLoja() {
+        return idLoja;
     }
-    public String getId(){
-        return this.id;
-    }
-
-    public String getCliente() {
-        return cliente;
-    }
-
-    public int getEstoque(){
-        return estoque;
-    }
-
-    public double getPreco(){
-        return preco;
-    }
-
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
 
     public String getNome() {
         return nome;
     }
 
+    public String getId(){
+        return this.id;
+    }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
+
+    public int getEstoque() {
+        return estoque;
+    }
+
+    public void setEstoque(int estoque) {
+        this.estoque = estoque;
+    }
+
 }

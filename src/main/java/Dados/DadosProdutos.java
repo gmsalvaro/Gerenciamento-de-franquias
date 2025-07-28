@@ -1,5 +1,5 @@
 package Dados;
-import Model.Produto;
+import Model.Produtos;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DadosProdutos {
     private final String LOJAS_FILE;
     private final ObjectMapper mapper;
-    private Map<String, Produto> produtoMap;
+    private Map<String, Produtos> produtoMap;
 
     public DadosProdutos(String filePath) {
         this.LOJAS_FILE = filePath;
@@ -37,7 +37,7 @@ public class DadosProdutos {
             return;
         }
         try {
-            List<Produto> lista = mapper.readValue(file, new TypeReference<List<Produto>>() {});
+            List<Produtos> lista = mapper.readValue(file, new TypeReference<List<Produtos>>() {});
             produtoMap = new ConcurrentHashMap<>();
             lista.forEach(produto -> produtoMap.put(produto.getId(), produto));
         } catch (IOException e) {
@@ -54,20 +54,20 @@ public class DadosProdutos {
         }
     }
 
-    public List<Produto> listarTodas() {
+    public List<Produtos> listarTodas() {
         return new ArrayList<>(produtoMap.values());
     }
 
-    public Optional<Produto> buscarPorId(String id) {
+    public Optional<Produtos> buscarPorId(String id) {
         return Optional.ofNullable(produtoMap.get(id));
     }
 
-    public void adicionar(Produto produto) {
+    public void adicionar(Produtos produto) {
         produtoMap.put(produto.getId(), produto);
         salvar();
     }
 
-    public void atualizar(Produto lojaAtualizada) {
+    public void atualizar(Produtos lojaAtualizada) {
         if (produtoMap.containsKey(lojaAtualizada.getId())) {
             produtoMap.put(lojaAtualizada.getId(), lojaAtualizada);
             salvar();

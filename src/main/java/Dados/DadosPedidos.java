@@ -1,6 +1,5 @@
 package Dados;
 
-import Model.Produto;
 import Model.Produtos;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,7 +67,7 @@ public class DadosPedidos {
         return Optional.ofNullable(lojasMap.get(id));
     }
 
-    public void adicionar(Produto loja) {
+    public void adicionar(Produtos loja) {
         lojasMap.put(loja.getId(), loja);
         salvar();
     }
