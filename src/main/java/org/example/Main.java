@@ -18,7 +18,7 @@ public class Main {
         DadosUsuario dadosUsuario = new DadosUsuario(caminhoUsuario);
         Dono Dono = new Dono("alvaro", "alvaro@gmail.com", "teste", "12345678");
         dadosUsuario.adicionar(Dono);
-        //SwingUtilities.invokeLater(() -> new Login(caminhoUsuario));
+       // SwingUtilities.invokeLater(() -> new Login(caminhoUsuario));
 
         List<Franquia> franquias = List.of(
                 new Franquia("Franquia A", "Rua 1", "123"),
@@ -31,9 +31,9 @@ public class Main {
                 new Loja("Franquia C", "Rua 3", "123")
         );
 
-        //SwingUtilities.invokeLater(() -> new InterfaceGerenciarLojas(lojas));
+        ///SwingUtilities.invokeLater(() -> new InterfaceGerenciarLojas(lojas));
 
-        //SwingUtilities.invokeLater(() -> new InterfaceDono(franquias));
+       // SwingUtilities.invokeLater(() -> new InterfaceDono(franquias));
         SwingUtilities.invokeLater(() -> {
             List<Usuario> usuariosDeExemplo = new ArrayList<>();
             // Adicione alguns usuários de exemplo aqui

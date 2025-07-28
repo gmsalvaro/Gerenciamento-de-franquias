@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DadosProdutos {
     private final String LOJAS_FILE;
     private final ObjectMapper mapper;
-    private Map<String, Produto> lojasMap;
+    private Map<String, Produto> produtoMap;
 
     public DadosProdutos(String filePath) {
         this.LOJAS_FILE = filePath;
@@ -33,43 +33,43 @@ public class DadosProdutos {
             } catch (IOException e) {
                 System.err.println("Erro ao criar arquivo de lojas: " + e.getMessage());
             }
-            lojasMap = new ConcurrentHashMap<>();
+            produtoMap = new ConcurrentHashMap<>();
             return;
         }
         try {
             List<Produto> lista = mapper.readValue(file, new TypeReference<List<Produto>>() {});
-            lojasMap = new ConcurrentHashMap<>();
-            lista.forEach(loja -> lojasMap.put(loja.getId(), loja));
+            produtoMap = new ConcurrentHashMap<>();
+            lista.forEach(produto -> produtoMap.put(produto.getId(), produto));
         } catch (IOException e) {
             System.err.println("Erro ao carregar lojas: " + e.getMessage());
-            lojasMap = new ConcurrentHashMap<>();
+            produtoMap = new ConcurrentHashMap<>();
         }
     }
 
     private void salvar() {
         try {
-            mapper.writeValue(new File(LOJAS_FILE), new ArrayList<>(lojasMap.values()));
+            mapper.writeValue(new File(LOJAS_FILE), new ArrayList<>(produtoMap.values()));
         } catch (IOException e) {
             System.err.println("Erro ao salvar lojas: " + e.getMessage());
         }
     }
 
     public List<Produto> listarTodas() {
-        return new ArrayList<>(lojasMap.values());
+        return new ArrayList<>(produtoMap.values());
     }
 
     public Optional<Produto> buscarPorId(String id) {
-        return Optional.ofNullable(lojasMap.get(id));
+        return Optional.ofNullable(produtoMap.get(id));
     }
 
-    public void adicionar(Produto loja) {
-        lojasMap.put(loja.getId(), loja);
+    public void adicionar(Produto produto) {
+        produtoMap.put(produto.getId(), produto);
         salvar();
     }
 
     public void atualizar(Produto lojaAtualizada) {
-        if (lojasMap.containsKey(lojaAtualizada.getId())) {
-            lojasMap.put(lojaAtualizada.getId(), lojaAtualizada);
+        if (produtoMap.containsKey(lojaAtualizada.getId())) {
+            produtoMap.put(lojaAtualizada.getId(), lojaAtualizada);
             salvar();
         } else {
             System.err.println("Loja com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
@@ -77,7 +77,7 @@ public class DadosProdutos {
     }
 
     public void remover(String id) {
-        if (lojasMap.remove(id) != null) {
+        if (produtoMap.remove(id) != null) {
             salvar();
         } else {
             System.err.println("Loja com ID " + id + " não encontrada para remoção.");
