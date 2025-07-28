@@ -9,10 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DadosFranquias {
@@ -56,13 +53,10 @@ public class DadosFranquias {
         }
     }
 
-    public List<Franquia> listarTodas() {
-        return new ArrayList<>(lojasMap.values());
+    public Map<String, Franquia> listarMap() {
+        return new HashMap<>(lojasMap);
     }
 
-    public Optional<Franquia> buscarPorId(String id) {
-        return Optional.ofNullable(lojasMap.get(id));
-    }
 
     public void adicionar(Franquia loja) {
         lojasMap.put(loja.getId(), loja);
