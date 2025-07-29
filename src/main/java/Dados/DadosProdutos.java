@@ -3,6 +3,8 @@ import Model.Produtos;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import exception.persistencia.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,20 +20,20 @@ public class DadosProdutos {
     private final ObjectMapper mapper;
     private Map<String, Produtos> produtoMap;
 
-    public DadosProdutos(String filePath) {
+    public DadosProdutos(String filePath) throws PersistenciaException{
         this.LOJAS_FILE = filePath;
         mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         carregar();
     }
 
-    private void carregar() {
+    private void carregar() throws PersistenciaException {
         File file = new File(LOJAS_FILE);
         if (!file.exists() || file.length() == 0) {
             try {
                 Files.write(Paths.get(LOJAS_FILE), "[]".getBytes());
             } catch (IOException e) {
-                System.err.println("Erro ao criar arquivo de lojas: " + e.getMessage());
+                throw new ArquivoNaoCriadoException("Erro ao criar arquivo de lojas: " + e.getMessage());
             }
             produtoMap = new ConcurrentHashMap<>();
             return;
@@ -41,16 +43,16 @@ public class DadosProdutos {
             produtoMap = new ConcurrentHashMap<>();
             lista.forEach(produto -> produtoMap.put(produto.getId(), produto));
         } catch (IOException e) {
-            System.err.println("Erro ao carregar lojas: " + e.getMessage());
             produtoMap = new ConcurrentHashMap<>();
+            throw new LojaNaoCarregadaException("Erro ao carregar lojas: " + e.getMessage());
         }
     }
 
-    private void salvar() {
+    private void salvar() throws PersistenciaException {
         try {
             mapper.writeValue(new File(LOJAS_FILE), new ArrayList<>(produtoMap.values()));
         } catch (IOException e) {
-            System.err.println("Erro ao salvar lojas: " + e.getMessage());
+            throw new ErroSalvarLojaException("Erro ao salvar lojas: " + e.getMessage());
         }
     }
 
@@ -62,25 +64,25 @@ public class DadosProdutos {
         return Optional.ofNullable(produtoMap.get(id));
     }
 
-    public void adicionar(Produtos produto) {
+    public void adicionar(Produtos produto) throws PersistenciaException{
         produtoMap.put(produto.getId(), produto);
         salvar();
     }
 
-    public void atualizar(Produtos lojaAtualizada) {
+    public void atualizar(Produtos lojaAtualizada) throws PersistenciaException{
         if (produtoMap.containsKey(lojaAtualizada.getId())) {
             produtoMap.put(lojaAtualizada.getId(), lojaAtualizada);
             salvar();
         } else {
-            System.err.println("Loja com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
+            throw new LojaNaoAtualizadaException("Loja com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
         }
     }
 
-    public void remover(String id) {
+    public void remover(String id) throws PersistenciaException{
         if (produtoMap.remove(id) != null) {
             salvar();
         } else {
-            System.err.println("Loja com ID " + id + " não encontrada para remoção.");
+            throw new LojaNaoRemovidaException("Loja com ID " + id + " não encontrada para remoção.");
         }
     }
 }

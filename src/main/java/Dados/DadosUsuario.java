@@ -5,6 +5,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import exception.autenticacao.AutenticacaoException;
+import exception.autenticacao.UsuarioInvalidoException;
+import exception.persistencia.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,20 +26,20 @@ public class DadosUsuario {
     private final ObjectMapper mapper;
     private Map<String, Usuario> usuariosMap;
 
-    public DadosUsuario(String filePath) {
+    public DadosUsuario(String filePath) throws PersistenciaException {
         this.USUARIO_FILE = filePath;
         mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         carregar();
     }
 
-    private void carregar() {
+    private void carregar() throws PersistenciaException {
         File file = new File(USUARIO_FILE);
         if (!file.exists() || file.length() == 0) {
             try {
                 Files.write(Paths.get(USUARIO_FILE), "[]".getBytes());
             } catch (IOException e) {
-                System.err.println("Erro ao inicializar arquivo de usuários: " + e.getMessage());
+                throw new ErroCarregarArquivosException("Erro ao inicializar arquivo de usuários: " + e.getMessage());
             }
             usuariosMap = new ConcurrentHashMap<>();
             return;
@@ -46,19 +49,19 @@ public class DadosUsuario {
             usuariosMap = new ConcurrentHashMap<>();
             lista.forEach(usuario -> usuariosMap.put(usuario.getId(), usuario));
         } catch (MismatchedInputException e) {
-            System.err.println("Erro no formato do arquivo de usuários: " + e.getMessage());
             usuariosMap = new ConcurrentHashMap<>();
+            throw new FormatoArquivoInvalidoException("Erro no formato do arquivo de usuários: " + e.getMessage());
         } catch (IOException e) {
-            System.err.println("Erro ao carregar usuários: " + e.getMessage());
             usuariosMap = new ConcurrentHashMap<>();
+            throw new UsuarioNaoCarregadoException("Erro ao carregar usuários: " + e.getMessage());
         }
     }
 
-    private void salvar() {
+    private void salvar() throws PersistenciaException{
         try {
             mapper.writeValue(new File(USUARIO_FILE), new ArrayList<>(usuariosMap.values()));
         } catch (IOException e) {
-            System.err.println("Erro ao salvar usuários: " + e.getMessage());
+            throw new ErroSalvarUsuariosException("Erro ao salvar usuários: " + e.getMessage());
         }
     }
 
@@ -79,35 +82,35 @@ public class DadosUsuario {
     public boolean existeCpf(String cpf) {
         return usuariosMap.values().stream()
                 .anyMatch(u -> u.getCpf().equals(cpf));
+
     }
 
-    public void adicionar(Usuario usuario) {
+    public void adicionar(Usuario usuario) throws PersistenciaException, AutenticacaoException {
         if (usuariosMap.containsKey(usuario.getId())) {
-            System.err.println("Erro: Usuário com ID " + usuario.getId() + " já existe. Use 'atualizar' para modificar.");
-            return;
+            throw new UsuarioInvalidoException("Erro: Usuário com ID " + usuario.getId() + " já existe. Use 'atualizar' para modificar.");
         }
         usuariosMap.put(usuario.getId(), usuario);
         salvar();
     }
 
-    public void atualizar(Usuario usuarioAtualizado) {
+    public void atualizar(Usuario usuarioAtualizado) throws PersistenciaException, AutenticacaoException{
         if (usuariosMap.containsKey(usuarioAtualizado.getId())) {
             usuariosMap.put(usuarioAtualizado.getId(), usuarioAtualizado);
             salvar();
         } else {
-            System.err.println("Erro: Usuário com ID " + usuarioAtualizado.getId() + " não encontrado para atualização.");
+            throw new UsuarioInvalidoException("Erro: Usuário com ID " + usuarioAtualizado.getId() + " não encontrado para atualização.");
         }
     }
 
-    public void remover(String id) {
+    public void remover(String id) throws PersistenciaException, AutenticacaoException{
         if (usuariosMap.remove(id) != null) {
             salvar();
         } else {
-            System.err.println("Erro: Usuário com ID " + id + " não encontrado para remoção.");
+            throw new UsuarioInvalidoException("Erro: Usuário com ID " + id + " não encontrado para remoção.");
         }
     }
 
-    public void remover(Predicate<Usuario> condicao) {
+    public void remover(Predicate<Usuario> condicao) throws PersistenciaException{
         List<String> idsParaRemover = usuariosMap.values().stream()
                 .filter(condicao)
                 .map(Usuario::getId)

@@ -19,7 +19,7 @@ public class Main {
         DadosUsuario dadosUsuario = new DadosUsuario(caminhoUsuario);
         Dono Dono = new Dono("alvaro", "alvaro@gmail.com", "teste", "12345678");
         dadosUsuario.adicionar(Dono);
-       // SwingUtilities.invokeLater(() -> new Login(caminhoUsuario));
+       SwingUtilities.invokeLater(() -> new Login(caminhoUsuario));
 
         List<Franquia> franquias = List.of(
                 new Franquia("Franquia A", "Rua 1", "123"),
@@ -35,15 +35,15 @@ public class Main {
         ///SwingUtilities.invokeLater(() -> new InterfaceGerenciarLojas(lojas));
 
        // SwingUtilities.invokeLater(() -> new InterfaceDono(franquias));
-        SwingUtilities.invokeLater(() -> {
-            List<Usuario> usuariosDeExemplo = new ArrayList<>();
-            // Adicione alguns usuários de exemplo aqui
-            usuariosDeExemplo.add(new Vendedor("Carlos Silva", "carlos@exemplo.com", "(31) 98765-4321", "Cliente VIP"));
-            usuariosDeExemplo.add(new Vendedor("Ana Paula", "ana@exemplo.com", "(21) 91234-5678", "Novo Cadastro"));
-            usuariosDeExemplo.add(new Vendedor("Pedro Costa", "pedro@exemplo.com", "(11) 99887-6655", "Suporte Técnico"));
-
-            new InterfaceGerenciarUsuario(usuariosDeExemplo).setVisible(true);
-        });
+//        SwingUtilities.invokeLater(() -> {
+//            List<Usuario> usuariosDeExemplo = new ArrayList<>();
+//            // Adicione alguns usuários de exemplo aqui
+//            usuariosDeExemplo.add(new Vendedor("Carlos Silva", "carlos@exemplo.com", "(31) 98765-4321", "Cliente VIP"));
+//            usuariosDeExemplo.add(new Vendedor("Ana Paula", "ana@exemplo.com", "(21) 91234-5678", "Novo Cadastro"));
+//            usuariosDeExemplo.add(new Vendedor("Pedro Costa", "pedro@exemplo.com", "(11) 99887-6655", "Suporte Técnico"));
+//
+//            new InterfaceGerenciarUsuario(usuariosDeExemplo).setVisible(true);
+//        });
 
     }
 

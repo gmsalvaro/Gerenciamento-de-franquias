@@ -3,6 +3,10 @@ import Dados.DadosPedidos;
 import Model.Loja;
 import Model.Produtos;
 import exception.ValidacaoException;
+import exception.persistencia.LojaInvalidaException;
+import exception.persistencia.LojaNaoAtualizadaException;
+import exception.persistencia.PersistenciaException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,13 +16,13 @@ public class ServicePedido {
     DadosPedidos dadosPedidos;
     private Map<String, Produtos> pedidoMap;
 
-    public ServicePedido(String FILE_PEDIDOS) {
+    public ServicePedido(String FILE_PEDIDOS) throws PersistenciaException {
         this.FILE_PEDIDOS = FILE_PEDIDOS;
         this.dadosPedidos = new DadosPedidos(FILE_PEDIDOS);
         this.pedidoMap = dadosPedidos.getLojasMap();
     }
 
-    public void addPedidos(Produtos pedido, Loja loja) throws ValidacaoException {
+    public void addPedidos(Produtos pedido, Loja loja) throws PersistenciaException {
         for (Produtos p : pedidoMap.values()) { // verificar essa validação !
 //            if () { pensar na verificação de pedido
 //                throw new ValidacaoException("Loja com nome ou endereço já existente.");
@@ -26,7 +30,7 @@ public class ServicePedido {
         }
 
         if(loja == null) {
-            throw new ValidacaoException("Franquia invalida");
+            throw new LojaInvalidaException("Franquia invalida");
         }
 
         loja.adicionarIdPedido(pedido.getId());
@@ -35,13 +39,13 @@ public class ServicePedido {
         pedidoMap = dadosPedidos.getLojasMap();
     }
 
-    public void removerLoja(String id,  Loja loja) throws ValidacaoException {
+    public void removerLoja(String id,  Loja loja) throws PersistenciaException {
         if (pedidoMap.containsKey(id)) {
             loja.removerIdPedido(id);
             dadosPedidos.remover(id);
             pedidoMap = dadosPedidos.getLojasMap();
         } else {
-            throw new ValidacaoException("Loja não encontrada para remoção.");
+            throw new LojaInvalidaException("Loja não encontrada para remoção.");
         }
     }
 
@@ -63,12 +67,12 @@ public class ServicePedido {
         return pedidoMap.get(id);
     }
 
-    public void atualizarLoja(Produtos pedidoAtualizado) throws ValidacaoException {
+    public void atualizarLoja(Produtos pedidoAtualizado) throws PersistenciaException {
         if (pedidoMap.containsKey(pedidoAtualizado.getId())) {
             dadosPedidos.atualizar(pedidoAtualizado);
             pedidoMap = dadosPedidos.getLojasMap();
         } else {
-            throw new ValidacaoException("Loja não encontrada para atualização.");
+            throw new LojaNaoAtualizadaException("Loja não encontrada para atualização.");
         }
     }
 
