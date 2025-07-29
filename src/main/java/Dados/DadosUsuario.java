@@ -54,7 +54,7 @@ public class DadosUsuario {
         }
     }
 
-    public void salvar() {
+    private void salvar() {
         try {
             mapper.writeValue(new File(USUARIO_FILE), new ArrayList<>(usuariosMap.values()));
         } catch (IOException e) {

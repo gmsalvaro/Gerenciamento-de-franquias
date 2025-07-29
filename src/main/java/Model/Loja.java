@@ -1,5 +1,6 @@
 package Model;
 import exception.ValidacaoException;
+import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,11 +66,11 @@ public class Loja {
         this.idProdutos = idProdutos;
     }
 
-    public void removerIdPedido(String pedidoId) throws ValidacaoException {
+    public void removerIdPedido(String pedidoId) throws PersistenciaException {
         idPedidos.remove(pedidoId);
     }
 
-    public void removerIdProduto(String produtoId) throws ValidacaoException {
+    public void removerIdProduto(String produtoId) throws PersistenciaException {
         idProdutos.remove(produtoId);
     }
 
