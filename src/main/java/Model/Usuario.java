@@ -1,7 +1,7 @@
 package Model;
 import java.util.UUID;
 
-public class Usuario {
+public  class Usuario {
     private String id;
     private String nome;
     private String email;
@@ -61,7 +61,5 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public int getPermissao() {
-        return permissao;
-    }
+    public int getPermissao() {return permissao;} ;
 }

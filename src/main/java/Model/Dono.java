@@ -5,5 +5,7 @@ public class Dono extends Usuario {
         super(nome, email, senha, cpf, 1);
     }
 
+    @Override
+    public int getPermissao() {return 1;}
 
 }
