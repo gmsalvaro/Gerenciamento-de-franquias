@@ -168,7 +168,7 @@ public class InterfaceGerenciarUsuario extends JFrame {
         JTextField dialogNome = new JTextField(20);
         JTextField dialogEmail = new JTextField(20);
         JTextField dialogTelefone = new JTextField(20);
-        JTextField dialogCpf = new JTextField(20); // Novo campo de CPF no diálogo
+        JTextField dialogCpf = new JTextField(20);
         String[] tiposUsuario = {"Vendedor", "Gerente", "Dono"};
         JComboBox<String> dialogTipo = new JComboBox<>(tiposUsuario);
 
@@ -179,8 +179,8 @@ public class InterfaceGerenciarUsuario extends JFrame {
         panel.add(dialogEmail);
         panel.add(new JLabel("Telefone:"));
         panel.add(dialogTelefone);
-        panel.add(new JLabel("CPF:")); // Label para o CPF
-        panel.add(dialogCpf); // Campo de texto para o CPF
+        panel.add(new JLabel("CPF:"));
+        panel.add(dialogCpf);
         panel.add(new JLabel("Tipo de Usuário:"));
         panel.add(dialogTipo);
 
@@ -192,16 +192,16 @@ public class InterfaceGerenciarUsuario extends JFrame {
             String email = dialogEmail.getText().trim();
             String telefone = dialogTelefone.getText().trim();
             String cpf = dialogCpf.getText().trim(); // Pega o valor do CPF
-            String tipoSelecionado = (String) dialogTipo.getSelectedItem(); // nao necessario mais
+            String tipoSelecionado = (String) dialogTipo.getSelectedItem();
 
-            if (nome.isEmpty() || email.isEmpty() || cpf.isEmpty()) { // CPF agora é obrigatório
+            if (nome.isEmpty() || email.isEmpty() || cpf.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Nome, Email e CPF são obrigatórios.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             Usuario novoUsuario;
             if ("Dono".equals(tipoSelecionado)) {
-                // Supondo que o construtor de Gerente ou uma nova classe Dono aceite CPF
+
                 novoUsuario = new Gerente(nome, email, telefone, cpf);
             } else if ("Gerente".equals(tipoSelecionado)) {
                 novoUsuario = new Gerente(nome, email, telefone, cpf);
@@ -272,7 +272,6 @@ public class InterfaceGerenciarUsuario extends JFrame {
         String nome = txtNome.getText().trim();
         String email = txtEmail.getText().trim();
         String telefone = txtTelefone.getText().trim();
-        // String cpf = txtCpf.getText().trim(); // Você pode querer permitir a edição do CPF aqui também
 
         if (nome.isEmpty() || email.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Nome e Email são obrigatórios para edição.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
@@ -282,7 +281,6 @@ public class InterfaceGerenciarUsuario extends JFrame {
         selecionado.setNome(nome);
         selecionado.setEmail(email);
         selecionado.setTelefone(telefone);
-        // selecionado.setCpf(cpf); // Se você permitir edição do CPF, adicione aqui
 
         try {
             serviceManager.getServiceUsuario().atualizarUsuario(selecionado);
@@ -314,7 +312,7 @@ public class InterfaceGerenciarUsuario extends JFrame {
         txtNome.setText("");
         txtEmail.setText("");
         txtTelefone.setText("");
-        txtCpf.setText(""); // Limpa o campo de CPF
+        txtCpf.setText("");
         txtPermissao.setText("");
     }
 
@@ -322,7 +320,7 @@ public class InterfaceGerenciarUsuario extends JFrame {
         txtNome.setEnabled(habilitar);
         txtEmail.setEnabled(habilitar);
         txtTelefone.setEnabled(habilitar);
-        txtCpf.setEnabled(habilitar); // Habilita/desabilita o campo CPF para edição
-        txtPermissao.setEnabled(false); // Permissão continua apenas para exibição
+        txtCpf.setEnabled(habilitar);
+        txtPermissao.setEnabled(false);
     }
 }
