@@ -1,10 +1,12 @@
 package Service;
 
-import Dados.DadosFranquias;
 import Dados.DadosLojas;
 import Model.Franquia;
 import Model.Loja;
-import exception.ValidacaoException;
+import exception.persistencia.LojaInvalidaException;
+import exception.persistencia.LojaNaoAtualizadaException;
+import exception.persistencia.LojaNaoRemovidaException;
+import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,21 +17,21 @@ public class ServiceLoja {
     private final DadosLojas dadosLojas;
     private Map<String, Loja> lojasMap;
 
-    public ServiceLoja(String FILE_LOJA) {
+    public ServiceLoja(String FILE_LOJA) throws PersistenciaException {
         this.FILE_LOJA = FILE_LOJA;
         this.dadosLojas = new DadosLojas(FILE_LOJA);
         this.lojasMap = dadosLojas.getLojasMap();
     }
 
-    public void addLoja(Loja loja, Franquia franquia) throws ValidacaoException {
+    public void addLoja(Loja loja, Franquia franquia) throws PersistenciaException {
         for (Loja l : lojasMap.values()) { // verificar essa validação !
             if (l.getNome().equalsIgnoreCase(loja.getNome()) ||
-                    l.getEndereco().equalsIgnoreCase(loja.getEndereco())) {
-                throw new ValidacaoException("Loja com nome ou endereço já existente.");
+                l.getEndereco().equalsIgnoreCase(loja.getEndereco())) {
+                throw new LojaInvalidaException("Loja com nome ou endereço já existente.");
             }
         }
         if(franquia == null) {
-            throw new ValidacaoException("Franquia invalida");
+            throw new LojaInvalidaException("Franquia invalida");
         }
         loja.setFranquiaId(franquia.getId());
         franquia.adicionarIdLoja(loja.getId());
@@ -37,13 +39,12 @@ public class ServiceLoja {
         lojasMap = dadosLojas.getLojasMap();
     }
 
-    public void removerLoja(String id, Franquia franquia) throws ValidacaoException {
+    public void removerLoja(String id) throws PersistenciaException {
         if (lojasMap.containsKey(id)) {
-            franquia.removeIDLoja(id);
             dadosLojas.remover(id);
             lojasMap = dadosLojas.getLojasMap();
         } else {
-            throw new ValidacaoException("Loja não encontrada para remoção.");
+            throw new LojaNaoRemovidaException("Loja não encontrada para remoção.");
         }
     }
 
@@ -65,13 +66,17 @@ public class ServiceLoja {
         return lojasMap.get(id);
     }
 
-    public void atualizarLoja(Loja lojaAtualizada) throws ValidacaoException {
+    public void atualizarLoja(Loja lojaAtualizada) throws PersistenciaException {
         if (lojasMap.containsKey(lojaAtualizada.getId())) {
             dadosLojas.atualizar(lojaAtualizada);
             lojasMap = dadosLojas.getLojasMap();
         } else {
-            throw new ValidacaoException("Loja não encontrada para atualização.");
+            throw new LojaNaoAtualizadaException("Loja não encontrada para atualização.");
         }
+    }
+
+    public Loja getLojaById(String idLoja) {
+        return lojasMap.get(idLoja);
     }
 }
 

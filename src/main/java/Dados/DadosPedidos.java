@@ -1,9 +1,15 @@
 package Dados;
 
-import Model.Produtos;
+import Model.Pedido;
+import Model.Produto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import exception.persistencia.ErroCarregarArquivosException;
+import exception.persistencia.ErroSalvarLojaException;
+import exception.persistencia.LojaNaoCarregadaException;
+import exception.persistencia.PersistenciaException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,62 +23,62 @@ import java.util.concurrent.ConcurrentHashMap; // Bom para uso multi-thread se a
 public class DadosPedidos {
     private final String LOJAS_FILE;
     private final ObjectMapper mapper;
-    private Map<String, Produtos> lojasMap;
+    private Map<String, Pedido> lojasMap;
 
-    public DadosPedidos(String filePath) {
+    public DadosPedidos(String filePath) throws PersistenciaException {
         this.LOJAS_FILE = filePath;
         mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         carregar();
     }
 
-    private void carregar() {
+    private void carregar() throws PersistenciaException {
         File file = new File(LOJAS_FILE);
         if (!file.exists() || file.length() == 0) {
             try {
                 Files.write(Paths.get(LOJAS_FILE), "[]".getBytes());
             } catch (IOException e) {
-                System.err.println("Erro ao criar arquivo de lojas: " + e.getMessage());
+                throw new ErroCarregarArquivosException("Erro ao criar arquivo de lojas: " + e.getMessage());
             }
             lojasMap = new ConcurrentHashMap<>();
             return;
         }
         try {
-            List<Produtos> lista = mapper.readValue(file, new TypeReference<List<Produtos>>() {});
+            List<Pedido> lista = mapper.readValue(file, new TypeReference<List<Pedido>>() {});
             lojasMap = new ConcurrentHashMap<>();
             lista.forEach(loja -> lojasMap.put(loja.getId(), loja));
         } catch (IOException e) {
-            System.err.println("Erro ao carregar lojas: " + e.getMessage());
             lojasMap = new ConcurrentHashMap<>();
+            throw new LojaNaoCarregadaException("Erro ao carregar lojas: " + e.getMessage());
         }
     }
 
-    private void salvar() {
+    private void salvar() throws PersistenciaException {
         try {
             mapper.writeValue(new File(LOJAS_FILE), new ArrayList<>(lojasMap.values()));
         } catch (IOException e) {
-            System.err.println("Erro ao salvar lojas: " + e.getMessage());
+            throw new ErroSalvarLojaException("Erro ao salvar lojas: " + e.getMessage());
         }
     }
 
-    public Map<String, Produtos> getLojasMap() {
+    public Map<String, Pedido> getPedidosMap() {
         return lojasMap;
     }
 
-    public List<Produtos> listarTodas() {
+    public List<Pedido> listarTodas() {
         return new ArrayList<>(lojasMap.values());
     }
 
-    public Optional<Produtos> buscarPorId(String id) {
+    public Optional<Pedido> buscarPorId(String id) {
         return Optional.ofNullable(lojasMap.get(id));
     }
 
-    public void adicionar(Produtos loja) {
+    public void adicionar(Pedido loja) throws PersistenciaException{
         lojasMap.put(loja.getId(), loja);
         salvar();
     }
 
-    public void atualizar(Produtos lojaAtualizada) {
+    public void atualizar(Pedido lojaAtualizada) throws PersistenciaException{
         if (lojasMap.containsKey(lojaAtualizada.getId())) {
             lojasMap.put(lojaAtualizada.getId(), lojaAtualizada);
             salvar();
@@ -81,7 +87,7 @@ public class DadosPedidos {
         }
     }
 
-    public void remover(String id) {
+    public void remover(String id) throws PersistenciaException{
         if (lojasMap.remove(id) != null) {
             salvar();
         } else {

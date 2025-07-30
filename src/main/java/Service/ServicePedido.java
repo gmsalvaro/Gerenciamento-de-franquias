@@ -1,75 +1,66 @@
 package Service;
-import Dados.DadosPedidos;
-import Model.Loja;
-import Model.Produtos;
-import exception.ValidacaoException;
+
+import Dados.DadosPedidos; // Certifique-se de que esta é a classe correta para lidar com Pedidos
+import Model.Pedido; // Importe a classe Pedido
+import exception.persistencia.PersistenciaException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ServicePedido {
-    String FILE_PEDIDOS;
-    DadosPedidos dadosPedidos;
-    private Map<String, Produtos> pedidoMap;
+    private final String FILE_PEDIDOS;
+    private DadosPedidos dadosPedidos;
+    private Map<String, Pedido> pedidoMap;
 
-    public ServicePedido(String FILE_PEDIDOS) {
+    public ServicePedido(String FILE_PEDIDOS) throws PersistenciaException {
         this.FILE_PEDIDOS = FILE_PEDIDOS;
         this.dadosPedidos = new DadosPedidos(FILE_PEDIDOS);
-        this.pedidoMap = dadosPedidos.getLojasMap();
+        this.pedidoMap = dadosPedidos.getPedidosMap();
     }
 
-    public void addPedidos(Produtos pedido, Loja loja) throws ValidacaoException {
-        for (Produtos p : pedidoMap.values()) { // verificar essa validação !
-//            if () { pensar na verificação de pedido
-//                throw new ValidacaoException("Loja com nome ou endereço já existente.");
-//            }
-        }
+    public void addPedido(Pedido pedido) throws PersistenciaException {
 
-        if(loja == null) {
-            throw new ValidacaoException("Franquia invalida");
-        }
-
-        loja.adicionarIdPedido(pedido.getId());
-        pedido.setIdLoja(loja.getFranquiaId());
+        // if (pedidoMap.containsKey(pedido.getId())) {
+        //     throw new PersistenciaException("Pedido com ID '" + pedido.getId() + "' já existe.");
+        // }
         dadosPedidos.adicionar(pedido);
-        pedidoMap = dadosPedidos.getLojasMap();
+        this.pedidoMap = dadosPedidos.getPedidosMap();
     }
 
-    public void removerLoja(String id,  Loja loja) throws ValidacaoException {
-        if (pedidoMap.containsKey(id)) {
-            loja.removerIdPedido(id);
-            dadosPedidos.remover(id);
-            pedidoMap = dadosPedidos.getLojasMap();
+    public void removerPedido(Pedido pedido) throws PersistenciaException {
+        if (pedidoMap.containsKey(pedido.getId())) {
+            dadosPedidos.remover(pedido.getId());
+            this.pedidoMap = dadosPedidos.getPedidosMap();
         } else {
-            throw new ValidacaoException("Loja não encontrada para remoção.");
+            throw new PersistenciaException("Pedido '" + pedido.getId() + "' não encontrado para remoção.");
         }
     }
 
-    public ArrayList<Produtos> listarLojas() {
+    public Pedido getPedidoById(String idPedido) {
+        return pedidoMap.get(idPedido);
+    }
+
+    public List<Pedido> listarTodos() {
         return new ArrayList<>(pedidoMap.values());
     }
 
-    public List<Produtos> listarPorIDLoja(String id) {
-        ArrayList<Produtos> pedidos = new ArrayList<>();
-        for(Produtos p : pedidoMap.values()) {
-            if (p.getIdLoja().equalsIgnoreCase(id)) {
-                pedidos.add(p);
+    public List<Pedido> listarPorIDLoja(String idLoja) {
+        List<Pedido> pedidosDaLoja = new ArrayList<>();
+        for(Pedido p : pedidoMap.values()) {
+            if (p.getIdLoja().equals(idLoja)) {
+                pedidosDaLoja.add(p);
             }
         }
-        return pedidos;
+        return pedidosDaLoja;
     }
 
-    public Produtos buscarPorId(String id) {
-        return pedidoMap.get(id);
-    }
-
-    public void atualizarLoja(Produtos pedidoAtualizado) throws ValidacaoException {
+    public void atualizarPedido(Pedido pedidoAtualizado) throws PersistenciaException {
         if (pedidoMap.containsKey(pedidoAtualizado.getId())) {
             dadosPedidos.atualizar(pedidoAtualizado);
-            pedidoMap = dadosPedidos.getLojasMap();
+            this.pedidoMap = dadosPedidos.getPedidosMap();
         } else {
-            throw new ValidacaoException("Loja não encontrada para atualização.");
+            throw new PersistenciaException("Pedido não encontrado para atualização.");
         }
     }
-
 }

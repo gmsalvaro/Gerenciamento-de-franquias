@@ -4,6 +4,7 @@ import Model.Franquia;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import exception.persistencia.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,20 +18,20 @@ public class DadosFranquias {
     private final ObjectMapper mapper;
     private Map<String, Franquia> lojasMap;
 
-    public DadosFranquias(String filePath) {
+    public DadosFranquias(String filePath) throws PersistenciaException{
         this.LOJAS_FILE = filePath;
         mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         carregar();
     }
 
-    private void carregar() {
+    private void carregar() throws PersistenciaException {
         File file = new File(LOJAS_FILE);
         if (!file.exists() || file.length() == 0) {
             try {
                 Files.write(Paths.get(LOJAS_FILE), "[]".getBytes());
             } catch (IOException e) {
-                System.err.println("Erro ao criar arquivo de lojas: " + e.getMessage());
+                throw new ArquivoNaoCriadoException("Erro ao criar arquivo de lojas: " + e.getMessage());
             }
             lojasMap = new ConcurrentHashMap<>();
             return;
@@ -40,16 +41,16 @@ public class DadosFranquias {
             lojasMap = new ConcurrentHashMap<>();
             lista.forEach(loja -> lojasMap.put(loja.getId(), loja));
         } catch (IOException e) {
-            System.err.println("Erro ao carregar lojas: " + e.getMessage());
             lojasMap = new ConcurrentHashMap<>();
+            throw new LojaNaoCarregadaException("Erro ao carregar lojas: " + e.getMessage());
         }
     }
 
-    private void salvar() {
+    private void salvar() throws PersistenciaException {
         try {
             mapper.writeValue(new File(LOJAS_FILE), new ArrayList<>(lojasMap.values()));
         } catch (IOException e) {
-            System.err.println("Erro ao salvar lojas: " + e.getMessage());
+            throw new ErroSalvarLojaException("Erro ao salvar lojas: " + e.getMessage());
         }
     }
 
@@ -58,25 +59,26 @@ public class DadosFranquias {
     }
 
 
-    public void adicionar(Franquia loja) {
+    public void adicionar(Franquia loja) throws PersistenciaException{
         lojasMap.put(loja.getId(), loja);
         salvar();
     }
 
-    public void atualizar(Franquia lojaAtualizada) {
+    public void atualizar(Franquia lojaAtualizada) throws PersistenciaException{
         if (lojasMap.containsKey(lojaAtualizada.getId())) {
             lojasMap.put(lojaAtualizada.getId(), lojaAtualizada);
             salvar();
         } else {
-            System.err.println("Loja com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
+            throw new LojaNaoAtualizadaException("Loja com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
         }
     }
 
-    public void remover(String id) {
+    public void remover(String id) throws PersistenciaException {
         if (lojasMap.remove(id) != null) {
             salvar();
         } else {
-            System.err.println("Loja com ID " + id + " não encontrada para remoção.");
+            throw new LojaNaoRemovidaException("Loja com ID " + id + " não encontrada para remoção.");
         }
     }
+
 }

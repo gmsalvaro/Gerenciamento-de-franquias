@@ -1,5 +1,6 @@
 package Model;
 import exception.ValidacaoException;
+import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ public class Loja {
     private String nome;
     private String endereco;
     private String franquiaId;
+    private List<String> idUsuario;
 
     private List<String> idPedidos;
     private List<String> idProdutos;
@@ -18,6 +20,7 @@ public class Loja {
         this.id = UUID.randomUUID().toString();
         this.idPedidos = new ArrayList<>();
         this.idProdutos = new ArrayList<>();
+        this.idUsuario = new ArrayList<>();
     }
 
     public Loja(String nome, String endereco, String franquiaId) {
@@ -27,6 +30,13 @@ public class Loja {
         this.franquiaId = franquiaId;
     }
 
+    public void addUsuarioID(String id){
+        idUsuario.add(id);
+    }
+
+    public void removeUsuario(String id){
+        idUsuario.remove(id);
+    }
 
     public String getId() {
         return id;
@@ -65,11 +75,11 @@ public class Loja {
         this.idProdutos = idProdutos;
     }
 
-    public void removerIdPedido(String pedidoId) throws ValidacaoException {
+    public void removerIdPedido(String pedidoId) throws PersistenciaException {
         idPedidos.remove(pedidoId);
     }
 
-    public void removerIdProduto(String produtoId) throws ValidacaoException {
+    public void removerIdProduto(String produtoId) throws PersistenciaException {
         idProdutos.remove(produtoId);
     }
 
@@ -80,5 +90,9 @@ public class Loja {
     public void adicionarIdProduto(String produtoId) {
         if (this.idProdutos == null) this.idProdutos = new ArrayList<>();
         this.idProdutos.add(produtoId);
+    }
+
+    public List<String> getIdsUsuarios() {
+        return  idUsuario;
     }
 }
