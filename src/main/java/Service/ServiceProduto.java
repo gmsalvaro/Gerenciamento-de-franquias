@@ -1,74 +1,62 @@
 package Service;
 
-import Dados.DadosPedidos;
-import Model.Produtos;
+import Dados.DadosProdutos;
+import Dados.DadosProdutos;
+import Model.Produto;
+import exception.persistencia.PersistenciaException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class ServiceProduto {
-    String FILE_PRODUTOS;
-    DadosPedidos dadosProdutos;
-    private Map<String, Produtos> produtosMap;
+    private final String FILE_PRODUTOS;
+    private DadosProdutos dadosProdutos;
+    private Map<String, Produto> produtosMap;
 
-//    public ServiceProduto(String FILE_PEDIDOS) {
-//        this.FILE_PRODUTOS = FILE_PEDIDOS;
-//        this.dadosProdutos = new DadosPedidos(FILE_PEDIDOS);
-//        this.produtosMap = dadosProdutos.getLojasMap();
-//    }
-//
-//    public void addPedidos(Produto produto, Loja loja) throws ValidacaoException {
-//        for (Produto p : produtosMap.values()) { // verificar essa validação !
-////            if () { pensar na verificação de pedido
-////                throw new ValidacaoException("Loja com nome ou endereço já existente.");
-////            }
-//        }
-//
-//        if(loja == null) {
-//            throw new ValidacaoException("Franquia invalida");
-//        }
-//
-//        loja.adicionarIdProduto(produto.getId());
-//        produto.setIdLoja(loja.getFranquiaId());
-//        dadosProdutos.adicionar(produto);
-//        produtosMap = dadosProdutos.getLojasMap();
-//    }
-//
-//    public void removerLoja(String id,  Loja loja) throws ValidacaoException {
-//        if (produtosMap.containsKey(id)) {
-//            loja.removerIdPedido(id);
-//            dadosProdutos.remover(id);
-//            produtosMap = dadosProdutos.getLojasMap();
-//        } else {
-//            throw new ValidacaoException("Loja não encontrada para remoção.");
-//        }
-//    }
-//
-//    public ArrayList<E> listarLojas() {
-//        return new ArrayList<>(produtosMap.values());
-//    }
-//
-//    public List<Produtos> listarPorIDLoja(String id) {
-//        ArrayList<Produtos> pedidos = new ArrayList<>();
-//        for(Produtos p : produtosMap.values()) {
-//            if (p.getIdLoja().equalsIgnoreCase(id)) {
-//                pedidos.add(p);
-//            }
-//        }
-//        return pedidos;
-//    }
-//
-//    public Produtos buscarPorId(String id) {
-//        return produtosMap.get(id);
-//    }
-//
-//    public void atualizarLoja(Produtos pedidoAtualizado) throws ValidacaoException {
-//        if (produtosMap.containsKey(pedidoAtualizado.getId())) {
-//            dadosProdutos.atualizar(pedidoAtualizado);
-//            produtosMap = dadosProdutos.getLojasMap();
-//        } else {
-//            throw new ValidacaoException("Loja não encontrada para atualização.");
-//        }
-//    }
-//
+    public ServiceProduto(String FILE_PRODUTOS) throws PersistenciaException {
+        this.FILE_PRODUTOS = FILE_PRODUTOS;
+        this.dadosProdutos = new DadosProdutos(FILE_PRODUTOS);
+        this.produtosMap = dadosProdutos.getProdutosMap();
+    }
 
+    public void addProduto(Produto produto) throws PersistenciaException {
+        dadosProdutos.adicionar(produto);
+        this.produtosMap = dadosProdutos.getProdutosMap();
+    }
+
+    public void removerProduto(Produto produto) throws PersistenciaException {
+        if (produtosMap.containsKey(produto.getId())) {
+            dadosProdutos.remover(produto.getId());
+            this.produtosMap = dadosProdutos.getProdutosMap();
+        } else {
+            throw new PersistenciaException("Produto '" + produto.getNome() + "' não encontrado para remoção.");
+        }
+    }
+
+    public Produto getProdutoById(String idProduto) {
+        return produtosMap.get(idProduto);
+    }
+
+    public List<Produto> listarTodos() {
+        return new ArrayList<>(produtosMap.values());
+    }
+
+    public List<Produto> listarPorIDLoja(String idLoja) {
+        List<Produto> produtosDaLoja = new ArrayList<>();
+        for(Produto p : produtosMap.values()) {
+                if(p.getIdLoja().equals(idLoja))
+                    produtosDaLoja.add(p);
+            }
+        return produtosDaLoja;
+    }
+
+    public void atualizarProduto(Produto produtoAtualizado) throws PersistenciaException {
+        if (produtosMap.containsKey(produtoAtualizado.getId())) {
+            dadosProdutos.atualizar(produtoAtualizado);
+            this.produtosMap = dadosProdutos.getProdutosMap();
+        } else {
+            throw new PersistenciaException("Produto não encontrado para atualização.");
+        }
+    }
 }

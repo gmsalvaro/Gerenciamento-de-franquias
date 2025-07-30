@@ -2,62 +2,80 @@ package org.example;
 
 import Dados.*;
 import Model.*;
+import Service.ServiceLoja;
+import Service.ServiceManager;
+import Service.ServiceUsuario;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import tela.InterfaceGerenciarUsuario;
-import tela.InterfaceDono;
-import tela.InterfaceGerenciarLojas;
-import tela.Login;
-import tela.GerenciaFluxoLogin ;
+import exception.persistencia.PersistenciaException;
+import tela.*;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
-        String caminhoUsuario = "usuario.json";
-        DadosUsuario dadosUsuario = new DadosUsuario(caminhoUsuario);
-        Dono Dono = new Dono("alvaro", "alvaro@gmail.com", "teste", "12345678");
-        Gerente gerente = new Gerente("Pedro","pedronalon@email.com","123","12345678");
-        dadosUsuario.adicionar(gerente);
-        dadosUsuario.adicionar(Dono);
-        SwingUtilities.invokeLater(() -> {
-            new Login(caminhoUsuario, new GerenciaFluxoLogin() {
-                @Override
-                public void sucessoLogin(Usuario usuarioLogado) {
-                    System.out.println("Login bem sucedido para" + usuarioLogado);
+    public static void main(String[] args) throws PersistenciaException {
+        ServiceManager serviceManager = new ServiceManager("Arquivos");
+       ServiceUsuario serviceUsuario = serviceManager.getServiceUsuario();
+       ServiceLoja serviceLoja = serviceManager.getServiceLoja();
+        List<Usuario> usuarios = serviceUsuario.getUsuarios();
+        Franquia franquia = new Franquia("lerdadasdasdasddddo", "leroasdaasdsassddddo", "leroddasdadasdlero");
+        Loja loja = new Loja("lerdasdasdaadasdadsasdo", "leasdasdasdasdsasdsaro", franquia.getId());
+        serviceManager.getServiceLoja().addLoja(loja, franquia);
+        for (Usuario usuario : usuarios) {
+            loja.addUsuarioID(usuario.getId());
+        }
 
-                    switch (usuarioLogado.getPermissao()){
-                        case 1:
-                          abrirInterfaceDono();
-                        break;
+        InterfaceGerenciarFranquia interfaceGerenciarFranquia = new InterfaceGerenciarFranquia(serviceManager);
+        //InterfaceGerenciarUsuario interfaceGerenciarUsuario = new InterfaceGerenciarUsuario(loja, serviceManager, franquia);
+       // interfaceGerenciarUsuario.setVisible(true);
+        InterfaceGerenciarLojas interfaceGerenciarLojas = new InterfaceGerenciarLojas(serviceManager, franquia);
+        interfaceGerenciarLojas.setVisible(true);
 
-                        case 2:
-                           //abrirInterfaceGerente() ;
-                            break;
 
-                       case 3:
-                           break;
-
-                        default:
-                            //lançar exception
-                    }
-                }
-            });
-        });
+//        String caminhoUsuario = "usuario.json";
+//        DadosUsuario dadosUsuario = new DadosUsuario(caminhoUsuario);
+//        Dono Dono = new Dono("alvaro", "alvaro@gmail.com", "teste", "12345678");
+//        Gerente gerente = new Gerente("Pedro","pedronalon@email.com","123","12345678");
+//        dadosUsuario.adicionar(gerente);
+//        dadosUsuario.adicionar(Dono);
+//        SwingUtilities.invokeLater(() -> {
+//            new Login(caminhoUsuario, new GerenciaFluxoLogin() {
+//                @Override
+//                public void sucessoLogin(Usuario usuarioLogado) {
+//                    System.out.println("Login bem sucedido para" + usuarioLogado);
+//
+//                    switch (usuarioLogado.getPermissao()){
+//                        case 1:
+//                          abrirInterfaceDono();
+//                        break;
+//
+//                        case 2:
+//                           //abrirInterfaceGerente() ;
+//                            break;
+//
+//                       case 3:
+//                           break;
+//
+//                        default:
+//                            //lançar exception
+//                    }
+//                }
+//            });
+//        });
 
     ;}
 
-    private static void abrirInterfaceDono(){
-        List<Franquia> franquiasDeExemplo = List.of(
-                new Franquia("Franquia A", "Rua 1", "123"),
-                new Franquia("Franquia B", "Rua 2", "123")
-        );
-
-        // A InterfaceDono é criada e exibida
-        new InterfaceDono(franquiasDeExemplo);
-    }
+//    private static void abrirInterfaceDono(){
+//        List<Franquia> franquiasDeExemplo = List.of(
+//                new Franquia("Franquia A", "Rua 1", "123"),
+//                new Franquia("Franquia B", "Rua 2", "123")
+//        );
+//
+//        // A InterfaceDono é criada e exibida
+//        new InterfaceDono(franquiasDeExemplo);
+//    }
 
     private static void abrirInterfaceGerente(){
 

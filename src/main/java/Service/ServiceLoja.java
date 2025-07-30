@@ -1,10 +1,8 @@
 package Service;
 
-import Dados.DadosFranquias;
 import Dados.DadosLojas;
 import Model.Franquia;
 import Model.Loja;
-import exception.ValidacaoException;
 import exception.persistencia.LojaInvalidaException;
 import exception.persistencia.LojaNaoAtualizadaException;
 import exception.persistencia.LojaNaoRemovidaException;
@@ -41,9 +39,8 @@ public class ServiceLoja {
         lojasMap = dadosLojas.getLojasMap();
     }
 
-    public void removerLoja(String id, Franquia franquia) throws PersistenciaException {
+    public void removerLoja(String id) throws PersistenciaException {
         if (lojasMap.containsKey(id)) {
-            franquia.removeIDLoja(id);
             dadosLojas.remover(id);
             lojasMap = dadosLojas.getLojasMap();
         } else {
@@ -76,6 +73,10 @@ public class ServiceLoja {
         } else {
             throw new LojaNaoAtualizadaException("Loja não encontrada para atualização.");
         }
+    }
+
+    public Loja getLojaById(String idLoja) {
+        return lojasMap.get(idLoja);
     }
 }
 

@@ -2,14 +2,17 @@ package tela;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import Model.Franquia;
+import Model.Usuario;
+import Service.*;
 
 public class InterfaceDono extends JFrame {
     private JPanel sidebar;
     private JPanel painelConteudo;
 
-    public InterfaceDono(List<Franquia> franquias) {
+    public InterfaceDono(ServiceFranquia serviceFranquia, ServiceLoja serviceLoja, ServicePedido servicePedido, ServiceProduto serviceProduto, ServiceUsuario serviceUsuario, Usuario usuario) {
         super("Painel do Dono");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -32,11 +35,12 @@ public class InterfaceDono extends JFrame {
         // Painel de conteúdo (direita)
         painelConteudo = new JPanel();
         painelConteudo.setLayout(new BorderLayout());
+        //Pegar a lista de Franquias no Service -> Arquivo
+        List<Franquia> franquias = serviceFranquia.listarFranquias();
 
         // Quando clicar em "Ver Franquias"
         btnFranquias.addActionListener(e -> mostrarFranquias(franquias));
-
-        btnSair.addActionListener(e -> System.exit(0));
+        btnSair.addActionListener(e -> System.exit(0)); //Implementar para voltar para o login
 
         // Usa JSplitPane para dividir a tela
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, sidebar, painelConteudo);
@@ -70,7 +74,7 @@ public class InterfaceDono extends JFrame {
             JButton btnGerenciar = new JButton("Gerenciar");
             btnGerenciar.setBackground(Color.WHITE);
             btnGerenciar.addActionListener(e -> {
-                new InterfaceGerenciarFranquia(f);
+                //new InterfaceGerenciarLojas(serviceLoja, );
             });
 
             // Adiciona componentes ao card
