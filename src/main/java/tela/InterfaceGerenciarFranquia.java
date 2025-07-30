@@ -27,15 +27,15 @@ public class InterfaceGerenciarFranquia extends JFrame {
 
     public InterfaceGerenciarFranquia(ServiceManager serviceManager) {
         super("Gerenciar Franquias");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Fecha apenas esta janela
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(700, 500);
-        setLocationRelativeTo(null); // Centraliza a janela
+        setLocationRelativeTo(null);
 
         this.serviceManager = serviceManager;
 
         listModel = new DefaultListModel<>();
         listaFranquias = new JList<>(listModel);
-        // Define um CellRenderer personalizado para exibir apenas o nome da franquia
+
         listaFranquias.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -61,7 +61,7 @@ public class InterfaceGerenciarFranquia extends JFrame {
                     habilitarCamposFormulario(true);
                     btnEditar.setEnabled(true);
                     btnRemover.setEnabled(true);
-                    // Garante que o botão Adicionar volta à sua função original
+
                     for (var al : btnAdicionar.getActionListeners()) {
                         btnAdicionar.removeActionListener(al);
                     }
@@ -82,7 +82,6 @@ public class InterfaceGerenciarFranquia extends JFrame {
             }
         });
 
-        // Painel do formulário de detalhes
         JPanel painelFormulario = new JPanel(new GridBagLayout());
         painelFormulario.setBorder(BorderFactory.createTitledBorder("Detalhes da Franquia"));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -107,7 +106,6 @@ public class InterfaceGerenciarFranquia extends JFrame {
         txtTelefone = new JTextField(20);
         painelFormulario.add(txtTelefone, gbc);
 
-        // Painel de botões de ação
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         btnAdicionar = new JButton("Adicionar");
         btnRemover = new JButton("Remover");
@@ -148,7 +146,7 @@ public class InterfaceGerenciarFranquia extends JFrame {
 
     private void prepararParaAdicionarNovaFranquia() {
         limparCampos();
-        habilitarCamposFormulario(false); // Desabilita os campos do painel principal
+        habilitarCamposFormulario(false);
 
         JTextField dialogNome = new JTextField(20);
         JTextField dialogEndereco = new JTextField(20);
@@ -185,7 +183,7 @@ public class InterfaceGerenciarFranquia extends JFrame {
                 JOptionPane.showMessageDialog(this, "Erro ao adicionar franquia: " + persistenciaException.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
-        // Reseta o estado dos botões e campos após a operação
+
         btnAdicionar.setText("Adicionar");
         btnAdicionar.setEnabled(true);
         listaFranquias.clearSelection();
@@ -202,9 +200,7 @@ public class InterfaceGerenciarFranquia extends JFrame {
             return;
         }
 
-        // Esta validação da lista de lojas já está contida na lógica de remoção em cascata do ServiceFranquia.
-        // É melhor ter um único ponto de decisão e aviso.
-        // A interface deve apenas informar sobre a irreversibilidade.
+
         int confirm = JOptionPane.showConfirmDialog(this,
                 "<html>Tem certeza que deseja remover a franquia <b>'" + selecionada.getNome() + "'</b>?<br>" +
                         "<b>ATENÇÃO:</b> Isso removerá permanentemente todas as lojas, usuários, produtos e pedidos associados a esta franquia. Esta ação não pode ser desfeita!</html>",
@@ -212,12 +208,11 @@ public class InterfaceGerenciarFranquia extends JFrame {
 
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                // CHAMA O MÉTODO DE REMOÇÃO EM CASCATA NO SERVICEFRANQUIA
-                // O ServiceFranquia.removeFranquia agora recebe o ServiceManager como parâmetro
+
                 serviceManager.getServiceFranquia().removeFranquia(selecionada, serviceManager);
 
                 JOptionPane.showMessageDialog(this, "Franquia e todos os dados associados removidos com sucesso!", "Removido", JOptionPane.INFORMATION_MESSAGE);
-                listModel.removeElement(selecionada); // Remove da lista visual após sucesso
+                listModel.removeElement(selecionada);
 
                 limparCampos();
                 habilitarCamposFormulario(false);
@@ -225,9 +220,9 @@ public class InterfaceGerenciarFranquia extends JFrame {
                 btnEditar.setEnabled(false);
                 btnAdicionar.setEnabled(true);
 
-            } catch (PersistenciaException exception) { // Use a exceção específica de persistência
+            } catch (PersistenciaException exception) {
                 JOptionPane.showMessageDialog(this, "Erro ao remover franquia: " + exception.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            } catch (Exception exception) { // Captura outras exceções inesperadas
+            } catch (Exception exception) {
                 JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado ao remover a franquia: " + exception.getMessage(), "Erro Inesperado", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -257,7 +252,7 @@ public class InterfaceGerenciarFranquia extends JFrame {
             // Chamando o método correto: atualizarFranquia, não apenas atualizar
             serviceManager.getServiceFranquia().atualizar(selecionada);
             JOptionPane.showMessageDialog(this, "Franquia atualizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            listaFranquias.repaint(); // Atualiza a exibição na lista
+            listaFranquias.repaint();
         } catch (PersistenciaException ex) {
             JOptionPane.showMessageDialog(this, "Erro ao editar franquia: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
