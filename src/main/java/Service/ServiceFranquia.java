@@ -1,7 +1,7 @@
 package Service;
 
 import Dados.DadosFranquias;
-import Model.Franquia;
+import Model.*;
 import exception.ValidacaoException;
 import exception.persistencia.*;
 
@@ -37,11 +37,58 @@ public class ServiceFranquia {
         franquiasMap = dadosFranquias.listarMap();
     }
 
-    public void removeFranquia(Franquia franquia) throws PersistenciaException {
-        if(franquiasMap.containsKey(franquia.getId())){
+    public void removeFranquia(Franquia franquia, ServiceManager serviceManager) throws PersistenciaException {
+        if (!franquiasMap.containsKey(franquia.getId())) {
+            throw new PersistenciaException("Franquia '" + franquia.getNome() + "' não encontrada para remoção.");
+        }
+        try {
+            // 1. Remover Lojas e seus dependentes (Usuários, Produtos, Pedidos)
+            List<String> idsLojas = new ArrayList<>(franquia.getIdLojas());
+            for (String idLoja : idsLojas) {
+                Loja lojaParaRemover = serviceManager.getServiceLoja().getLojaById(idLoja);
+                if (lojaParaRemover != null) {
+                    // Remover Usuários da Loja
+                    List<String> idsUsuarios = new ArrayList<>(lojaParaRemover.getIdsUsuarios());
+                    for (String idUsuario : idsUsuarios) {
+                        Usuario usuarioParaRemover = serviceManager.getServiceUsuario().getUsuarioById(idUsuario);
+                        if (usuarioParaRemover != null) {
+                            serviceManager.getServiceUsuario().removeUsuario(usuarioParaRemover);
+                            System.out.println("Usuário " + usuarioParaRemover.getNome() + " removido.");
+                        }
+                    }
+
+                    // Remover Produtos da Loja
+                    List<String> idsProdutos = new ArrayList<>(lojaParaRemover.getIdProdutos());
+                    for (String idProduto : idsProdutos) {
+                        Produto produtoParaRemover = serviceManager.getServiceProduto().getProdutoById(idProduto);
+                        if (produtoParaRemover != null) {
+                            serviceManager.getServiceProduto().removerProduto(produtoParaRemover);
+                            System.out.println("Produto " + produtoParaRemover.getNome() + " removido.");
+                        }
+                    }
+
+                    // Remover Pedidos da Loja
+                    List<String> idsPedidos = new ArrayList<>(lojaParaRemover.getIdPedidos());
+                    for (String idPedido : idsPedidos) {
+                        Pedido pedidoParaRemover = serviceManager.getServicePedido().getPedidoById(idPedido);
+                        if (pedidoParaRemover != null) {
+                            serviceManager.getServicePedido().removerPedido(pedidoParaRemover);
+                            System.out.println("Pedido " + pedidoParaRemover.getId() + " removido.");
+                        }
+                    }
+                    // Remover a própria Loja
+                    serviceManager.getServiceLoja().removerLoja(lojaParaRemover.getId());
+                    franquia.removeIDLoja(lojaParaRemover.getId());
+                    serviceManager.getServiceFranquia().atualizar(franquia);
+                    System.out.println("Loja " + lojaParaRemover.getNome() + " removida.");
+                }
+            }
             dadosFranquias.remover(franquia.getId());
-        } else
-            throw new LojaNaoRemovidaException("Franquia invalida");
+            this.franquiasMap = dadosFranquias.listarMap();
+            System.out.println("Franquia " + franquia.getNome() + " e todos os seus dados associados removidos com sucesso!");
+        } catch (PersistenciaException e) {
+            throw new PersistenciaException("Erro ao remover dados associados à franquia '" + franquia.getNome() + "': " + e.getMessage());
+        }
     }
 
     public List<Franquia> listarFranquias() {

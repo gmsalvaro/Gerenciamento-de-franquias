@@ -3,6 +3,15 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
+  "permissao" : 1,
+  "senha" : "teste"
+}, {
+  "id" : "3a7082fa-1c87-4061-b0e3-afd9667cf393",
+  "nome" : "alvaro",
+  "email" : "alvaro@gmail.com",
+  "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 }, {
@@ -10,6 +19,7 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 }, {
@@ -17,6 +27,7 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 }, {
@@ -24,13 +35,23 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
+}, {
+  "id" : "9570176c-f46f-4c1a-881d-016a4ca5afec",
+  "nome" : "dasdadas",
+  "email" : "dasdasdasd",
+  "cpf" : "asdadadas",
+  "telefone" : "123456789",
+  "permissao" : 3,
+  "senha" : "adasdadsa"
 }, {
   "id" : "81db4747-5357-472b-bc44-6f64280cb5a5",
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -38,6 +59,7 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -45,6 +67,7 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -52,6 +75,7 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -59,6 +83,7 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -66,6 +91,7 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -73,6 +99,7 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 }, {
@@ -80,6 +107,7 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 }, {
@@ -87,6 +115,7 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 }, {
@@ -94,6 +123,7 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -101,6 +131,7 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -108,13 +139,23 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
+}, {
+  "id" : "611c9461-28ca-473d-9f05-746452dd1b71",
+  "nome" : "Pedro",
+  "email" : "pedronalon@email.com",
+  "cpf" : "12345678",
+  "telefone" : null,
+  "permissao" : 2,
+  "senha" : "123"
 }, {
   "id" : "6a456d21-8025-4d7f-87dd-5dd976eee0f1",
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -122,6 +163,7 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 }, {
@@ -129,6 +171,7 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 }, {
@@ -136,6 +179,7 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -143,6 +187,7 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 }, {
@@ -150,6 +195,7 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -157,6 +203,7 @@
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 2,
   "senha" : "123"
 }, {
@@ -164,6 +211,7 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 }, {
@@ -171,13 +219,7 @@
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
-  "permissao" : 1,
-  "senha" : "teste"
-}, {
-  "id" : "a7dc47bd-8ddf-4e0b-97ff-cfcd76cc0d90",
-  "nome" : "alvaro",
-  "email" : "alvaro@gmail.com",
-  "cpf" : "12345678",
+  "telefone" : null,
   "permissao" : 1,
   "senha" : "teste"
 } ]

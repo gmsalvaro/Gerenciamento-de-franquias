@@ -6,6 +6,7 @@ public  class Usuario {
     private String nome;
     private String email;
     private String cpf;
+    private String telefone;
     private int permissao;
     private String senha;
 
@@ -17,6 +18,7 @@ public  class Usuario {
         this.permissao = permissao;
         this.email = email;
         this.senha = senha;
+        this.telefone = "123456789";
         this.cpf = cpf;
         this.id = UUID.randomUUID().toString();; // criar uma logica para gerar id aleatorio !
     }
@@ -61,5 +63,15 @@ public  class Usuario {
         this.senha = senha;
     }
 
-    public int getPermissao() {return permissao;} ;
+    public int getPermissao() {return permissao;}
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    ;
 }

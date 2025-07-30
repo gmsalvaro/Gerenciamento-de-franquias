@@ -1,6 +1,7 @@
 package Dados;
 
-import Model.Produtos;
+import Model.Pedido;
+import Model.Produto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -22,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap; // Bom para uso multi-thread se a
 public class DadosPedidos {
     private final String LOJAS_FILE;
     private final ObjectMapper mapper;
-    private Map<String, Produtos> lojasMap;
+    private Map<String, Pedido> lojasMap;
 
     public DadosPedidos(String filePath) throws PersistenciaException {
         this.LOJAS_FILE = filePath;
@@ -43,7 +44,7 @@ public class DadosPedidos {
             return;
         }
         try {
-            List<Produtos> lista = mapper.readValue(file, new TypeReference<List<Produtos>>() {});
+            List<Pedido> lista = mapper.readValue(file, new TypeReference<List<Pedido>>() {});
             lojasMap = new ConcurrentHashMap<>();
             lista.forEach(loja -> lojasMap.put(loja.getId(), loja));
         } catch (IOException e) {
@@ -60,24 +61,24 @@ public class DadosPedidos {
         }
     }
 
-    public Map<String, Produtos> getLojasMap() {
+    public Map<String, Pedido> getPedidosMap() {
         return lojasMap;
     }
 
-    public List<Produtos> listarTodas() {
+    public List<Pedido> listarTodas() {
         return new ArrayList<>(lojasMap.values());
     }
 
-    public Optional<Produtos> buscarPorId(String id) {
+    public Optional<Pedido> buscarPorId(String id) {
         return Optional.ofNullable(lojasMap.get(id));
     }
 
-    public void adicionar(Produtos loja) throws PersistenciaException{
+    public void adicionar(Pedido loja) throws PersistenciaException{
         lojasMap.put(loja.getId(), loja);
         salvar();
     }
 
-    public void atualizar(Produtos lojaAtualizada) throws PersistenciaException{
+    public void atualizar(Pedido lojaAtualizada) throws PersistenciaException{
         if (lojasMap.containsKey(lojaAtualizada.getId())) {
             lojasMap.put(lojaAtualizada.getId(), lojaAtualizada);
             salvar();

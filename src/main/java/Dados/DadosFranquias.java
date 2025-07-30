@@ -80,4 +80,5 @@ public class DadosFranquias {
             throw new LojaNaoRemovidaException("Loja com ID " + id + " não encontrada para remoção.");
         }
     }
+
 }

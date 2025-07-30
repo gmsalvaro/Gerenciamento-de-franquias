@@ -62,6 +62,10 @@ public class DadosUsuario {
         }
     }
 
+    public Map<String, Usuario> getUsuariosMap() {
+        return usuariosMap;
+    }
+
     public List<Usuario> listarTodas() {
         return new ArrayList<>(usuariosMap.values());
     }

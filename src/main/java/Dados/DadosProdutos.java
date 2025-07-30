@@ -1,5 +1,5 @@
 package Dados;
-import Model.Produtos;
+import Model.Produto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DadosProdutos {
     private final String LOJAS_FILE;
     private final ObjectMapper mapper;
-    private Map<String, Produtos> produtoMap;
+    private Map<String, Produto> produtoMap;
 
     public DadosProdutos(String filePath) throws PersistenciaException{
         this.LOJAS_FILE = filePath;
@@ -39,7 +39,7 @@ public class DadosProdutos {
             return;
         }
         try {
-            List<Produtos> lista = mapper.readValue(file, new TypeReference<List<Produtos>>() {});
+            List<Produto> lista = mapper.readValue(file, new TypeReference<List<Produto>>() {});
             produtoMap = new ConcurrentHashMap<>();
             lista.forEach(produto -> produtoMap.put(produto.getId(), produto));
         } catch (IOException e) {
@@ -56,20 +56,20 @@ public class DadosProdutos {
         }
     }
 
-    public List<Produtos> listarTodas() {
+    public List<Produto> listarTodas() {
         return new ArrayList<>(produtoMap.values());
     }
 
-    public Optional<Produtos> buscarPorId(String id) {
+    public Optional<Produto> buscarPorId(String id) {
         return Optional.ofNullable(produtoMap.get(id));
     }
 
-    public void adicionar(Produtos produto) throws PersistenciaException{
+    public void adicionar(Produto produto) throws PersistenciaException{
         produtoMap.put(produto.getId(), produto);
         salvar();
     }
 
-    public void atualizar(Produtos lojaAtualizada) throws PersistenciaException{
+    public void atualizar(Produto lojaAtualizada) throws PersistenciaException{
         if (produtoMap.containsKey(lojaAtualizada.getId())) {
             produtoMap.put(lojaAtualizada.getId(), lojaAtualizada);
             salvar();
@@ -84,5 +84,9 @@ public class DadosProdutos {
         } else {
             throw new LojaNaoRemovidaException("Loja com ID " + id + " não encontrada para remoção.");
         }
+    }
+
+    public Map<String, Produto> getProdutosMap() {
+        return produtoMap;
     }
 }
