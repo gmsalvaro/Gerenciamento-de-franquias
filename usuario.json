@@ -27,6 +27,20 @@
   "permissao" : 2,
   "senha" : "123"
 }, {
+  "id" : "821432ce-370a-4c87-8880-95d9ec5d0b96",
+  "nome" : "alvaro",
+  "email" : "alvaro@gmail.com",
+  "cpf" : "12345678",
+  "permissao" : 1,
+  "senha" : "teste"
+}, {
+  "id" : "f9fbe807-94ed-41dd-9441-6a94bfc611d5",
+  "nome" : "Pedro",
+  "email" : "pedronalon@email.com",
+  "cpf" : "12345678",
+  "permissao" : 2,
+  "senha" : "123"
+}, {
   "id" : "81db4747-5357-472b-bc44-6f64280cb5a5",
   "nome" : "Pedro",
   "email" : "pedronalon@email.com",

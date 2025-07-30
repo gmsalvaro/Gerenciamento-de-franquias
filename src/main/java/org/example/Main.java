@@ -22,7 +22,6 @@ public class Main {
         Gerente gerente = new Gerente("Pedro","pedronalon@email.com","123","12345678");
         dadosUsuario.adicionar(gerente);
         dadosUsuario.adicionar(Dono);
-        dadosUsuario.salvar() ;
         SwingUtilities.invokeLater(() -> {
             new Login(caminhoUsuario, new GerenciaFluxoLogin() {
                 @Override
