@@ -5,6 +5,7 @@ import Model.Pedido; // Importe a classe Pedido
 import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,10 @@ public class ServicePedido {
 
     public Pedido getPedidoById(String idPedido) {
         return pedidoMap.get(idPedido);
+    }
+
+    public Map<String, Pedido> getPedidoMap() {
+        return pedidoMap;
     }
 
     public List<Pedido> listarTodos() {

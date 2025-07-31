@@ -16,6 +16,7 @@ public class Loja {
     private List<String> idPedidos;
     private List<String> idProdutos;
 
+
     public Loja() {
         this.id = UUID.randomUUID().toString();
         this.idPedidos = new ArrayList<>();
