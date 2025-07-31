@@ -11,27 +11,36 @@ import exception.persistencia.PersistenciaException;
 import tela.*;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws PersistenciaException {
         ServiceManager serviceManager = new ServiceManager("Arquivos");
-       ServiceUsuario serviceUsuario = serviceManager.getServiceUsuario();
-       ServiceLoja serviceLoja = serviceManager.getServiceLoja();
+        ServiceUsuario serviceUsuario = serviceManager.getServiceUsuario();
+        ServiceLoja serviceLoja = serviceManager.getServiceLoja();
         List<Usuario> usuarios = serviceUsuario.getUsuarios();
-        Franquia franquia = new Franquia("lerdadasdasdasddddo", "leroasdaasdsassddddo", "leroddasdadasdlero");
-        Loja loja = new Loja("lerdasdasdaadasdadsasdo", "leasdasdasdasdsasdsaro", franquia.getId());
-        serviceManager.getServiceLoja().addLoja(loja, franquia);
-        for (Usuario usuario : usuarios) {
-            loja.addUsuarioID(usuario.getId());
-        }
+        Loja loja = new Loja("lerdasdasdaadasdadsasdo", "leasdasdasdasdsasdsaro", "dasdassdasdasds");
+        Produto produto = new Produto("refri", 4);
+        Map<String, Integer> produtosNoPedido = new HashMap<>();
+        produtosNoPedido.put("refri", 4);
+        Date dataPedido = new Date();
+        Pedido pedido = new Pedido(loja.getId(), produtosNoPedido,dataPedido,"Não concluido");
+        serviceManager.getServicePedido().addPedido(pedido);
+
+
+
+//        Franquia franquia = new Franquia("lerdadasdasdasddddo", "leroasdaasdsassddddo", "leroddasdadasdlero");
+//        Loja loja = new Loja("lerdasdasdaadasdadsasdo", "leasdasdasdasdsasdsaro", franquia.getId());
+//        serviceManager.getServiceLoja().addLoja(loja, franquia);
+//        for (Usuario usuario : usuarios) {
+//            loja.addUsuarioID(usuario.getId());
+//        }
 
         InterfaceGerenciarFranquia interfaceGerenciarFranquia = new InterfaceGerenciarFranquia(serviceManager);
         //InterfaceGerenciarUsuario interfaceGerenciarUsuario = new InterfaceGerenciarUsuario(loja, serviceManager, franquia);
-       // interfaceGerenciarUsuario.setVisible(true);
-        InterfaceGerenciarLojas interfaceGerenciarLojas = new InterfaceGerenciarLojas(serviceManager, franquia);
-        interfaceGerenciarLojas.setVisible(true);
+        //interfaceGerenciarUsuario.setVisible(true);
+        //InterfaceGerenciarLojas interfaceGerenciarLojas = new InterfaceGerenciarLojas(serviceManager, franquia);
+        //interfaceGerenciarLojas.setVisible(true);
 
 
 //        String caminhoUsuario = "usuario.json";

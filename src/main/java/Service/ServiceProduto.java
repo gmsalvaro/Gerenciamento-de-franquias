@@ -34,6 +34,10 @@ public class ServiceProduto {
         }
     }
 
+    public Map<String, Produto> getProdutosMap() {
+        return produtosMap;
+    }
+
     public Produto getProdutoById(String idProduto) {
         return produtosMap.get(idProduto);
     }

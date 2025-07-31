@@ -1,55 +1,51 @@
 package Model;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-public class Pedido {
-    private String nome;
+public class Pedido implements Serializable {
+
     private String id;
-    private double preco;
-    private int estoque;
-    String idLoja;
+    private String idLoja;
+    private Map<String, Integer> produtosNoPedido;
+    private Date dataPedido;
+    private String status;
 
 
-    public Pedido(String nome, double preco) {
-        this.nome = nome;
-        this.preco = preco;
+    public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, String status) {
         this.id = UUID.randomUUID().toString();
+        this.idLoja = idLoja;
+        this.produtosNoPedido = new HashMap<>(produtosNoPedido);
+        this.dataPedido = dataPedido;
+        this.status = status;
     }
 
-    public void setIdLoja(String idLoja) {
-        this.idLoja = idLoja;
+
+    public String getId() {
+        return id;
     }
 
     public String getIdLoja() {
         return idLoja;
     }
 
-    public String getNome() {
-        return nome;
+    public Map<String, Integer> getProdutosNoPedido() {
+        return new HashMap<>(produtosNoPedido);
     }
 
-    public String getId(){
-        return this.id;
+    public Date getDataPedido() {
+        return dataPedido;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public String getStatus() {
+        return status;
     }
 
-    public double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
-
-    public int getEstoque() {
-        return estoque;
-    }
-
-    public void setEstoque(int estoque) {
-        this.estoque = estoque;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }
