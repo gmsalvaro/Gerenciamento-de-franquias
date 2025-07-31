@@ -86,10 +86,6 @@ public class DadosUsuario {
     }
 
     public void adicionar(Usuario usuario) {
-        if (usuariosMap.containsKey(usuario.getId())) {
-            System.err.println("Erro: Usuário com ID " + usuario.getId() + " já existe. Use 'atualizar' para modificar.");
-            return;
-        }
         usuariosMap.put(usuario.getId(), usuario);
         salvar();
     }
