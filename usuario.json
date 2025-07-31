@@ -159,6 +159,14 @@
   "permissao" : 2,
   "senha" : "123"
 }, {
+  "id" : "acdb679f-f383-4feb-8da5-8a1522b61cf1",
+  "nome" : "heitor",
+  "email" : "heitorcoelho@gmail.com",
+  "cpf" : "13876276608",
+  "telefone" : "123456789",
+  "permissao" : 2,
+  "senha" : "123456789"
+}, {
   "id" : "c51bf95c-7372-4965-a5b8-b8c91802c7ea",
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",

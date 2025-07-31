@@ -22,7 +22,7 @@ public class ServiceFranquia {
             franquiasMap = dadosFranquias.listarMap();
 
         }catch(ErroCarregarArquivosException e){
-            throw new ErroCarregarArquivosException("ERRO: não foi possível inicializar o serviço de franquias!"+e.getMessage());
+            throw new ErroCarregarArquivosException("ERRO: não foi possível inicializar o serviço de franquias!");
         }
     }
 
