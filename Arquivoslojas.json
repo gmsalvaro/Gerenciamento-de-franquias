@@ -1,0 +1,17 @@
+[ {
+  "id" : "ac6c1df7-896a-4ddc-841d-76ca6c2f1975",
+  "nome" : "lerdasdaaadasdo",
+  "endereco" : "leasdasdasdsasdsa",
+  "franquiaId" : "45d421e3-26e7-4623-b8c9-bd76f8eb9b0d",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+}, {
+  "id" : "bdbd013a-bdaf-4e2e-8668-1a3242d24132",
+  "nome" : "lerdasdasdaadasdo",
+  "endereco" : "leasdasdasdsasdsaro",
+  "franquiaId" : "a71f623e-297d-4ade-b502-179f355ad8b0",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+} ]
