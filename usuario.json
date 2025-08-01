@@ -1,48 +1,8 @@
 [ {
-  "id" : "56f4ae99-2da7-4953-8f21-15ec7ba8af2b",
+  "id" : "8b8395a2-832d-4803-938f-a7732b703bb1",
   "nome" : "alvaro",
   "email" : "alvaro@gmail.com",
   "cpf" : "12345678",
-  "telefone" : null,
-  "permissao" : 1,
-  "senha" : "teste"
-}, {
-  "id" : "3a7082fa-1c87-4061-b0e3-afd9667cf393",
-  "nome" : "alvaro",
-  "email" : "alvaro@gmail.com",
-  "cpf" : "12345678",
-  "telefone" : null,
-  "permissao" : 1,
-  "senha" : "teste"
-}, {
-  "id" : "7a516c78-8835-4b99-b523-ea6c11943c58",
-  "nome" : "alvaro",
-  "email" : "alvaro@gmail.com",
-  "cpf" : "12345678",
-  "telefone" : null,
-  "permissao" : 1,
-  "senha" : "teste"
-}, {
-  "id" : "4d54e8df-fe7a-4ed3-89b9-f06127327248",
-  "nome" : "alvaro",
-  "email" : "alvaro@gmail.com",
-  "cpf" : "12345678",
-  "telefone" : null,
-  "permissao" : 1,
-  "senha" : "teste"
-}, {
-  "id" : "66e6f626-462b-4fdc-82f5-32377ae0490e",
-  "nome" : "Pedro",
-  "email" : "pedronalon@email.com",
-  "cpf" : "12345678",
-  "telefone" : null,
-  "permissao" : 2,
-  "senha" : "123"
-}, {
-  "id" : "9570176c-f46f-4c1a-881d-016a4ca5afec",
-  "nome" : "dasdadas",
-  "email" : "dasdasdasd",
-  "cpf" : "asdadadas",
   "telefone" : "123456789",
   "permissao" : 3,
   "senha" : "adasdadsa"
@@ -183,51 +143,12 @@
   "permissao" : 1,
   "senha" : "teste"
 }, {
-  "id" : "dd30b05d-bd3f-4e04-a4b5-c482724d55bd",
+  "id" : "06cc1987-d5ab-453c-b18f-4de19f41dc3b",
   "nome" : "Pedro",
-  "email" : "pedronalon@email.com",
+  "email" : "pedro@email.com",
   "cpf" : "12345678",
-  "telefone" : null,
+  "telefone" : "123456789",
   "permissao" : 2,
-  "senha" : "123"
-}, {
-  "id" : "288a1d44-f368-49f9-8493-1055daebec74",
-  "nome" : "alvaro",
-  "email" : "alvaro@gmail.com",
-  "cpf" : "12345678",
-  "telefone" : null,
-  "permissao" : 1,
-  "senha" : "teste"
-}, {
-  "id" : "27021070-23c6-4720-8598-b19109a46286",
-  "nome" : "Pedro",
-  "email" : "pedronalon@email.com",
-  "cpf" : "12345678",
-  "telefone" : null,
-  "permissao" : 2,
-  "senha" : "123"
-}, {
-  "id" : "11e45685-f9a4-4d16-8b38-67558f107702",
-  "nome" : "Pedro",
-  "email" : "pedronalon@email.com",
-  "cpf" : "12345678",
-  "telefone" : null,
-  "permissao" : 2,
-  "senha" : "123"
-}, {
-  "id" : "fa0ce38c-170d-4f85-92f6-47fd52914500",
-  "nome" : "alvaro",
-  "email" : "alvaro@gmail.com",
-  "cpf" : "12345678",
-  "telefone" : null,
-  "permissao" : 1,
-  "senha" : "teste"
-}, {
-  "id" : "d2ab0fb5-1420-434e-b499-80ad7141a75b",
-  "nome" : "alvaro",
-  "email" : "alvaro@gmail.com",
-  "cpf" : "12345678",
-  "telefone" : null,
-  "permissao" : 1,
-  "senha" : "teste"
+  "senha" : "123",
+  "idloja" : null
 } ]

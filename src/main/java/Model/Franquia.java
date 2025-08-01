@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Franquia implements Entidade {
+public class Franquia implements Entidade{
     private String id;
     private String nome;
     private String endereco;
@@ -18,7 +18,6 @@ public class Franquia implements Entidade {
         this.id = UUID.randomUUID().toString();
         this.idLojas = new ArrayList<>();
     }
-
 
     @Override
     public String getId() {

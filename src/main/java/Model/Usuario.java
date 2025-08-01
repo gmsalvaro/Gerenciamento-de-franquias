@@ -24,12 +24,9 @@ public  class Usuario implements Entidade {
     }
 
     // Getters e Setters
-    @Override
     public String getId() {
         return id;
     }
-
-
     public void setId(String id) {
         this.id = id;
     }
