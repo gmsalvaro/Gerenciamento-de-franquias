@@ -163,11 +163,56 @@ public class InterfaceGerenciarLojas extends JFrame {
                     JOptionPane.showMessageDialog(this, "Funcionalidade de Gerenciar Pedidos em construção.", "Em Breve", JOptionPane.INFORMATION_MESSAGE);
                 });
 
+                JButton btnRemoverLoja = new JButton("Remover Loja");
+                btnRemoverLoja.setPreferredSize(new Dimension(160, 30));
+                btnRemoverLoja.setAlignmentX(Component.CENTER_ALIGNMENT);
+                btnRemoverLoja.addActionListener(e -> {
+                    int confirma = JOptionPane.showConfirmDialog(
+                            this,
+                            "Tem certeza que deseja remover esta loja?\nEsta ação não pode ser desfeita!",
+                            "Confirmar Remoção",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE
+                    );
+
+                    if (confirma == JOptionPane.YES_OPTION) {
+                        try {
+                            // Remove a loja do service
+                            serviceManager.getServiceLoja().removerLoja(lojaAtual.getId());
+
+                            // Remove o ID da loja da franquia
+                            franquia.removeIDLoja(lojaAtual.getId());
+
+                            // Atualiza a interface
+                            mostrarLojas();
+
+                            JOptionPane.showMessageDialog(
+                                    this,
+                                    "Loja removida com sucesso!",
+                                    "Sucesso",
+                                    JOptionPane.INFORMATION_MESSAGE
+                            );
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(
+                                    this,
+                                    "Erro ao remover loja: " + ex.getMessage(),
+                                    "Erro",
+                                    JOptionPane.ERROR_MESSAGE
+                            );
+                        }
+                    }
+                });
+
+
+
                 botoesPanel.add(btnGerenciarUsuarios);
                 botoesPanel.add(Box.createVerticalStrut(5));
                 botoesPanel.add(btnGerenciarProdutos);
                 botoesPanel.add(Box.createVerticalStrut(5));
                 botoesPanel.add(btnGerenciarPedidos);
+                botoesPanel.add(Box.createVerticalStrut(5));
+                botoesPanel.add(btnRemoverLoja);
+
 
                 card.add(infoPanel, BorderLayout.CENTER);
                 card.add(botoesPanel, BorderLayout.EAST);
