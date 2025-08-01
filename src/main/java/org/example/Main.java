@@ -17,13 +17,13 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         try {
-            // Cria o ServiceManager uma única vez.
+            
             ServiceManager serviceManager = new ServiceManager("");
 
-            // Cria os dados iniciais para teste, se necessário, usando os serviços.
+
             seedInitialData(serviceManager);
 
-            // Inicia a interface de Login
+
             SwingUtilities.invokeLater(() -> {
                 new Login(serviceManager, new GerenciaFluxoLogin() {
                     @Override
@@ -48,12 +48,9 @@ public class Main {
         }
     }
 
-    /**
-     * Cria dados de exemplo (franquia, loja, dono, gerente) USANDO OS SERVIÇOS.
-     * Agora corrigido para usar os métodos exatos das suas classes.
-     */
+
     private static void seedInitialData(ServiceManager sm) throws PersistenciaException {
-        // --- Cria Franquia e Loja ---
+
         Franquia franquia;
         if (sm.getServiceFranquia().listarFranquias().isEmpty()) {
             franquia = new Franquia("Franquia Principal", "Rua A, 1", "12345");
@@ -81,8 +78,7 @@ public class Main {
             System.out.println("Usuário Dono 'alvaro' já existe, pulando criação.");
         }
 
-        // --- Adiciona Gerente ---
-        // CORREÇÃO: Mesma lógica de try-catch para o gerente.
+
         try {
             Gerente gerente = new Gerente("Pedro" , "pedro@email.com","123","12345678");
             sm.getServiceUsuario().addUsuario(gerente);
