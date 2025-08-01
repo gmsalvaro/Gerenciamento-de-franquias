@@ -15,73 +15,97 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws PersistenciaException {
-        ServiceManager serviceManager = new ServiceManager("Arquivos");
-       ServiceUsuario serviceUsuario = serviceManager.getServiceUsuario();
-       ServiceLoja serviceLoja = serviceManager.getServiceLoja();
-        List<Usuario> usuarios = serviceUsuario.getUsuarios();
-        Franquia franquia = new Franquia("lerdadasdasdasddddo", "leroasdaasdsassddddo", "leroddasdadasdlero");
-        Loja loja = new Loja("lerdasdasdaadasdadsasdo", "leasdasdasdasdsasdsaro", franquia.getId());
-        serviceManager.getServiceLoja().addLoja(loja, franquia);
-        for (Usuario usuario : usuarios) {
-            loja.addUsuarioID(usuario.getId());
+    public static void main(String[] args) {
+        try {
+            // Cria o ServiceManager uma única vez.
+            ServiceManager serviceManager = new ServiceManager("");
+
+            // Cria os dados iniciais para teste, se necessário, usando os serviços.
+            seedInitialData(serviceManager);
+
+            // Inicia a interface de Login
+            SwingUtilities.invokeLater(() -> {
+                new Login(serviceManager, new GerenciaFluxoLogin() {
+                    @Override
+                    public void sucessoLogin(Usuario usuarioLogado) {
+                        System.out.println("Login bem-sucedido para: " + usuarioLogado.getNome());
+
+                        switch (usuarioLogado.getPermissao()) {
+                            case 1:
+                                new InterfaceDono(serviceManager, (Dono) usuarioLogado);
+                                break;
+                            case 2:
+                                new InterfaceGerente(serviceManager, (Gerente) usuarioLogado);
+                                break;
+                        }
+                    }
+                });
+            });
+
+        } catch (PersistenciaException e) {
+            JOptionPane.showMessageDialog(null, "Erro crítico ao carregar os dados: " + e.getMessage(), "Erro de Sistema", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Cria dados de exemplo (franquia, loja, dono, gerente) USANDO OS SERVIÇOS.
+     * Agora corrigido para usar os métodos exatos das suas classes.
+     */
+    private static void seedInitialData(ServiceManager sm) throws PersistenciaException {
+        // --- Cria Franquia e Loja ---
+        Franquia franquia;
+        if (sm.getServiceFranquia().listarFranquias().isEmpty()) {
+            franquia = new Franquia("Franquia Principal", "Rua A, 1", "12345");
+            sm.getServiceFranquia().addFranquia(franquia);
+        } else {
+            franquia = sm.getServiceFranquia().listarFranquias().get(0);
         }
 
-        InterfaceGerenciarFranquia interfaceGerenciarFranquia = new InterfaceGerenciarFranquia(serviceManager);
-        //InterfaceGerenciarUsuario interfaceGerenciarUsuario = new InterfaceGerenciarUsuario(loja, serviceManager, franquia);
-       // interfaceGerenciarUsuario.setVisible(true);
-        InterfaceGerenciarLojas interfaceGerenciarLojas = new InterfaceGerenciarLojas(serviceManager, franquia);
-        interfaceGerenciarLojas.setVisible(true);
+        Loja loja;
+        if (sm.getServiceLoja().listarTodasAsLojas().isEmpty()) {
+            loja = new Loja("Loja Central", "Av. B, 2", franquia.getId());
+            sm.getServiceLoja().addLoja(loja, franquia);
+        } else {
+            loja = sm.getServiceLoja().listarTodasAsLojas().get(0);
+        }
 
+        // --- Adiciona Dono ---
+        // CORREÇÃO: Em vez de verificar antes, tentamos adicionar. Se já existir, a exceção é capturada.
+        try {
+            Dono dono = new Dono("alvaro", "alvaro@gmail.com", "teste", "12345678");
+            sm.getServiceUsuario().addUsuario(dono);
+            System.out.println("Usuário Dono 'alvaro' criado.");
+        } catch (PersistenciaException e) {
+            // Se o usuário já existe, o addUsuario lança uma exceção. A gente ignora e continua.
+            System.out.println("Usuário Dono 'alvaro' já existe, pulando criação.");
+        }
 
-//        String caminhoUsuario = "usuario.json";
-//        DadosUsuario dadosUsuario = new DadosUsuario(caminhoUsuario);
-//        Dono Dono = new Dono("alvaro", "alvaro@gmail.com", "teste", "12345678");
-//        Gerente gerente = new Gerente("Pedro","pedronalon@email.com","123","12345678");
-//        dadosUsuario.adicionar(gerente);
-//        dadosUsuario.adicionar(Dono);
-//        SwingUtilities.invokeLater(() -> {
-//            new Login(caminhoUsuario, new GerenciaFluxoLogin() {
-//                @Override
-//                public void sucessoLogin(Usuario usuarioLogado) {
-//                    System.out.println("Login bem sucedido para" + usuarioLogado);
-//
-//                    switch (usuarioLogado.getPermissao()){
-//                        case 1:
-//                          abrirInterfaceDono();
-//                        break;
-//
-//                        case 2:
-//                           //abrirInterfaceGerente() ;
-//                            break;
-//
-//                       case 3:
-//                           break;
-//
-//                        default:
-//                            //lançar exception
-//                    }
-//                }
-//            });
-//        });
+        // --- Adiciona Gerente ---
+        // CORREÇÃO: Mesma lógica de try-catch para o gerente.
+        try {
+            Gerente gerente = new Gerente("Pedro" , "pedro@email.com","123","12345678");
+            sm.getServiceUsuario().addUsuario(gerente);
 
-    ;}
+            loja.addUsuarioID(gerente.getId());
+            sm.getServiceLoja().atualizarLoja(loja); // Salva a associação na loja
+            System.out.println("Usuário Gerente 'Pedro' criado e associado à Loja.");
 
-//    private static void abrirInterfaceDono(){
-//        List<Franquia> franquiasDeExemplo = List.of(
-//                new Franquia("Franquia A", "Rua 1", "123"),
-//                new Franquia("Franquia B", "Rua 2", "123")
-//        );
-//
-//        // A InterfaceDono é criada e exibida
-//        new InterfaceDono(franquiasDeExemplo);
-//    }
+        } catch (PersistenciaException e) {
+            System.out.println("Usuário Gerente 'Pedro' já existe, pulando criação.");
+        }
+    }
 
-    private static void abrirInterfaceGerente(){
+    private static void abrirInterfaceDono(ServiceManager serviceManager, Dono donoLogado) {
+        new InterfaceDono(serviceManager, donoLogado);
+    }
 
+    private static void abrirInterfaceGerente(ServiceManager serviceManager, Gerente gerenteLogado) {
+        new InterfaceGerente(serviceManager, gerenteLogado);
     }
 
 }
+
 //new Login(caminhoUsuario));
 //
 //List<Franquia> franquias = List.of(
@@ -106,3 +130,32 @@ public class Main {
 //
 //        new InterfaceGerenciarUsuario(usuariosDeExemplo).setVisible(true);
 //        });
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//ServiceManager serviceManager = new ServiceManager("Arquivos");
+//    ServiceUsuario serviceUsuario = serviceManager.getServiceUsuario();
+//    ServiceLoja serviceLoja = serviceManager.getServiceLoja();
+//    List<Usuario> usuarios = serviceUsuario.getUsuarios();
+//    Franquia franquia = new Franquia("lerdadasdasdasddddo", "leroasdaasdsassddddo", "leroddasdadasdlero");
+//    Loja loja = new Loja("lerdasdasdaadasdadsasdo", "leasdasdasdasdsasdsaro", franquia.getId());
+//        serviceManager.getServiceLoja().addLoja(loja, franquia);
+//        for (Usuario usuario : usuarios) {
+//        loja.addUsuarioID(usuario.getId());
+//    }
+//
+//    InterfaceGerenciarFranquia interfaceGerenciarFranquia = new InterfaceGerenciarFranquia(serviceManager);
+//    //InterfaceGerenciarUsuario interfaceGerenciarUsuario = new InterfaceGerenciarUsuario(loja, serviceManager, franquia);
+//    // interfaceGerenciarUsuario.setVisible(true);
+//    InterfaceGerenciarLojas interfaceGerenciarLojas = new InterfaceGerenciarLojas(serviceManager, franquia);
+//        interfaceGerenciarLojas.setVisible(true);

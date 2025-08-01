@@ -16,6 +16,10 @@ public class Pedido {
         this.id = UUID.randomUUID().toString();
     }
 
+    public Pedido(){
+
+    }
+
     public void setIdLoja(String idLoja) {
         this.idLoja = idLoja;
     }

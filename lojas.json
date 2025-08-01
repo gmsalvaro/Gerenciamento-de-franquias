@@ -1,0 +1,9 @@
+[ {
+  "id" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
+  "nome" : "Loja Central",
+  "endereco" : "Av. B, 2",
+  "franquiaId" : "546e5a7c-1b4f-4deb-8d55-2b9931e1e234",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ "15d1e1bc-7569-42d7-968c-393ddbfb5086", "41f32fc6-b54a-4908-9792-902cbd6dc035", "9e06f704-e0dd-4aed-a1a2-a9a4e7aeca12", "06cc1987-d5ab-453c-b18f-4de19f41dc3b" ]
+} ]

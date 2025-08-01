@@ -48,7 +48,7 @@ public class ServiceLoja {
         }
     }
 
-    public List<Loja> listarLojas() {
+    public List<Loja> listarTodasAsLojas() {
         return new ArrayList<>(lojasMap.values());
     }
 
