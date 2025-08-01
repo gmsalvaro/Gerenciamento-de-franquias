@@ -25,7 +25,7 @@ public class ServiceUsuario{
     private ValidadorCPF validadorCPF;
     private ValidadorSenha validadorSenha;
 
-    public ServiceUsuario(String FILE_USUARIOS)  {
+    public ServiceUsuario(String FILE_USUARIOS) throws PersistenciaException{
         this.FILE_USUARIOS = FILE_USUARIOS;
         this.dadosUsuarios = new DadosUsuario(FILE_USUARIOS);
         this.usuarioMap = dadosUsuarios.getUsuariosMap();
@@ -51,17 +51,15 @@ public class ServiceUsuario{
         return new ArrayList<>(usuarioMap.values());
     }
 
-    public void addUsuario(Usuario usuario) throws ValidacaoUsuarioException, SenhaInvalidaException {
+    public void addUsuario(Usuario usuario) throws ValidacaoUsuarioException {
 
         try{
             validadorCPF.validar(usuario.getCpf());
             validadorEmail.validar(usuario.getEmail());
-            validadorSenha.validar(usuario.getSenha());
-        }catch(CPFInvalidoException | EmailInvalidoException | SenhaInvalidaException e){
+        }catch(CPFInvalidoException | EmailInvalidoException e){
             switch(e){
                 case CPFInvalidoException cpfE -> throw new CPFInvalidoException("CPF invalido");
                 case EmailInvalidoException emailE -> throw new EmailInvalidoException("Email invalido");
-                case SenhaInvalidaException senhaE -> throw new SenhaInvalidaException("Senha invalida");
                 default -> throw new IllegalStateException("ERRO INESPERADO: " + e.getMessage());
             }
         }
@@ -80,8 +78,12 @@ public class ServiceUsuario{
             }
         }
 
-        dadosUsuarios.adicionar(usuario);
-        this.usuarioMap = dadosUsuarios.getUsuariosMap();
+        try{
+            dadosUsuarios.adicionar(usuario);
+            this.usuarioMap = dadosUsuarios.getUsuariosMap();
+        } catch(PersistenciaException e){
+            throw new ValidacaoUsuarioException("Nao foi possivel adicionar o usuario!");
+        }
     }
 
     public void removeUsuario(Usuario usuario) throws PersistenciaException {

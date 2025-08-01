@@ -1,7 +1,7 @@
 package Model;
 import java.util.UUID;
 
-public  class Usuario {
+public  class Usuario implements Entidade {
     private String id;
     private String nome;
     private String email;
@@ -24,9 +24,12 @@ public  class Usuario {
     }
 
     // Getters e Setters
+    @Override
     public String getId() {
         return id;
     }
+
+
     public void setId(String id) {
         this.id = id;
     }

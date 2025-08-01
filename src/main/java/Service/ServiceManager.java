@@ -14,11 +14,11 @@ public class ServiceManager {
     private final ServiceFranquia serviceFranquia;
 
     public ServiceManager(String basePath) throws PersistenciaException {
-        this.serviceUsuario = new ServiceUsuario( "usuario.json");
-        this.serviceLoja = new ServiceLoja( "lojas.json");
-        this.serviceProduto = new ServiceProduto( "produtos.json");
-        this.servicePedido = new ServicePedido("pedidos.json");
-        this.serviceFranquia = new ServiceFranquia("franquia.json");
+        this.serviceUsuario = new ServiceUsuario(basePath + "usuario.json");
+        this.serviceLoja = new ServiceLoja( basePath + "lojas.json");
+        this.serviceProduto = new ServiceProduto( basePath + "produtos.json");
+        this.servicePedido = new ServicePedido(basePath + "pedidos.json");
+        this.serviceFranquia = new ServiceFranquia(basePath + "franquia.json");
     }
 
     public ServiceFranquia getServiceFranquia() {

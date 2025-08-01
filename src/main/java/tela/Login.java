@@ -3,6 +3,7 @@ package tela;
 import Dados.DadosUsuario;
 import Model.Gerente;
 import Model.Usuario;
+import exception.persistencia.PersistenciaException;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -17,7 +18,7 @@ public class Login extends JFrame {
     private JTextField insereEmail;
     private JPasswordField insereSenha;
 
-    public Login(String caminhoUsuario, GerenciaFluxoLogin gerenciaFluxoLogin) {
+    public Login(String caminhoUsuario, GerenciaFluxoLogin gerenciaFluxoLogin) throws PersistenciaException {
         this.dadosUsuario = new DadosUsuario(caminhoUsuario);
         this.gerenciaFluxoLogin = gerenciaFluxoLogin;
 
@@ -98,30 +99,36 @@ public class Login extends JFrame {
     }
 
 
-    private void verificarLogin(ActionEvent e) {
-        String email = insereEmail.getText();
-        String senha = new  String(insereSenha.getPassword());
+    private void verificarLogin(ActionEvent e)  {
 
-        Usuario usuarioEncontrado = null ;
-        List<Usuario> listaUsuarios = dadosUsuario.listarTodas() ;
+        try{
 
-        for (Usuario usuario : listaUsuarios) {
-            if (email.equals(usuario.getEmail()) && senha.equals(usuario.getSenha())) {
-                usuarioEncontrado = usuario;
-                break;
+            String email = insereEmail.getText();
+            String senha = new  String(insereSenha.getPassword());
+
+            Usuario usuarioEncontrado = null ;
+            List<Usuario> listaUsuarios = dadosUsuario.getAll() ;
+
+            for (Usuario usuario : listaUsuarios) {
+                if (email.equals(usuario.getEmail()) && senha.equals(usuario.getSenha())) {
+                    usuarioEncontrado = usuario;
+                    break;
+                }
             }
-        }
 
-        if (usuarioEncontrado != null) {
-            JOptionPane.showMessageDialog(this, "Bem-vindo, " + usuarioEncontrado.getNome() + "!");
-            this.gerenciaFluxoLogin.sucessoLogin(usuarioEncontrado);
+            if (usuarioEncontrado != null) {
+                JOptionPane.showMessageDialog(this, "Bem-vindo, " + usuarioEncontrado.getNome() + "!");
+                this.gerenciaFluxoLogin.sucessoLogin(usuarioEncontrado);
 
-            this.dispose();
-        }
-        else{
-            JOptionPane.showMessageDialog(this,"Usuario ou senhas incorretas!");
-            insereEmail.setText("");
-            insereSenha.setText("");
+                this.dispose();
+            }
+            else{
+                JOptionPane.showMessageDialog(this,"Usuario ou senhas incorretas!");
+                insereEmail.setText("");
+                insereSenha.setText("");
+            }
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(this, erro.getMessage());
         }
     }
 

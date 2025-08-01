@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class Pedido implements Serializable {
+public class Pedido implements Serializable, Entidade {
 
     private String id;
     private String idLoja;
@@ -23,7 +23,7 @@ public class Pedido implements Serializable {
         this.status = status;
     }
 
-
+    @Override
     public String getId() {
         return id;
     }

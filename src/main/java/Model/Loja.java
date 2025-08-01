@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Loja {
+public class Loja implements Entidade{
     private String id;
     private String nome;
     private String endereco;
@@ -39,6 +39,7 @@ public class Loja {
         idUsuario.remove(id);
     }
 
+    @Override
     public String getId() {
         return id;
     }

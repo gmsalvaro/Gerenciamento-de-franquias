@@ -20,8 +20,8 @@ public class Main {
        ServiceUsuario serviceUsuario = serviceManager.getServiceUsuario();
        ServiceLoja serviceLoja = serviceManager.getServiceLoja();
         List<Usuario> usuarios = serviceUsuario.getUsuarios();
-        Franquia franquia = new Franquia("lerdadasdadddo", "asdaasdsassddddo", "leroddasdadasd");
-        Loja loja = new Loja("lerdasdasdaadasdo", "leasdasdasdsasdsaro", franquia.getId());
+        Franquia franquia = new Franquia("lerdadasdadd", "asdadsassddddo", "lerosdadasd");
+        Loja loja = new Loja("lerdasdaaadasdo", "leasdasdasdsasdsa", franquia.getId());
         serviceManager.getServiceLoja().addLoja(loja, franquia);
         for (Usuario usuario : usuarios) {
             loja.addUsuarioID(usuario.getId());

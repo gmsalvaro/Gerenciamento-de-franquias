@@ -2,6 +2,7 @@ package tela;
 
 import Model.Franquia;
 import Model.Loja;
+import Model.Dono;
 import Model.Usuario;
 import Model.Vendedor;
 import Model.Gerente; // Importar Gerente
@@ -203,7 +204,7 @@ public class InterfaceGerenciarUsuario extends JFrame {
 
             Usuario novoUsuario;
             if ("Dono".equals(tipoSelecionado)) {
-                novoUsuario = new Gerente(nome, email, telefone, cpf);
+                novoUsuario = new Dono(nome, email, telefone, cpf);
             } else if ("Gerente".equals(tipoSelecionado)) {
                 novoUsuario = new Gerente(nome, email, telefone, cpf);
             } else { // Vendedor
@@ -218,7 +219,7 @@ public class InterfaceGerenciarUsuario extends JFrame {
                 JOptionPane.showMessageDialog(this, "Usuário '" + nome + "' adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 listModel.addElement(novoUsuario);
 
-            } catch (PersistenciaException | SenhaInvalidaException | ValidacaoUsuarioException e) {
+            } catch (PersistenciaException | ValidacaoUsuarioException e) {
                 JOptionPane.showMessageDialog(this, "Erro ao adicionar usuário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
