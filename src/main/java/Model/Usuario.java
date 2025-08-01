@@ -17,7 +17,7 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = Vendedor.class, name = "vendedor")
 })
 
-public  class Usuario {
+public abstract class Usuario {
     private String id;
     private String nome;
     private String email;

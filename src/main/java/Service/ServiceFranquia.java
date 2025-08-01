@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class ServiceFranquia {
+public class    ServiceFranquia {
     String FILE_FRANQUIA;
     DadosFranquias dadosFranquias;
     Map<String, Franquia> franquiasMap;

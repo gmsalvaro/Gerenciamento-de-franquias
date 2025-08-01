@@ -8,6 +8,7 @@ import Service.ServiceUsuario;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import exception.persistencia.PersistenciaException;
+import exception.usuario.ValidacaoUsuarioException;
 import tela.*;
 
 import javax.swing.*;
@@ -73,7 +74,7 @@ public class Main {
             Dono dono = new Dono("alvaro", "alvaro@gmail.com", "teste", "12345678");
             sm.getServiceUsuario().addUsuario(dono);
             System.out.println("Usuário Dono 'alvaro' criado.");
-        } catch (PersistenciaException e) {
+        } catch (ValidacaoUsuarioException e) {
             // Se o usuário já existe, o addUsuario lança uma exceção. A gente ignora e continua.
             System.out.println("Usuário Dono 'alvaro' já existe, pulando criação.");
         }
@@ -87,7 +88,7 @@ public class Main {
             sm.getServiceLoja().atualizarLoja(loja); // Salva a associação na loja
             System.out.println("Usuário Gerente 'Pedro' criado e associado à Loja.");
 
-        } catch (PersistenciaException e) {
+        } catch (PersistenciaException | ValidacaoUsuarioException e) {
             System.out.println("Usuário Gerente 'Pedro' já existe, pulando criação.");
         }
     }

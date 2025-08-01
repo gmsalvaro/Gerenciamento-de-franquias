@@ -4,7 +4,7 @@ public class Gerente extends Usuario{
     private String idloja;
 
     public Gerente() {
-        super(); //contrsutor vazio pra leitura do JSON
+         //contrsutor vazio para o JSON
     }
 
     public Gerente(String nome, String email, String senha, String cpf) {

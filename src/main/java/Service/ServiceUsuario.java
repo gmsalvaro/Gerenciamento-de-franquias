@@ -51,7 +51,7 @@ public class ServiceUsuario{
         return new ArrayList<>(usuarioMap.values());
     }
 
-    public void addUsuario(Usuario usuario) throws ValidacaoUsuarioException, SenhaInvalidaException {
+    public void addUsuario(Usuario usuario) throws ValidacaoUsuarioException {
 
         try{
             validadorCPF.validar(usuario.getCpf());
@@ -61,7 +61,7 @@ public class ServiceUsuario{
             switch(e){
                 case CPFInvalidoException cpfE -> throw new CPFInvalidoException("CPF invalido");
                 case EmailInvalidoException emailE -> throw new EmailInvalidoException("Email invalido");
-                case SenhaInvalidaException senhaE -> throw new SenhaInvalidaException("Senha invalida");
+                //case SenhaInvalidaException senhaE -> throw new SenhaInvalidaException("Senha invalida");
                 default -> throw new IllegalStateException("ERRO INESPERADO: " + e.getMessage());
             }
         }

@@ -7,4 +7,6 @@ public class Dono extends Usuario {
 
     @Override
     public int getPermissao() {return 1;}
+
+    public Dono (){} //construtor vazio para o JSON
 }

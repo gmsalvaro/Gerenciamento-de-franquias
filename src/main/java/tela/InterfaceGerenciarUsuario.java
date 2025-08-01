@@ -218,7 +218,7 @@ public class InterfaceGerenciarUsuario extends JFrame {
                 JOptionPane.showMessageDialog(this, "Usuário '" + nome + "' adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 listModel.addElement(novoUsuario);
 
-            } catch (PersistenciaException | SenhaInvalidaException | ValidacaoUsuarioException e) {
+            } catch (PersistenciaException | ValidacaoUsuarioException e) {
                 JOptionPane.showMessageDialog(this, "Erro ao adicionar usuário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
