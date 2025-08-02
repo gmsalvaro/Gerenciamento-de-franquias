@@ -11,7 +11,7 @@ import exception.usuario.CPFInvalidoException;
 import exception.usuario.EmailInvalidoException;
 import exception.usuario.UsuarioJaExistenteException;
 import exception.usuario.ValidacaoUsuarioException;
-
+import Model.Vendedor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,7 +124,28 @@ public class ServiceUsuario{
         return usuarioMap.get(idUsuario);
     }
 
+    public void rebaixarGerenteParaVendedor(Gerente gerente) throws Exception {
+        if (gerente == null) {
+            throw new IllegalArgumentException("Gerente não pode ser nulo.");
+        }
 
+        // 1. Cria um novo objeto Vendedor com os dados do Gerente
+        Vendedor novoVendedor = new Vendedor(
+                gerente.getNome(),
+                gerente.getEmail(),
+                gerente.getSenha(),
+                gerente.getCpf()
+        );
+        // Garante que o novo vendedor tenha um ID diferente, ou reutilize o mesmo se preferir
+        // Para simplificar, vamos manter o ID, mas precisamos de um setId no Usuario.
+        // Se não tiver, o construtor do Vendedor já cria um novo ID.
+
+        // 2. Adiciona o novo Vendedor ao sistema
+        this.addUsuario(novoVendedor);
+
+        // 3. Remove o antigo registro de Gerente
+        this.removeUsuario(gerente); // Supondo que você tenha um método que remove por objeto ou ID
+    }
 
 
 

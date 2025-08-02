@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import Model.Franquia;
+import Model.Gerente;
 import Model.Usuario;
 import Service.*;
 
@@ -35,6 +36,9 @@ public class InterfaceDono extends PainelPrincipal {
         JButton btnFranquias = criarBotaoMenu("Gerenciar Franquias");
         sidebar.add(btnFranquias);
 
+        JButton btnGerentes = criarBotaoMenu("Administrar Gerentes");
+        sidebar.add(btnGerentes);
+
         sidebar.add(Box.createVerticalGlue());
         JButton btnSair = criarBotaoMenu("Sair");
         sidebar.add(btnSair);
@@ -45,6 +49,189 @@ public class InterfaceDono extends PainelPrincipal {
             this.dispose();
             // Lógica para voltar ao Login
         });
+
+
+        btnGerentes.addActionListener(e -> mostrarGerentes());
+
+    }
+
+
+    private void mostrarGerentes() {
+        configurarPainelConteudo("Administrar Gerentes");
+        painelConteudo.setLayout(new BorderLayout(10, 10));
+
+        // Painel para a lista de cards de gerentes
+        JPanel painelListaCards = new JPanel();
+        painelListaCards.setLayout(new BoxLayout(painelListaCards, BoxLayout.Y_AXIS));
+        painelListaCards.setBackground(Color.WHITE);
+        painelListaCards.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        List<Gerente> gerentes = serviceManager.getServiceUsuario().listarGerentes();
+
+        if (gerentes.isEmpty()) {
+            painelListaCards.add(new JLabel("Nenhum gerente cadastrado."));
+        } else {
+            for (Gerente gerente : gerentes) {
+                painelListaCards.add(criarCardGerente(gerente));
+                painelListaCards.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
+        }
+
+        JScrollPane scrollPane = new JScrollPane(painelListaCards);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        painelConteudo.add(scrollPane, BorderLayout.CENTER);
+
+        // Painel inferior com os botões de ação
+        JPanel painelBotoesAcao = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        JButton btnAdicionar = new JButton("Adicionar Gerente");
+        JButton btnRemover = new JButton("Remover Gerente");
+        JButton btnRebaixar = new JButton("Rebaixar para Vendedor");
+
+        painelBotoesAcao.add(btnAdicionar);
+        painelBotoesAcao.add(btnRemover);
+        painelBotoesAcao.add(btnRebaixar);
+
+        painelConteudo.add(painelBotoesAcao, BorderLayout.SOUTH);
+
+        // Adiciona as ações aos botões
+        btnAdicionar.addActionListener(e -> acaoAdicionarGerente());
+        btnRemover.addActionListener(e -> acaoRemoverGerente(gerentes));
+        btnRebaixar.addActionListener(e -> acaoRebaixarGerente(gerentes));
+
+        painelConteudo.revalidate();
+        painelConteudo.repaint();
+    }
+
+    private JPanel criarCardGerente(Gerente gerente) {
+        JPanel card = new JPanel(new BorderLayout(10, 10));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+        card.setBackground(new Color(245, 245, 245));
+        // ... (estilização do card)
+
+        JPanel painelInfo = new JPanel();
+        painelInfo.setLayout(new BoxLayout(painelInfo, BoxLayout.Y_AXIS));
+        painelInfo.setOpaque(false);
+
+        painelInfo.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+
+        JLabel lblNome = new JLabel(gerente.getNome());
+        lblNome.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblNome.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelInfo.add(lblNome);
+
+        JLabel lblEmail = new JLabel(gerente.getEmail());
+        lblEmail.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblEmail.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelInfo.add(lblEmail);
+
+        // Mostra a loja que ele gerencia
+        String statusLoja = serviceManager.getServiceLoja().buscarStatusLojaPorGerente(gerente);
+        String textoLoja = "Loja: " + (statusLoja.equals("Gerente disponível") ? "Nenhuma" : statusLoja);
+
+        JLabel lblLoja = new JLabel(textoLoja);
+        lblLoja.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblLoja.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelInfo.add(lblLoja);
+
+
+        JLabel lblFranquiaGerente = new JLabel((serviceManager.getServiceFranquia().getFranquiaDoGerente(gerente, serviceManager.getServiceLoja())).getNome());
+        lblFranquiaGerente.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblFranquiaGerente.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelInfo.add(lblFranquiaGerente);
+
+        card.add(painelInfo, BorderLayout.CENTER);
+        return card;
+    }
+
+    private void acaoAdicionarGerente() {
+        JTextField txtNome = new JTextField();
+        JTextField txtEmail = new JTextField();
+        JTextField txtCpf = new JTextField();
+        JPasswordField txtSenha = new JPasswordField();
+
+        JPanel painelFormulario = new JPanel(new GridLayout(0, 1, 5, 5));
+        painelFormulario.add(new JLabel("Nome:"));
+        painelFormulario.add(txtNome);
+        painelFormulario.add(new JLabel("Email:"));
+        painelFormulario.add(txtEmail);
+        painelFormulario.add(new JLabel("CPF:"));
+        painelFormulario.add(txtCpf);
+        painelFormulario.add(new JLabel("Senha:"));
+        painelFormulario.add(txtSenha);
+
+        int resultado = JOptionPane.showConfirmDialog(this, painelFormulario, "Adicionar Novo Gerente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (resultado == JOptionPane.OK_OPTION) {
+            try {
+                Gerente novoGerente = new Gerente(txtNome.getText(), txtEmail.getText(), new String(txtSenha.getPassword()), txtCpf.getText());
+                serviceManager.getServiceUsuario().addUsuario(novoGerente);
+                JOptionPane.showMessageDialog(this, "Gerente adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                mostrarGerentes(); // Atualiza a tela
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao adicionar gerente: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void acaoRemoverGerente(List<Gerente> gerentes) {
+        if (gerentes.isEmpty()) { /* ... (mesma lógica do acaoRemoverLoja) ... */ return; }
+        JComboBox<Gerente> comboBox = new JComboBox<>(gerentes.toArray(new Gerente[0]));
+
+        comboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Gerente) {
+                    // Se o objeto na lista for um Gerente, define o texto do item para o nome dele
+                    setText(((Gerente) value).getNome());
+                }
+                return this;
+            }
+        });
+
+        // ... (configurar o renderer do comboBox)
+        int resultado = JOptionPane.showConfirmDialog(this, comboBox, "Selecione o Gerente para Remover", JOptionPane.OK_CANCEL_OPTION);
+        if (resultado == JOptionPane.OK_OPTION) {
+            // Lógica de confirmação e chamada ao serviceManager.getServiceUsuario().removeUsuario(...)
+            // Depois, chamar mostrarGerentes() para atualizar a tela
+        }
+    }
+
+    private void acaoRebaixarGerente(List<Gerente> gerentes) {
+        if (gerentes.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Não há gerentes para rebaixar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        JComboBox<Gerente> comboBox = new JComboBox<>(gerentes.toArray(new Gerente[0]));
+
+        // --- AQUI ESTÁ A CORREÇÃO ---
+        // Configura o renderer para exibir o nome do gerente em vez do "código"
+        comboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Gerente) {
+                    // Se o objeto na lista for um Gerente, define o texto do item para o nome dele
+                    setText(((Gerente) value).getNome());
+                }
+                return this;
+            }
+        });
+        // --- FIM DA CORREÇÃO ---
+
+        int resultado = JOptionPane.showConfirmDialog(this, comboBox, "Selecione o Gerente para Rebaixar", JOptionPane.OK_CANCEL_OPTION);
+        if (resultado == JOptionPane.OK_OPTION) {
+            Gerente gerenteSelecionado = (Gerente) comboBox.getSelectedItem();
+            if (gerenteSelecionado == null) return; // Garante que algo foi selecionado
+
+            try {
+                serviceManager.getServiceUsuario().rebaixarGerenteParaVendedor(gerenteSelecionado);
+                JOptionPane.showMessageDialog(this, "Gerente rebaixado para Vendedor com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                mostrarGerentes(); // Atualiza a tela
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro ao rebaixar gerente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
 
@@ -106,27 +293,47 @@ public class InterfaceDono extends PainelPrincipal {
      */
     private JPanel criarCardFranquia(Franquia franquia) {
         JPanel card = new JPanel(new BorderLayout(10, 10));
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60)); // Altura fixa para os cards
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
         card.setBackground(new Color(245, 245, 245));
 
-        // Borda estilizada para o card
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         Border bordaLinha = BorderFactory.createLineBorder(new Color(200, 200, 200));
         card.setBorder(BorderFactory.createCompoundBorder(bordaLinha, padding));
 
-        // Nome da franquia
+        // --- AQUI ESTÁ A MUDANÇA ---
+
+        // 1. Cria um painel para agrupar as informações da esquerda (nome e n° de lojas)
+        JPanel painelInfo = new JPanel();
+        painelInfo.setLayout(new BoxLayout(painelInfo, BoxLayout.Y_AXIS)); // Layout vertical
+        painelInfo.setOpaque(false); // Fundo transparente
+
+        // 2. Adiciona o nome da franquia a este novo painel
         JLabel lblNome = new JLabel(franquia.getNome());
         lblNome.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        card.add(lblNome, BorderLayout.CENTER);
+        lblNome.setAlignmentX(Component.LEFT_ALIGNMENT); // Alinha à esquerda
+        painelInfo.add(lblNome);
 
-        // Botão para gerenciar a franquia específica
+        // 3. Adiciona o número de lojas a este novo painel, debaixo do nome
+        String textoLojas = franquia.getIdLojas().size() + " loja(s) cadastrada(s)";
+        JLabel labelLojas = new JLabel(textoLojas);
+        labelLojas.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        labelLojas.setAlignmentX(Component.LEFT_ALIGNMENT); // Alinha à esquerda
+        painelInfo.add(labelLojas);
+
+        // 4. Adiciona o painel de informações ao CENTRO do card principal
+        card.add(painelInfo, BorderLayout.CENTER);
+
+        // 5. O botão "Gerenciar" agora fica sozinho na região LESTE
         JButton btnGerenciar = new JButton("Gerenciar");
-        card.add(btnGerenciar, BorderLayout.EAST);
-
-        // Ação do botão "Gerenciar"
         btnGerenciar.addActionListener(e -> {
             new InterfaceGerenciarLojas(serviceManager, franquia);
         });
+
+        // Para centralizar o botão verticalmente, o colocamos dentro de outro painel
+        JPanel painelBotao = new JPanel(new GridBagLayout());
+        painelBotao.setOpaque(false);
+        painelBotao.add(btnGerenciar);
+        card.add(painelBotao, BorderLayout.EAST);
 
         return card;
     }

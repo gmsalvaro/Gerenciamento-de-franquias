@@ -108,4 +108,19 @@ public class    ServiceFranquia {
         } else
             throw new LojaNaoAtualizadaException("ERRO: não foi possível atualizar a loja!");
     }
+
+    public Franquia getFranquiaDoGerente(Usuario gerente, ServiceLoja serviceloja) {
+
+        if (!(gerente instanceof Gerente))
+            return null;
+
+        for (Loja loja : serviceloja.listarTodasAsLojas()) {
+            if (loja.getIdsUsuarios() != null && loja.getIdsUsuarios().contains(gerente.getId()))
+                return this.buscarPorId(loja.getFranquiaId());
+
+        }
+
+        return null;
+    }
+
 }
