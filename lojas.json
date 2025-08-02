@@ -5,7 +5,7 @@
   "franquiaId" : "546e5a7c-1b4f-4deb-8d55-2b9931e1e234",
   "idPedidos" : [ ],
   "idProdutos" : [ ],
-  "idsUsuarios" : [ "acdb679f-f383-4feb-8da5-8a1522b61cf1", "c658e276-3cf6-42f0-a58b-f326ae8b9f76", "4773d15b-6468-4c50-ad7a-73596de5d714" ]
+  "idsUsuarios" : [ "acdb679f-f383-4feb-8da5-8a1522b61cf1", "c658e276-3cf6-42f0-a58b-f326ae8b9f76", "12c38747-73b9-4b07-802f-d4dd9fa0f3d1" ]
 }, {
   "id" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
   "nome" : "Loja Central",
@@ -13,5 +13,5 @@
   "franquiaId" : "546e5a7c-1b4f-4deb-8d55-2b9931e1e234",
   "idPedidos" : [ ],
   "idProdutos" : [ ],
-  "idsUsuarios" : [ "15d1e1bc-7569-42d7-968c-393ddbfb5086", "41f32fc6-b54a-4908-9792-902cbd6dc035", "9e06f704-e0dd-4aed-a1a2-a9a4e7aeca12", "06cc1987-d5ab-453c-b18f-4de19f41dc3b", "958e63ba-f6c7-437f-ac82-f3e705ed6fbe", "493797a5-2d83-4e5a-a355-2d7067e66fb5", "acdb679f-f383-4feb-8da5-8a1522b61cf1", "b0fb9b62-9f2b-438b-bde7-e7d95bef27b7", "08f998da-123f-4eb1-b18a-59d53dc67fb0" ]
+  "idsUsuarios" : [ "15d1e1bc-7569-42d7-968c-393ddbfb5086", "41f32fc6-b54a-4908-9792-902cbd6dc035", "9e06f704-e0dd-4aed-a1a2-a9a4e7aeca12", "06cc1987-d5ab-453c-b18f-4de19f41dc3b", "958e63ba-f6c7-437f-ac82-f3e705ed6fbe", "493797a5-2d83-4e5a-a355-2d7067e66fb5", "acdb679f-f383-4feb-8da5-8a1522b61cf1", "b0fb9b62-9f2b-438b-bde7-e7d95bef27b7", "4773d15b-6468-4c50-ad7a-73596de5d714", "08f998da-123f-4eb1-b18a-59d53dc67fb0" ]
 } ]
