@@ -49,7 +49,8 @@ public class ServiceProduto {
         return produtosMap;
     }
 
-    public Produto getProdutoById(String idProduto) {
+    public Produto getProdutoById(String idProduto) throws PersistenciaException
+    {
         return produtosMap.get(idProduto);
     }
 

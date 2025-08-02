@@ -47,6 +47,8 @@ public abstract class Usuario {
         this.id = id;
     }
 
+
+
     public void setPermissao(int permissao) {
         this.permissao = permissao;
     }
@@ -89,5 +91,4 @@ public abstract class Usuario {
         return telefone;
     }
 
-    ;
 }

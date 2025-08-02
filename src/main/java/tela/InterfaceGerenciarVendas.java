@@ -5,6 +5,7 @@ import Model.Pedido;
 import Model.Produto;
 import Service.ServiceManager;
 import Service.serviceEstoque;
+import Model.formaPagamento;
 import exception.persistencia.PersistenciaException;
 
 import javax.swing.*;
@@ -30,6 +31,10 @@ public class InterfaceGerenciarVendas extends JFrame {
     private JButton btnRemoverCarrinho;
     private JButton btnFinalizarCompra;
     private JButton btnCancelar;
+
+    // --- NOVO: Componente para seleção da forma de pagamento ---
+    private JComboBox<formaPagamento> comboFormaPagamento;
+    // -------------------------------------------------------------
 
     // Map para armazenar os itens no carrinho: ID_Produto -> Quantidade
     private Map<String, Integer> carrinhoDeCompras;
@@ -102,8 +107,15 @@ public class InterfaceGerenciarVendas extends JFrame {
         painelCarrinho.add(painelRemover, BorderLayout.SOUTH);
 
 
-        // --- Painel de Botões Inferiores ---
+        // --- Painel de Botões Inferiores (com seleção de pagamento) ---
         JPanel painelBotoesFinais = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+
+        // --- NOVO: Adicionar a seleção da forma de pagamento ---
+        painelBotoesFinais.add(new JLabel("Forma de Pagamento:"));
+        comboFormaPagamento = new JComboBox<>(formaPagamento.values()); // Popula o JComboBox com os valores do enum
+        painelBotoesFinais.add(comboFormaPagamento);
+        // -------------------------------------------------------------
+
         btnFinalizarCompra = new JButton("Finalizar Compra");
         btnCancelar = new JButton("Cancelar");
         painelBotoesFinais.add(btnFinalizarCompra);
@@ -217,7 +229,14 @@ public class InterfaceGerenciarVendas extends JFrame {
         int confirm = JOptionPane.showConfirmDialog(this, "Confirmar a finalização da compra?", "Finalizar Compra", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                Pedido novoPedido = estoqueService.finalizarCompra(carrinhoDeCompras);
+                // --- NOVO: Obter a forma de pagamento selecionada ---
+                formaPagamento pagamentoSelecionado = (formaPagamento) comboFormaPagamento.getSelectedItem();
+                // -------------------------------------------------------------
+
+                // --- MODIFICADO: Passar a forma de pagamento para o método ---
+                Pedido novoPedido = estoqueService.finalizarCompra(carrinhoDeCompras, pagamentoSelecionado);
+                // -------------------------------------------------------------
+
                 JOptionPane.showMessageDialog(this, "Compra finalizada com sucesso! Pedido ID: " + novoPedido.getId(), "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
                 carrinhoDeCompras.clear();

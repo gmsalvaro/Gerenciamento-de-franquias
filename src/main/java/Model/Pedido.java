@@ -1,28 +1,31 @@
 package Model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 
 public class Pedido implements Serializable {
 
     private String id;
     private String idLoja;
     private Map<String, Integer> produtosNoPedido;
-    private Date dataPedido;
-    private String status;
+    private String dataPedido;
+    private StatusPedido status;
+    private formaPagamento formaPagamento;
 
-    public Pedido() {
+    public Pedido(String id, Map<String, Integer> produtosNoPedido, String pendente) {
         // necessário para a desserialização JSON via Jackson
     }
 
-    public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, String status) {
+    public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Instant datapedido, StatusPedido status, formaPagamento formaPagamento) {
         this.id = UUID.randomUUID().toString();
         this.idLoja = idLoja;
         this.produtosNoPedido = new HashMap<>(produtosNoPedido);
-        this.dataPedido = dataPedido;
+        this.dataPedido = datapedido.toString();
+        this.formaPagamento = formaPagamento;
         this.status = status;
     }
 
@@ -39,15 +42,19 @@ public class Pedido implements Serializable {
         return new HashMap<>(produtosNoPedido);
     }
 
-    public Date getDataPedido() {
+    public String getDataPedido() {
         return dataPedido;
     }
 
-    public String getStatus() {
+    public StatusPedido getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public  formaPagamento getFormaPagamento() {
+        return formaPagamento;
+    }
+
+    public void setStatus(StatusPedido status) {
         this.status = status;
     }
 

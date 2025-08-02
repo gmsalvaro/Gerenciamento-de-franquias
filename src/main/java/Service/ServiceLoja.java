@@ -75,7 +75,7 @@ public class ServiceLoja {
         }
     }
 
-    public Loja getLojaById(String idLoja) {
+    public Loja getLojaById(String idLoja) throws PersistenciaException {
         return lojasMap.get(idLoja);
     }
 }
