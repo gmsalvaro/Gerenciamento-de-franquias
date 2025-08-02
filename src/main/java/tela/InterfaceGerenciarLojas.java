@@ -123,7 +123,7 @@ public class InterfaceGerenciarLojas extends JFrame {
                 JLabel labelNumeroPedidos = new JLabel("<html><b>Número de Pedidos:</b> " + numeroPedidos + "</html>");
                 labelNumeroPedidos.setFont(new Font("Arial", Font.PLAIN, 12));
 
-                JLabel labelArrecadacao = new JLabel("<html><b>Arrecadação Total:</b> A calcular...</html>"); // criar função depois no Service !
+                JLabel labelArrecadacao = new JLabel("<html><b>Arrecadação Total:</b> </html>"); // criar função depois no Service !
                 labelArrecadacao.setFont(new Font("Arial", Font.PLAIN, 12));
 
 
@@ -153,14 +153,18 @@ public class InterfaceGerenciarLojas extends JFrame {
                 btnGerenciarProdutos.setPreferredSize(new Dimension(160, 30));
                 btnGerenciarProdutos.setAlignmentX(Component.CENTER_ALIGNMENT);
                 btnGerenciarProdutos.addActionListener(e -> {
-                    JOptionPane.showMessageDialog(this, "Funcionalidade de Gerenciar Produtos em construção.", "Em Breve", JOptionPane.INFORMATION_MESSAGE);
+                    try {
+                        new InterfaceGerenciarEstoque(serviceManager, lojaAtual);
+                    } catch (PersistenciaException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 });
 
                 JButton btnGerenciarPedidos = new JButton("Gerenciar Pedidos");
                 btnGerenciarPedidos.setPreferredSize(new Dimension(160, 30));
                 btnGerenciarPedidos.setAlignmentX(Component.CENTER_ALIGNMENT);
                 btnGerenciarPedidos.addActionListener(e -> {
-                    JOptionPane.showMessageDialog(this, "Funcionalidade de Gerenciar Pedidos em construção.", "Em Breve", JOptionPane.INFORMATION_MESSAGE);
+                    new InterfaceGerenciarPedidos(serviceManager, lojaAtual);
                 });
 
                 botoesPanel.add(btnGerenciarUsuarios);

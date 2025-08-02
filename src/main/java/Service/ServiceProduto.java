@@ -34,6 +34,17 @@ public class ServiceProduto {
         }
     }
 
+    public void removerProdutoID(String id) throws PersistenciaException {
+        if (id == null || !dadosProdutos.getProdutosMap().containsKey(id)) {
+            throw new PersistenciaException("Produto não encontrado para remoção.");
+        }
+
+        dadosProdutos.remover(id);
+        this.produtosMap = dadosProdutos.getProdutosMap();
+    }
+
+
+
     public Map<String, Produto> getProdutosMap() {
         return produtosMap;
     }
@@ -46,7 +57,7 @@ public class ServiceProduto {
         return new ArrayList<>(produtosMap.values());
     }
 
-    public List<Produto> listarPorIDLoja(String idLoja) {
+    public List<Produto> listarPorIDLoja(String idLoja) throws PersistenciaException {
         List<Produto> produtosDaLoja = new ArrayList<>();
         for(Produto p : produtosMap.values()) {
                 if(p.getIdLoja().equals(idLoja))
@@ -54,6 +65,9 @@ public class ServiceProduto {
             }
         return produtosDaLoja;
     }
+
+
+
 
     public void atualizarProduto(Produto produtoAtualizado) throws PersistenciaException {
         if (produtosMap.containsKey(produtoAtualizado.getId())) {

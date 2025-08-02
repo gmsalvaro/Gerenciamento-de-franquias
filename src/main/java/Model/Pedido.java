@@ -14,6 +14,9 @@ public class Pedido implements Serializable {
     private Date dataPedido;
     private String status;
 
+    public Pedido() {
+        // necessário para a desserialização JSON via Jackson
+    }
 
     public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, String status) {
         this.id = UUID.randomUUID().toString();
