@@ -1,6 +1,6 @@
 package tela;
 
-import Model.Gerente;
+import Model.Loja;
 import Model.Produto;
 import Model.Usuario;
 import Service.ServiceManager;
@@ -13,12 +13,18 @@ import java.util.List;
 
 public class InterfaceGerente extends PainelPrincipal {
     private final ServiceManager serviceManager;
-    private final Gerente gerente;
+    private final Usuario gerente;
 
-    public InterfaceGerente(ServiceManager serviceManager, Gerente gerente) {
-        super("Painel Gerente - " + gerente.getNome());
+    public InterfaceGerente(ServiceManager serviceManager, Usuario usuario) {
+        super("Painel Gerente - " + usuario.getNome());
         this.serviceManager = serviceManager;
-        this.gerente = gerente;
+
+        // Valida se o usuário tem permissão de gerente
+        if (usuario.getPermissao() == 2) {
+            this.gerente = usuario;
+        } else {
+            throw new IllegalArgumentException("O usuário fornecido não possui permissão de gerente.");
+        }
 
         setVisible(true);
         mostrarEstoqueDaLoja();
@@ -27,7 +33,9 @@ public class InterfaceGerente extends PainelPrincipal {
     private void mostrarEstoqueDaLoja() {
         configurarPainelConteudo("Estoque da Loja");
         try {
-            List<Produto> produtos = serviceManager.getServiceProduto().listarPorIDLoja(gerente.getIdloja());
+            Loja loja = serviceManager.getServiceLoja().getLojaByIDUsuario(gerente.getId());
+            List<Produto> produtos = serviceManager.getServiceProduto().listarPorIDLoja(loja.getId());
+
             if (produtos.isEmpty()) {
                 painelConteudo.add(new JLabel("Nenhum produto encontrado nesta loja."));
             } else {
@@ -44,6 +52,7 @@ public class InterfaceGerente extends PainelPrincipal {
                     painelLista.add(card);
                     painelLista.add(Box.createVerticalStrut(5));
                 }
+
                 JScrollPane scrollPane = new JScrollPane(painelLista);
                 painelConteudo.add(scrollPane, BorderLayout.CENTER);
             }
@@ -51,6 +60,7 @@ public class InterfaceGerente extends PainelPrincipal {
             JOptionPane.showMessageDialog(this, "Erro ao carregar o estoque: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             painelConteudo.add(new JLabel("Erro ao carregar o estoque."));
         }
+
         painelConteudo.revalidate();
         painelConteudo.repaint();
     }
@@ -65,12 +75,20 @@ public class InterfaceGerente extends PainelPrincipal {
     private void mostrarVendedoresDaLoja() {
         configurarPainelConteudo("Vendedores da Loja");
         try {
-            var loja = serviceManager.getServiceLoja().getLojaById(gerente.getIdloja());
+            Loja loja = serviceManager.getServiceLoja().getLojaByIDUsuario(gerente.getId());
+
             if (loja == null) {
                 painelConteudo.add(new JLabel("Erro: Loja não encontrada."));
                 return;
             }
-            List<Usuario> vendedores = serviceManager.getServiceUsuario().getUsuariosPorLoja(loja);
+
+            List<Usuario> usuarios = serviceManager.getServiceUsuario().getUsuariosPorLoja(loja);
+
+            // Filtra apenas os usuários com permissão de vendedor (ex: permissao == 2)
+            List<Usuario> vendedores = usuarios.stream()
+                    .filter(u -> u.getPermissao() == 2)
+                    .toList();
+
             if (vendedores.isEmpty()) {
                 painelConteudo.add(new JLabel("Nenhum vendedor encontrado para esta loja."));
             } else {
@@ -87,6 +105,7 @@ public class InterfaceGerente extends PainelPrincipal {
                     painelLista.add(card);
                     painelLista.add(Box.createVerticalStrut(5));
                 }
+
                 JScrollPane scrollPane = new JScrollPane(painelLista);
                 painelConteudo.add(scrollPane, BorderLayout.CENTER);
             }
@@ -94,6 +113,7 @@ public class InterfaceGerente extends PainelPrincipal {
             JOptionPane.showMessageDialog(this, "Erro ao carregar os vendedores: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             painelConteudo.add(new JLabel("Erro ao carregar os vendedores."));
         }
+
         painelConteudo.revalidate();
         painelConteudo.repaint();
     }

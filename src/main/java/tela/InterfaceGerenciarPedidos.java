@@ -181,8 +181,8 @@ public class InterfaceGerenciarPedidos extends JFrame {
             return;
         }
 
-        String novoStatus = (String) cmbStatus.getSelectedItem();
-        selecionado.setStatus(novoStatus);
+        //String novoStatus = (String) cmbStatus.getSelectedItem(); ARRUMAR !!!
+        //selecionado.setStatus(novoStatus);
 
         try {
             serviceManager.getServicePedido().atualizarPedido(selecionado);

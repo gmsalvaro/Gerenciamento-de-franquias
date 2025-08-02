@@ -8,9 +8,4 @@ public class Start {
 
     private ServiceManager serviceManager;
 
-    public Start() throws PersistenciaException {
-        this.serviceManager = new ServiceManager("lero");
-        Login login = new Login(serviceManager, new LoginSucesso());
-        login.setVisible(true);
-    }
 }

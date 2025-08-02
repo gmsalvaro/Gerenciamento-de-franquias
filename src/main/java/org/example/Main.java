@@ -3,17 +3,24 @@ package org.example;
 import Model.*;
 import Service.ServiceManager;
 import exception.persistencia.PersistenciaException;
+import exception.usuario.ValidacaoUsuarioException;
 import tela.*;
 
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws PersistenciaException {
+    public static void main(String[] args) throws PersistenciaException, ValidacaoUsuarioException {
 
         ServiceManager serviceManager = new ServiceManager("lero");
-        Loja loja = new Loja("lero", "lerolero", "1234567878");
-        InterfaceGerenciarEstoque interfaceGerenciarEstoque = new InterfaceGerenciarEstoque(serviceManager, loja);
-        interfaceGerenciarEstoque.setVisible(true);
+        Usuario dono = new Dono("Dono", "dono@gmail.com", "Donddo123", "99988877760");
+        Usuario vendendor = new Vendedor("Vendendor", "vendendor@gmail.com", "Vendddedor123", "12345678909");
+        Usuario gerente = new Gerente("Gerente", "gerente@gmail.com", "Gereddnte123", "11144477735");
+ ////       serviceManager.getServiceUsuario().addUsuario(dono);
+  //      serviceManager.getServiceUsuario().addUsuario(vendendor);
+   //     serviceManager.getServiceUsuario().addUsuario(gerente);
+
+        Login login = new Login(serviceManager);
+        login.setVisible(true);
 
     }
 }

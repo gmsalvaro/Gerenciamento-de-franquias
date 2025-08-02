@@ -52,7 +52,7 @@ public class ServiceLoja {
         return new ArrayList<>(lojasMap.values());
     }
 
-    public List<Loja> listarPorIDFranquia(String id) {
+    public List<Loja> listarPorIDFranquia(String id) throws PersistenciaException {
         ArrayList<Loja> lojas = new ArrayList<>();
         for(Loja l : lojasMap.values()) {
             if (l.getFranquiaId().equalsIgnoreCase(id)) {
@@ -60,6 +60,13 @@ public class ServiceLoja {
             }
         }
         return lojas;
+    }
+
+    public int numDeUsuarios(String idLoja)  throws PersistenciaException {
+        if(lojasMap.containsKey(idLoja)) {
+             return lojasMap.get(idLoja).getIdsUsuarios().size();
+        }
+        return 0;
     }
 
     public Loja buscarPorId(String id) {
@@ -73,6 +80,15 @@ public class ServiceLoja {
         } else {
             throw new LojaNaoAtualizadaException("Loja não encontrada para atualização.");
         }
+    }
+
+    public Loja getLojaByIDUsuario(String idUsuario)  throws PersistenciaException { // colocar para lançar excesao
+        for (Loja loja : lojasMap.values()) {
+            if (loja.getIdsUsuarios().contains(idUsuario)) {
+                return loja;
+            }
+        }
+        return null;
     }
 
     public Loja getLojaById(String idLoja) throws PersistenciaException {
