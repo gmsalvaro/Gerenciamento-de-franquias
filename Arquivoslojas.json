@@ -1,0 +1,81 @@
+[ {
+  "id" : "c8be3546-530e-47cf-84fc-99d6e81bb38c",
+  "nome" : "lersd",
+  "endereco" : "lerdasd",
+  "franquiaId" : "61503a45-4ee4-4efa-8626-29848175e905",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+}, {
+  "id" : "ac6c1df7-896a-4ddc-841d-76ca6c2f1975",
+  "nome" : "lerdasdaaadasdo",
+  "endereco" : "leasdasdasdsasdsa",
+  "franquiaId" : "45d421e3-26e7-4623-b8c9-bd76f8eb9b0d",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+}, {
+  "id" : "12447342-fbaa-4249-8289-43006de44fb4",
+  "nome" : "aaaaaaaa",
+  "endereco" : "asdaw",
+  "franquiaId" : "b6c8920f-a44b-4708-8b7a-1432fd4b8566",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+}, {
+  "id" : "f955d2a9-9b82-4ef6-ba4c-01881ffd0093",
+  "nome" : "aaaaaaaaa",
+  "endereco" : "adaaaaaw",
+  "franquiaId" : "55243a56-4e08-4683-bb13-c1754363cb58",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+}, {
+  "id" : "6a6fccaf-8ab8-4f07-a223-5193c3b616a7",
+  "nome" : "lerdasdaaada",
+  "endereco" : "leasdasdasdsas",
+  "franquiaId" : "2fc8ba62-8a76-4ba2-93fe-51216384ae6b",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+}, {
+  "id" : "612cf634-b3a9-496e-8801-dd9040417d12",
+  "nome" : "lerdasda",
+  "endereco" : "leasdasdsas",
+  "franquiaId" : "b6c8920f-a44b-4708-8b7a-1432fd4b8566",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+}, {
+  "id" : "65c13035-453a-453f-bb3c-2524bdd78e21",
+  "nome" : "lersda",
+  "endereco" : "ledasdsas",
+  "franquiaId" : "79954ddd-4ee9-4cc8-8c3a-143ebf2f4a05",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+}, {
+  "id" : "7b0542d4-20cb-421e-8293-2f5a89bcacfe",
+  "nome" : "lersdaaa",
+  "endereco" : "lerdaaasd",
+  "franquiaId" : "55243a56-4e08-4683-bb13-c1754363cb58",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+}, {
+  "id" : "bdbd013a-bdaf-4e2e-8668-1a3242d24132",
+  "nome" : "lerdasdasdaadasdo",
+  "endereco" : "leasdasdasdsasdsaro",
+  "franquiaId" : "a71f623e-297d-4ade-b502-179f355ad8b0",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+}, {
+  "id" : "146ca64e-caca-434a-9c40-975f3a855759",
+  "nome" : "aaaaaa",
+  "endereco" : "adaw",
+  "franquiaId" : "79954ddd-4ee9-4cc8-8c3a-143ebf2f4a05",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ ]
+} ]

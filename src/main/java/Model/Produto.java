@@ -1,21 +1,27 @@
 package Model;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
-public class Produto {
+public class Produto implements Entidade{
     private String nome;
     private String id;
-    private double preco;
+    private BigDecimal preco;
     private int estoque;
-    String idLoja;
+    private String idLoja;
 
     public Produto() {
     }
 
-    public Produto(String nome, double preco) {
+    public Produto(String nome, BigDecimal preco) {
         this.nome = nome;
         this.preco = preco;
         this.id = UUID.randomUUID().toString();
+    }
+
+    @Override
+    public String getId(){
+        return this.id;
     }
 
     public void setIdLoja(String idLoja) {
@@ -30,19 +36,15 @@ public class Produto {
         return nome;
     }
 
-    public String getId(){
-        return this.id;
-    }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public double getPreco() {
+    public BigDecimal getPreco() {
         return preco;
     }
 
-    public void setPreco(double preco) {
+    public void setPreco(BigDecimal preco) {
         this.preco = preco;
     }
 

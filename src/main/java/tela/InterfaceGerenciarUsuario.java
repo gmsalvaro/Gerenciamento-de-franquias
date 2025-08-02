@@ -2,6 +2,7 @@ package tela;
 
 import Model.Franquia;
 import Model.Loja;
+import Model.Dono;
 import Model.Usuario;
 import Model.Vendedor;
 import Model.Gerente; // Importar Gerente
@@ -203,7 +204,7 @@ public class InterfaceGerenciarUsuario extends JFrame {
 
             Usuario novoUsuario;
             if ("Dono".equals(tipoSelecionado)) {
-                novoUsuario = new Gerente(nome, email, telefone, cpf);
+                novoUsuario = new Dono(nome, email, telefone, cpf);
             } else if ("Gerente".equals(tipoSelecionado)) {
                 novoUsuario = new Gerente(nome, email, telefone, cpf);
             } else { // Vendedor
