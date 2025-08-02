@@ -1,0 +1,48 @@
+[ {
+  "tipo" : "dono",
+  "id" : "50d109fd-cfd4-4ba4-a94d-015bf1dc654e",
+  "nome" : "alvaro",
+  "email" : "alvaro@gmail.com",
+  "cpf" : "11111111111",
+  "telefone" : "123456789",
+  "permissao" : 1,
+  "senha" : "Senha@123"
+}, {
+  "tipo" : "gerente",
+  "id" : "08f998da-123f-4eb1-b18a-59d53dc67fb0",
+  "nome" : "Heitor",
+  "email" : "heitor@email.com",
+  "cpf" : "77777777777",
+  "telefone" : "123456789",
+  "permissao" : 2,
+  "senha" : "Senha@123",
+  "idloja" : null
+}, {
+  "tipo" : "gerente",
+  "id" : "4773d15b-6468-4c50-ad7a-73596de5d714",
+  "nome" : "Pedro",
+  "email" : "pedro@email.com",
+  "cpf" : "22222222222",
+  "telefone" : "123456789",
+  "permissao" : 2 ,
+  "senha" : "Senha@123"
+}, {
+  "tipo" : "gerente",
+  "id" : "12c38747-73b9-4b07-802f-d4dd9fa0f3d1",
+  "nome" : "gerenteTeste1",
+  "email" : "gerenteTeste@email.com",
+  "cpf" : "11111111222",
+  "telefone" : "123456789",
+  "permissao" : 2,
+  "senha" : "Gerente12345",
+  "idloja" : null
+}, {
+  "tipo" : "vendedor",
+  "id" : "900f2338-1695-4895-af23-efd3b771a3a6",
+  "nome" : "Vendedor teste",
+  "email" : "vendedor@email.com",
+  "cpf" : "33333333333",
+  "telefone" : "123456789",
+  "permissao" : 3,
+  "senha" : "Senha@123"
+} ]
