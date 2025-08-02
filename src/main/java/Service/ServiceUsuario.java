@@ -12,10 +12,8 @@ import exception.usuario.EmailInvalidoException;
 import exception.usuario.UsuarioJaExistenteException;
 import exception.usuario.ValidacaoUsuarioException;
 import Model.Vendedor;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ServiceUsuario{
@@ -124,7 +122,11 @@ public class ServiceUsuario{
         return usuarioMap.get(idUsuario);
     }
 
-    public void rebaixarGerenteParaVendedor(Gerente gerente) throws Exception {
+    public Optional<Usuario> buscarPorId(String id) {
+        return dadosUsuarios.buscarPorId(id);
+    }
+
+    public void rebaixarGerenteParaVendedor(Gerente gerente) throws PersistenciaException {
         if (gerente == null) {
             throw new IllegalArgumentException("Gerente não pode ser nulo.");
         }
@@ -136,15 +138,12 @@ public class ServiceUsuario{
                 gerente.getSenha(),
                 gerente.getCpf()
         );
-        // Garante que o novo vendedor tenha um ID diferente, ou reutilize o mesmo se preferir
-        // Para simplificar, vamos manter o ID, mas precisamos de um setId no Usuario.
-        // Se não tiver, o construtor do Vendedor já cria um novo ID.
 
-        // 2. Adiciona o novo Vendedor ao sistema
-        this.addUsuario(novoVendedor);
+        // 2. Atribui o MESMO ID do gerente antigo ao novo vendedor.
+        novoVendedor.setId(gerente.getId());
 
-        // 3. Remove o antigo registro de Gerente
-        this.removeUsuario(gerente); // Supondo que você tenha um método que remove por objeto ou ID
+        // 3. Chama o novo metodo de substituição diretamente em dadosUsuarios.
+        dadosUsuarios.substituir(novoVendedor);
     }
 
 

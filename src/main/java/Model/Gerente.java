@@ -1,14 +1,15 @@
 package Model;
+import com.fasterxml.jackson.annotation.JsonTypeName; // <-- ADICIONE ESTE IMPORT
 
+@JsonTypeName("gerente")
 public class Gerente extends Usuario{
     private String idloja;
 
     public Gerente() {
-         //contrsutor vazio para o JSON
+        super();
     }
 
     public Gerente(String nome, String email, String senha, String cpf) {
-
         super(nome, email, senha, cpf, 2);
     }
 

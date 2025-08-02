@@ -159,7 +159,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         botoesPanel.add(btnGerenciarUsuarios);
 
         JButton btnDesignarGerente = new JButton("Designar Gerente");
-        btnDesignarGerente.addActionListener(e -> acaoDesignarGerente(loja)); // Chama o novo método de ação
+        btnDesignarGerente.addActionListener(e -> acaoDesignarGerente(loja)); // Chama o novo metodo de ação
         botoesPanel.add(btnDesignarGerente);
 
         JButton btnFinanceiro = new JButton("Financeiro");
@@ -203,7 +203,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
             if (gerenteSelecionado == null) return;
 
             try {
-                serviceManager.getServiceLoja().designarGerenteParaLoja(gerenteSelecionado, loja,  serviceManager);
+                serviceManager.getServiceLoja().designarGerenteParaLoja(gerenteSelecionado, loja,  serviceManager.getServiceUsuario());
                 JOptionPane.showMessageDialog(this, "Gerente '" + gerenteSelecionado.getNome() + "' designado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 mostrarLojas(); // Atualiza a tela para mostrar o novo status
             } catch (PersistenciaException e) {

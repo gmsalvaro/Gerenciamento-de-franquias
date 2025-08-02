@@ -43,6 +43,7 @@ public abstract class Usuario {
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -89,5 +90,4 @@ public abstract class Usuario {
         return telefone;
     }
 
-    ;
 }

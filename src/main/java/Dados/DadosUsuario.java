@@ -1,10 +1,15 @@
 package Dados;
 
-import Model.Usuario;
+import Model.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.NamedType;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
+import exception.persistencia.PersistenciaException;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +32,7 @@ public class DadosUsuario {
         this.USUARIO_FILE = filePath;
         mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
         carregar();
     }
 
@@ -56,9 +62,23 @@ public class DadosUsuario {
 
     private void salvar() {
         try {
-            mapper.writeValue(new File(USUARIO_FILE), new ArrayList<>(usuariosMap.values()));
+            // ANTIGO: mapper.writeValue(new File(USUARIO_FILE), new ArrayList<>(usuariosMap.values()));
+
+            // --- CÓDIGO NOVO E CORRIGIDO ---
+
+            // 1. Cria um "escritor" especializado para uma Lista de Usuários.
+            //    Isso força o Jackson a olhar as anotações da classe Usuario.
+            ObjectWriter writer = mapper.writerFor(new TypeReference<List<Usuario>>() {});
+
+            // 2. Adiciona a formatação (pretty print) ao escritor especializado.
+            writer = writer.with(SerializationFeature.INDENT_OUTPUT);
+
+            // 3. Usa o escritor especializado para salvar o arquivo.
+            writer.writeValue(new File(USUARIO_FILE), new ArrayList<>(usuariosMap.values()));
+
         } catch (IOException e) {
-            System.err.println("Erro ao salvar usuários: " + e.getMessage());
+            // Mude a exceção para uma mais genérica para cobrir qualquer erro de persistência
+            System.out.println("TA ERRADO!");
         }
     }
 
@@ -117,6 +137,17 @@ public class DadosUsuario {
 
         if (!idsParaRemover.isEmpty()) {
             salvar();
+        }
+    }
+
+    public void substituir(Usuario usuarioAtualizado) throws PersistenciaException {
+        // Verifica se um usuário com este ID já existe no mapa
+        if (usuariosMap.containsKey(usuarioAtualizado.getId())) {
+            // Coloca o novo objeto de usuário no lugar do antigo
+            usuariosMap.put(usuarioAtualizado.getId(), usuarioAtualizado);
+            salvar(); // Salva o estado atualizado no arquivo JSON
+        } else {
+            throw new PersistenciaException("Usuário com ID " + usuarioAtualizado.getId() + " não encontrado para substituição.");
         }
     }
 }

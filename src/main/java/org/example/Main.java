@@ -12,88 +12,95 @@ import exception.usuario.ValidacaoUsuarioException;
 import tela.*;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
-        try {
-            ServiceManager serviceManager = new ServiceManager("");
-            seedInitialData(serviceManager);
 
-            SwingUtilities.invokeLater(() -> {
-                new Login(serviceManager, new GerenciaFluxoLogin() {
+    private static final String DATA_PATH = "data";
+
+    public static void main(String[] args) {
+        System.out.println("--- INICIANDO APLICAÇÃO ---");
+        SwingUtilities.invokeLater(() -> {
+            try {
+                System.out.println("step 1 -> Criando o diretório de dados...");
+                new File(DATA_PATH).mkdirs();
+                System.out.println("Diretório '" + DATA_PATH + "' verificado/criado.");
+
+                System.out.println("step 2 -> Inicializando o ServiceManager...");
+                ServiceManager serviceManager = new ServiceManager(DATA_PATH);
+                System.out.println("ServiceManager inicializado com sucesso.");
+
+                System.out.println("step 3 -> Executando seedInitialData...");
+                seedInitialData(serviceManager);
+                System.out.println("seedInitialData finalizado.");
+
+                System.out.println("step 4 -> Criando a tela de Login...");
+                GerenciaFluxoLogin fluxoLogin = new GerenciaFluxoLogin() {
                     @Override
                     public void sucessoLogin(Usuario usuarioLogado) {
-                        System.out.println("Login bem-sucedido para: " + usuarioLogado.getNome());
-
                         switch (usuarioLogado.getPermissao()) {
-                            case 1-> new InterfaceDono(serviceManager, (Dono) usuarioLogado);
-                            case 2-> new InterfaceGerente(serviceManager, (Gerente) usuarioLogado);
-                            default -> System.out.println("a");
+                            case 1:
+                                new InterfaceDono(serviceManager, (Dono) usuarioLogado);
+                                break;
+                            case 2:
+                                JOptionPane.showMessageDialog(null, "Login como GERENTE OK. Tela em construção.");
+                                break;
+                            case 3:
+                                JOptionPane.showMessageDialog(null, "Login como VENDEDOR OK. Tela em construção.");
+                                break;
+                            default:
+                                JOptionPane.showMessageDialog(null, "Permissão desconhecida.", "Erro", JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                });
-            });
+                };
+                new Login(serviceManager, fluxoLogin);
+                System.out.println("Tela de Login criada.");
 
-        } catch (PersistenciaException e) {
-            JOptionPane.showMessageDialog(null, "Erro crítico ao carregar os dados: " + e.getMessage(), "Erro de Sistema", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
+            } catch (Exception e) {
+                System.err.println("!!! ERRO CRÍTICO NA INICIALIZAÇÃO !!!");
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Ocorreu um erro crítico ao iniciar a aplicação:\n" + e.getMessage(), "Erro Fatal", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
+    private static void seedInitialData(ServiceManager serviceManager) {
+        System.out.println("  [Dentro de seedInitialData] Verificando se a base de usuários está vazia...");
 
-    private static void seedInitialData(ServiceManager sm) throws PersistenciaException {
+        if (serviceManager.getServiceUsuario().getUsuarios().isEmpty()) {
+            System.out.println("  [Dentro de seedInitialData] A base está vazia! Tentando criar usuários de teste...");
+            try {
+                Dono dono = new Dono("alvaro", "alvaro@gmail.com", "Senha@123", "11111111111");
+                Gerente gerente = new Gerente("Pedro", "pedro@email.com", "Senha@123", "22222222222");
+                Gerente gerente2 = new Gerente("Heitor", "heitor@email.com", "Senha@123", "77777777777");
+                Vendedor vendedor = new Vendedor("Vendedor teste", "vendedor@email.com", "Senha@123", "33333333333");
 
-        Franquia franquia;
-        if (sm.getServiceFranquia().listarFranquias().isEmpty()) {
-            franquia = new Franquia("Franquia Principal", "Rua A, 1", "12345");
-            sm.getServiceFranquia().addFranquia(franquia);
+                System.out.println("    Adicionando Dono...");
+                serviceManager.getServiceUsuario().addUsuario(dono);
+                System.out.println("    Dono adicionado.");
+
+                System.out.println("    Adicionando Gerente...");
+                serviceManager.getServiceUsuario().addUsuario(gerente);
+                serviceManager.getServiceUsuario().addUsuario(gerente2);
+                System.out.println("    Gerente adicionado.");
+
+                System.out.println("    Adicionando Vendedor...");
+                serviceManager.getServiceUsuario().addUsuario(vendedor);
+                System.out.println("    Vendedor adicionado.");
+
+                System.out.println("  [Dentro de seedInitialData] Usuários de teste criados com sucesso!");
+
+            } catch (Exception e) {
+                // Se um erro acontecer aqui, esta mensagem aparecerá no console
+                System.err.println("!!! ERRO DENTRO DO seedInitialData AO TENTAR ADICIONAR USUÁRIOS !!!");
+                e.printStackTrace();
+            }
         } else {
-            franquia = sm.getServiceFranquia().listarFranquias().get(0);
-        }
-
-        Loja loja;
-        if (sm.getServiceLoja().listarTodasAsLojas().isEmpty()) {
-            loja = new Loja("Loja Central", "Av. B, 2", franquia.getId());
-            sm.getServiceLoja().addLoja(loja, franquia);
-        } else {
-            loja = sm.getServiceLoja().listarTodasAsLojas().get(0);
-        }
-
-        // --- Adiciona Dono ---
-        // CORREÇÃO: Em vez de verificar antes, tentamos adicionar. Se já existir, a exceção é capturada.
-        try {
-            Dono dono = new Dono("alvaro", "alvaro@gmail.com", "teste", "12345678");
-            sm.getServiceUsuario().addUsuario(dono);
-            System.out.println("Usuário Dono 'alvaro' criado.");
-        } catch (ValidacaoUsuarioException e) {
-            // Se o usuário já existe, o addUsuario lança uma exceção. A gente ignora e continua.
-            System.out.println("Usuário Dono 'alvaro' já existe, pulando criação.");
-        }
-
-
-        try {
-            Gerente gerente = new Gerente("Pedro" , "pedro@email.com","123","12345678");
-            sm.getServiceUsuario().addUsuario(gerente);
-
-            loja.addUsuarioID(gerente.getId());
-            sm.getServiceLoja().atualizarLoja(loja); // Salva a associação na loja
-            System.out.println("Usuário Gerente 'Pedro' criado e associado à Loja.");
-
-        } catch (PersistenciaException | ValidacaoUsuarioException e) {
-            System.out.println("Usuário Gerente 'Pedro' já existe, pulando criação.");
+            System.out.println("  [Dentro de seedInitialData] A base de dados já contém " + serviceManager.getServiceUsuario().getUsuarios().size() + " usuários. Nenhuma ação foi tomada.");
         }
     }
-
-    private static void abrirInterfaceDono(ServiceManager serviceManager, Dono donoLogado) {
-        new InterfaceDono(serviceManager, donoLogado);
-    }
-
-    private static void abrirInterfaceGerente(ServiceManager serviceManager, Gerente gerenteLogado) {
-        new InterfaceGerente(serviceManager, gerenteLogado);
-    }
-
 }
 
 //new Login(caminhoUsuario));

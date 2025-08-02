@@ -10,10 +10,8 @@ import exception.persistencia.LojaNaoAtualizadaException;
 import exception.persistencia.LojaNaoRemovidaException;
 import exception.persistencia.PersistenciaException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ServiceLoja {
     private final String FILE_LOJA;
@@ -107,13 +105,11 @@ public class ServiceLoja {
             return false;
         }
 
-        for (String idUsuario : loja.getIdsUsuarios()) {
-            Usuario usuario = serviceUsuario.getUsuarioById(idUsuario);
-            if (usuario != null && usuario instanceof Gerente) {
-                return true;
-            }
-        }
-        return false;
+        // Versão corrigida para funcionar com o seu método getUsuarioById
+        return loja.getIdsUsuarios().stream()         // 1. Cria um fluxo de IDs (String)
+                .map(serviceUsuario::getUsuarioById)  // 2. Para cada ID, busca o Usuario (pode ser null)
+                .filter(Objects::nonNull)             // 3. IMPORTANTE: Remove todos os nulos do fluxo
+                .anyMatch(usuario -> usuario instanceof Gerente); // 4. Verifica se algum dos usuários não-nulos é Gerente
     }
 
     public String getGerente(Loja loja, ServiceManager serviceManager) {
@@ -151,16 +147,37 @@ public class ServiceLoja {
                 return lojasMap.get(idLoja);
     }
 
-    public void designarGerenteParaLoja(Gerente gerente, Loja loja, ServiceManager serviceManager) throws PersistenciaException {
-        // Remove qualquer gerente antigo para garantir que haja apenas um
-        loja.getIdsUsuarios().removeIf(idUsuario -> {
-            Optional<Usuario> uOpt = Optional.ofNullable(serviceManager.getServiceUsuario().getUsuarioById(idUsuario));
-            return uOpt.isPresent() && uOpt.get() instanceof Gerente;
-        });
+    public void designarGerenteParaLoja(Gerente novoGerente, Loja novaLoja, ServiceUsuario serviceUsuario) throws PersistenciaException {
+        // 1. VERIFICA SE O GERENTE JÁ ESTÁ EM OUTRA LOJA
+        Optional<Loja> lojaAntigaOpt = buscarLojaPorGerente(novoGerente);
 
-        // Adiciona o novo gerente
-        loja.addUsuarioID(gerente.getId());
-        this.atualizarLoja(loja); // Salva a loja com o novo ID de usuário
+        if (lojaAntigaOpt.isPresent()) {
+            Loja lojaAntiga = lojaAntigaOpt.get();
+
+            // Se a loja antiga é a mesma que a nova, não há nada a fazer.
+            if (lojaAntiga.getId().equals(novaLoja.getId())) {
+                return; // Interrompe a operação
+            }
+
+            // 2. REMOVE O GERENTE DA LOJA ANTIGA
+            System.out.println("Removendo gerente '" + novoGerente.getNome() + "' da loja antiga '" + lojaAntiga.getNome() + "'");
+            lojaAntiga.getIdsUsuarios().remove(novoGerente.getId());
+            this.atualizarLoja(lojaAntiga); // Salva o estado da loja antiga
+        }
+
+        // 3. REMOVE QUALQUER OUTRO GERENTE QUE ESTEJA NA NOVA LOJA
+        // (Esta lógica que você já tinha continua importante)
+        if (novaLoja.getIdsUsuarios() != null) {
+            novaLoja.getIdsUsuarios().removeIf(idUsuario -> {
+                Optional<Usuario> uOpt = serviceUsuario.buscarPorId(idUsuario); // Usando o metodo seguro com Optional
+                return uOpt.isPresent() && uOpt.get() instanceof Gerente;
+            });
+        }
+
+        // 4. ADICIONA O GERENTE À NOVA LOJA
+        System.out.println("Adicionando gerente '" + novoGerente.getNome() + "' à nova loja '" + novaLoja.getNome() + "'");
+        novaLoja.addUsuarioID(novoGerente.getId());
+        this.atualizarLoja(novaLoja); // Salva o estado da nova loja
     }
 
 
@@ -176,8 +193,25 @@ public class ServiceLoja {
                 return loja.getNome();
             }
         }
-
         return "Gerente disponível";
+    }
+
+    public List<Loja> listarLojasSemGerente(ServiceManager serviceManager) {
+        // Usando Streams para um código mais limpo:
+        return listarTodasAsLojas().stream() // Pega todas as lojas
+                .filter(loja -> !lojaTemGerente(loja, serviceManager)) // Filtra apenas as que NÃO têm gerente
+                .collect(Collectors.toList()); // Coleta o resultado em uma nova lista
+    }
+
+    public Optional<Loja> buscarLojaPorGerente(Usuario usuario) {
+        if (usuario == null) {
+            return Optional.empty();
+        }
+
+        // Itera por todas as lojas cadastradas
+        return listarTodasAsLojas().stream()
+                .filter(loja -> loja.getIdsUsuarios() != null && loja.getIdsUsuarios().contains(usuario.getId()))
+                .findFirst(); // Retorna a primeira loja que encontrar
     }
 }
 

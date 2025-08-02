@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import Model.Franquia;
 import Model.Gerente;
+import Model.Loja;
 import Model.Usuario;
 import Service.*;
 
@@ -144,6 +145,7 @@ public class InterfaceDono extends PainelPrincipal {
     }
 
     private void acaoAdicionarGerente() {
+        // O formulário para criar o gerente permanece o mesmo
         JTextField txtNome = new JTextField();
         JTextField txtEmail = new JTextField();
         JTextField txtCpf = new JTextField();
@@ -163,15 +165,62 @@ public class InterfaceDono extends PainelPrincipal {
 
         if (resultado == JOptionPane.OK_OPTION) {
             try {
+                // Cria e salva o novo gerente
                 Gerente novoGerente = new Gerente(txtNome.getText(), txtEmail.getText(), new String(txtSenha.getPassword()), txtCpf.getText());
                 serviceManager.getServiceUsuario().addUsuario(novoGerente);
-                JOptionPane.showMessageDialog(this, "Gerente adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-                mostrarGerentes(); // Atualiza a tela
+                JOptionPane.showMessageDialog(this, "Gerente '" + novoGerente.getNome() + "' adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+                // --- INÍCIO DO NOVO FLUXO ---
+
+                // 1. Pergunta ao usuário se ele quer vincular o gerente a uma loja
+                int vincularAgora = JOptionPane.showConfirmDialog(this,
+                        "Deseja vincular este novo gerente a uma loja agora?",
+                        "Vincular Gerente",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (vincularAgora == JOptionPane.YES_OPTION) {
+                    // 2. Busca as lojas que não têm gerente
+                    List<Loja> lojasDisponiveis = serviceManager.getServiceLoja().listarLojasSemGerente(serviceManager);
+
+                    if (lojasDisponiveis.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "Não há lojas disponíveis sem gerente no momento.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        // 3. Mostra as lojas disponíveis em um JComboBox
+                        JComboBox<Loja> comboBoxLojas = new JComboBox<>(lojasDisponiveis.toArray(new Loja[0]));
+                        comboBoxLojas.setRenderer(new DefaultListCellRenderer() {
+                            @Override
+                            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                                if (value instanceof Loja) {
+                                    setText(((Loja) value).getNome());
+                                }
+                                return this;
+                            }
+                        });
+
+                        int resultadoVinculo = JOptionPane.showConfirmDialog(this, comboBoxLojas, "Selecione a Loja",
+                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+                        if (resultadoVinculo == JOptionPane.OK_OPTION) {
+                            Loja lojaSelecionada = (Loja) comboBoxLojas.getSelectedItem();
+                            // 4. Chama o serviço para efetivar a designação
+                            serviceManager.getServiceLoja().designarGerenteParaLoja(novoGerente, lojaSelecionada, serviceManager.getServiceUsuario());
+                            JOptionPane.showMessageDialog(this, "Gerente vinculado à loja '" + lojaSelecionada.getNome() + "' com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                }
+                // --- FIM DO NOVO FLUXO ---
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Erro ao adicionar gerente: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                // Independentemente do que acontecer, atualiza a tela de gerentes no final
+                mostrarGerentes();
             }
         }
     }
+
 
     private void acaoRemoverGerente(List<Gerente> gerentes) {
         if (gerentes.isEmpty()) { /* ... (mesma lógica do acaoRemoverLoja) ... */ return; }
