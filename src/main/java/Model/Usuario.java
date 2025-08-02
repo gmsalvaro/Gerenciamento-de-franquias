@@ -1,7 +1,23 @@
 package Model;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.UUID;
 
-public  class Usuario implements Entidade {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "tipo" // Este campo é crucial!
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Dono.class, name = "dono"),
+        @JsonSubTypes.Type(value = Gerente.class, name = "gerente"),
+        @JsonSubTypes.Type(value = Vendedor.class, name = "vendedor")
+})
+
+public abstract class Usuario {
     private String id;
     private String nome;
     private String email;

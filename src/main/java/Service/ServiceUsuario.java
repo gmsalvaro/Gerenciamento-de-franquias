@@ -25,7 +25,7 @@ public class ServiceUsuario{
     private ValidadorCPF validadorCPF;
     private ValidadorSenha validadorSenha;
 
-    public ServiceUsuario(String FILE_USUARIOS) throws PersistenciaException{
+    public ServiceUsuario(String FILE_USUARIOS)  {
         this.FILE_USUARIOS = FILE_USUARIOS;
         this.dadosUsuarios = new DadosUsuario(FILE_USUARIOS);
         this.usuarioMap = dadosUsuarios.getUsuariosMap();
@@ -56,10 +56,12 @@ public class ServiceUsuario{
         try{
             validadorCPF.validar(usuario.getCpf());
             validadorEmail.validar(usuario.getEmail());
-        }catch(CPFInvalidoException | EmailInvalidoException e){
+            validadorSenha.validar(usuario.getSenha());
+        }catch(CPFInvalidoException | EmailInvalidoException | SenhaInvalidaException e){
             switch(e){
                 case CPFInvalidoException cpfE -> throw new CPFInvalidoException("CPF invalido");
                 case EmailInvalidoException emailE -> throw new EmailInvalidoException("Email invalido");
+                //case SenhaInvalidaException senhaE -> throw new SenhaInvalidaException("Senha invalida");
                 default -> throw new IllegalStateException("ERRO INESPERADO: " + e.getMessage());
             }
         }
@@ -78,12 +80,8 @@ public class ServiceUsuario{
             }
         }
 
-        try{
-            dadosUsuarios.adicionar(usuario);
-            this.usuarioMap = dadosUsuarios.getUsuariosMap();
-        } catch(PersistenciaException e){
-            throw new ValidacaoUsuarioException("Nao foi possivel adicionar o usuario!");
-        }
+        dadosUsuarios.adicionar(usuario);
+        this.usuarioMap = dadosUsuarios.getUsuariosMap();
     }
 
     public void removeUsuario(Usuario usuario) throws PersistenciaException {
