@@ -7,4 +7,6 @@ public class Vendedor extends Usuario {
 
     @Override
     public int getPermissao() {return 3;}
+
+    public Vendedor(){} //contrutor vazio para o JSON
 }

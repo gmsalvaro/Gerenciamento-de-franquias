@@ -6,7 +6,9 @@ import Model.Usuario;
 import Model.Vendedor;
 import Model.Gerente; // Importar Gerente
 import Service.ServiceManager;
+import exception.autenticacao.SenhaInvalidaException;
 import exception.persistencia.PersistenciaException;
+import exception.usuario.ValidacaoUsuarioException;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -201,7 +203,6 @@ public class InterfaceGerenciarUsuario extends JFrame {
 
             Usuario novoUsuario;
             if ("Dono".equals(tipoSelecionado)) {
-
                 novoUsuario = new Gerente(nome, email, telefone, cpf);
             } else if ("Gerente".equals(tipoSelecionado)) {
                 novoUsuario = new Gerente(nome, email, telefone, cpf);
@@ -217,8 +218,8 @@ public class InterfaceGerenciarUsuario extends JFrame {
                 JOptionPane.showMessageDialog(this, "Usuário '" + nome + "' adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 listModel.addElement(novoUsuario);
 
-            } catch (PersistenciaException persistenciaException) {
-                JOptionPane.showMessageDialog(this, "Erro ao adicionar usuário: " + persistenciaException.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            } catch (PersistenciaException | ValidacaoUsuarioException e) {
+                JOptionPane.showMessageDialog(this, "Erro ao adicionar usuário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
         btnAdicionar.setText("Adicionar");
