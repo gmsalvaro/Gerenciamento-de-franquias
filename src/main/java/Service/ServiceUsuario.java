@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ServiceUsuario{
     private final String FILE_USUARIOS;
@@ -51,6 +52,13 @@ public class ServiceUsuario{
         return new ArrayList<>(usuarioMap.values());
     }
 
+    public List<Gerente> listarGerentes() {
+        return getUsuarios().stream()
+                .filter(u -> u instanceof Gerente)
+                .map(u -> (Gerente) u)
+                .collect(Collectors.toList());
+    }
+
     public void addUsuario(Usuario usuario) throws ValidacaoUsuarioException {
 
         try{
@@ -80,8 +88,9 @@ public class ServiceUsuario{
             }
         }
 
-        dadosUsuarios.adicionar(usuario);
-        this.usuarioMap = dadosUsuarios.getUsuariosMap();
+
+            dadosUsuarios.adicionar(usuario);
+            this.usuarioMap = dadosUsuarios.getUsuariosMap();
     }
 
     public void removeUsuario(Usuario usuario) throws PersistenciaException {

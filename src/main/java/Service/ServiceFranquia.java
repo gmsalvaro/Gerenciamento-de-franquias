@@ -77,7 +77,7 @@ public class    ServiceFranquia {
                         }
                     }
                     // Remover a própria Loja
-                    serviceManager.getServiceLoja().removerLoja(lojaParaRemover.getId());
+                    serviceManager.getServiceLoja().removerLoja(lojaParaRemover, serviceManager.getServiceFranquia());
                     franquia.removeIDLoja(lojaParaRemover.getId());
                     serviceManager.getServiceFranquia().atualizar(franquia);
                     System.out.println("Loja " + lojaParaRemover.getNome() + " removida.");

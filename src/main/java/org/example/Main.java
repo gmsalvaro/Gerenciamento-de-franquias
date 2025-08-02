@@ -18,12 +18,8 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         try {
-
             ServiceManager serviceManager = new ServiceManager("");
-
-
             seedInitialData(serviceManager);
-
 
             SwingUtilities.invokeLater(() -> {
                 new Login(serviceManager, new GerenciaFluxoLogin() {
@@ -32,12 +28,9 @@ public class Main {
                         System.out.println("Login bem-sucedido para: " + usuarioLogado.getNome());
 
                         switch (usuarioLogado.getPermissao()) {
-                            case 1:
-                                new InterfaceDono(serviceManager, (Dono) usuarioLogado);
-                                break;
-                            case 2:
-                                new InterfaceGerente(serviceManager, (Gerente) usuarioLogado);
-                                break;
+                            case 1-> new InterfaceDono(serviceManager, (Dono) usuarioLogado);
+                            case 2-> new InterfaceGerente(serviceManager, (Gerente) usuarioLogado);
+                            default -> System.out.println("a");
                         }
                     }
                 });

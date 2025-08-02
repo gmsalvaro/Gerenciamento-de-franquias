@@ -29,10 +29,6 @@ public abstract class PainelPrincipal extends JFrame {
         splitPane.setEnabled(false);
 
         add(splitPane);
-
-        contruirSidebar() ;
-
-
     }
 
     public abstract void contruirSidebar();

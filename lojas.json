@@ -1,4 +1,12 @@
 [ {
+  "id" : "c42fde73-9a94-4391-893a-9878620452ab",
+  "nome" : "loja teste",
+  "endereco" : "logo ali",
+  "franquiaId" : "546e5a7c-1b4f-4deb-8d55-2b9931e1e234",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ "acdb679f-f383-4feb-8da5-8a1522b61cf1" ]
+}, {
   "id" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
   "nome" : "Loja Central",
   "endereco" : "Av. B, 2",
