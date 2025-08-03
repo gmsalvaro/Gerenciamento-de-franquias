@@ -12,6 +12,7 @@ public class ServiceManager {
     private final ServiceProduto serviceProduto;
     private final ServicePedido servicePedido;
     private final ServiceFranquia serviceFranquia;
+    private final ServiceRelatorio serviceRelatorio;
 
     public ServiceManager(String basePath) throws PersistenciaException {
         this.serviceUsuario = new ServiceUsuario( "usuario.json");
@@ -19,7 +20,10 @@ public class ServiceManager {
         this.serviceProduto = new ServiceProduto( "produtos.json");
         this.servicePedido = new ServicePedido("pedidos.json");
         this.serviceFranquia = new ServiceFranquia("franquia.json");
+        this.serviceRelatorio = new ServiceRelatorio(serviceLoja, servicePedido, serviceUsuario, serviceFranquia);
     }
+
+    public ServiceRelatorio getServiceRelatorio() {return serviceRelatorio;}
 
     public ServiceFranquia getServiceFranquia() {
         return serviceFranquia;

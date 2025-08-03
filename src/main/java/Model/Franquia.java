@@ -20,7 +20,7 @@ public class Franquia {
     }
 
     public Franquia() {
-
+        this.idLojas = new ArrayList<>();
     }
 
     public void removeIDLoja(String lojaId) {

@@ -12,101 +12,62 @@ import java.util.Map;
 public class    ServiceFranquia {
     String FILE_FRANQUIA;
     DadosFranquias dadosFranquias;
-    Map<String, Franquia> franquiasMap;
+   // Map<String, Franquia> franquiasMap;
 
 
     public ServiceFranquia(String FILE_FRANQUIA) throws PersistenciaException {
-        this.FILE_FRANQUIA = FILE_FRANQUIA;
-        try{
-            dadosFranquias = new DadosFranquias(FILE_FRANQUIA);
-            franquiasMap = dadosFranquias.listarMap();
-
-        }catch(ErroCarregarArquivosException e){
-            throw new ErroCarregarArquivosException("ERRO: não foi possível inicializar o serviço de franquias!");
-        }
+        this.dadosFranquias = new DadosFranquias(FILE_FRANQUIA);
     }
 
     public void addFranquia(Franquia franquia) throws PersistenciaException {
-        for(Map.Entry<String, Franquia> entry : franquiasMap.entrySet()) {
-            if( entry.getValue().getEndereco().equals(franquia.getEndereco()) ||  //Verifica se tem franquias com mesmo nome ou endereço
-                    entry.getValue().getNome().equals(franquia.getNome())) {
-                throw new LojaInvalidaException("ERRO: já existe uma loja com esse nome ou endereço!"); // Excessao
+        // A validação agora busca os dados mais recentes diretamente da fonte.
+        for(Franquia f : dadosFranquias.listarMap().values()) {
+            if(f.getEndereco().equalsIgnoreCase(franquia.getEndereco()) ||
+                    f.getNome().equalsIgnoreCase(franquia.getNome())) {
+                throw new LojaInvalidaException("ERRO: já existe uma franquia com esse nome ou endereço!");
             }
         }
         dadosFranquias.adicionar(franquia);
-        franquiasMap = dadosFranquias.listarMap();
     }
 
     public void removeFranquia(Franquia franquia, ServiceManager serviceManager) throws PersistenciaException {
-        if (!franquiasMap.containsKey(franquia.getId())) {
+        // 1. Busca os dados mais recentes da franquia para garantir que estamos com a lista de lojas correta
+        Franquia franquiaAtualizada = buscarPorId(franquia.getId());
+        if (franquiaAtualizada == null) {
             throw new PersistenciaException("Franquia '" + franquia.getNome() + "' não encontrada para remoção.");
         }
-        try {
-            // 1. Remover Lojas e seus dependentes (Usuários, Produtos, Pedidos)
-            List<String> idsLojas = new ArrayList<>(franquia.getIdLojas());
-            for (String idLoja : idsLojas) {
-                Loja lojaParaRemover = serviceManager.getServiceLoja().getLojaById(idLoja);
-                if (lojaParaRemover != null) {
-                    // Remover Usuários da Loja
-                    List<String> idsUsuarios = new ArrayList<>(lojaParaRemover.getIdsUsuarios());
-                    for (String idUsuario : idsUsuarios) {
-                        Usuario usuarioParaRemover = serviceManager.getServiceUsuario().getUsuarioById(idUsuario);
-                        if (usuarioParaRemover != null) {
-                            serviceManager.getServiceUsuario().removeUsuario(usuarioParaRemover);
-                            System.out.println("Usuário " + usuarioParaRemover.getNome() + " removido.");
-                        }
-                    }
 
-                    // Remover Produtos da Loja
-                    List<String> idsProdutos = new ArrayList<>(lojaParaRemover.getIdProdutos());
-                    for (String idProduto : idsProdutos) {
-                        Produto produtoParaRemover = serviceManager.getServiceProduto().getProdutoById(idProduto);
-                        if (produtoParaRemover != null) {
-                            serviceManager.getServiceProduto().removerProduto(produtoParaRemover);
-                            System.out.println("Produto " + produtoParaRemover.getNome() + " removido.");
-                        }
-                    }
+        // 2. Cria uma cópia da lista de IDs de loja para iterar com segurança
+        List<String> idsLojas = new ArrayList<>(franquiaAtualizada.getIdLojas());
 
-                    // Remover Pedidos da Loja
-                    List<String> idsPedidos = new ArrayList<>(lojaParaRemover.getIdPedidos());
-                    for (String idPedido : idsPedidos) {
-                        Pedido pedidoParaRemover = serviceManager.getServicePedido().getPedidoById(idPedido);
-                        if (pedidoParaRemover != null) {
-                            serviceManager.getServicePedido().removerPedido(pedidoParaRemover);
-                            System.out.println("Pedido " + pedidoParaRemover.getId() + " removido.");
-                        }
-                    }
-                    // Remover a própria Loja
-                    serviceManager.getServiceLoja().removerLoja(lojaParaRemover, serviceManager.getServiceFranquia());
-                    franquia.removeIDLoja(lojaParaRemover.getId());
-                    serviceManager.getServiceFranquia().atualizar(franquia);
-                    System.out.println("Loja " + lojaParaRemover.getNome() + " removida.");
-                }
+        // 3. Delega a remoção completa de cada loja para o ServiceLoja
+        for (String idLoja : idsLojas) {
+            Loja lojaParaRemover = serviceManager.getServiceLoja().getLojaById(idLoja);
+            if (lojaParaRemover != null) {
+                // Chama o novo metodo que encapsula toda a lógica de remoção da loja
+                serviceManager.getServiceLoja().removerLoja(lojaParaRemover, serviceManager);
             }
-            dadosFranquias.remover(franquia.getId());
-            this.franquiasMap = dadosFranquias.listarMap();
-            System.out.println("Franquia " + franquia.getNome() + " e todos os seus dados associados removidos com sucesso!");
-        } catch (PersistenciaException e) {
-            throw new PersistenciaException("Erro ao remover dados associados à franquia '" + franquia.getNome() + "': " + e.getMessage());
         }
+
+        // 4. Após todas as lojas serem removidas, remove a própria franquia
+        dadosFranquias.remover(franquiaAtualizada.getId());
+
+        System.out.println("Franquia '" + franquia.getNome() + "' e todos os seus dados associados foram removidos com sucesso!");
     }
 
     public List<Franquia> listarFranquias() {
-        return new ArrayList<>(franquiasMap.values());
+        return new ArrayList<>(dadosFranquias.listarMap().values());
     }
 
     public Franquia buscarPorId(String id) {
-        return franquiasMap.get(id);
+        return dadosFranquias.listarMap().get(id);
     }
 
 
 
     public void atualizar(Franquia franquia) throws PersistenciaException {
-        if (franquiasMap.containsKey(franquia.getId())) {
-            dadosFranquias.atualizar(franquia);
-            franquiasMap = dadosFranquias.listarMap();
-        } else
-            throw new LojaNaoAtualizadaException("ERRO: não foi possível atualizar a loja!");
+        // Delega a chamada diretamente.
+        dadosFranquias.atualizar(franquia);
     }
 
     public Franquia getFranquiaDoGerente(Usuario gerente, ServiceLoja serviceloja) {
@@ -119,8 +80,23 @@ public class    ServiceFranquia {
                 return this.buscarPorId(loja.getFranquiaId());
 
         }
-
         return null;
+    }
+
+    public boolean existeDuplicata(Franquia franquiaParaVerificar) {
+        for (Franquia existente : listarFranquias()) {
+            // Se o ID for o mesmo, é a própria franquia, então pulamos a verificação
+            if (existente.getId().equals(franquiaParaVerificar.getId())) {
+                continue;
+            }
+
+            // Verifica se o nome ou endereço de OUTRA franquia já é igual
+            if (existente.getNome().equalsIgnoreCase(franquiaParaVerificar.getNome()) ||
+                    existente.getEndereco().equalsIgnoreCase(franquiaParaVerificar.getEndereco())) {
+                return true; // Encontrou uma duplicata
+            }
+        }
+        return false; // Nenhuma duplicata encontrada
     }
 
 }

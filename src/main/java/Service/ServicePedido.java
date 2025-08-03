@@ -1,13 +1,14 @@
 package Service;
 
-import Dados.DadosPedidos; // Certifique-se de que esta é a classe correta para lidar com Pedidos
-import Model.Pedido; // Importe a classe Pedido
+import Dados.DadosPedidos;
+import Model.Pedido;
 import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ServicePedido {
     private final String FILE_PEDIDOS;
@@ -59,6 +60,18 @@ public class ServicePedido {
         }
         return pedidosDaLoja;
     }
+
+    public List<Pedido> listarPorIdVendedor(String idVendedor) {
+        if (idVendedor == null || idVendedor.trim().isEmpty()) {
+            return new ArrayList<>(); // Retorna lista vazia se o ID for inválido
+        }
+
+        // Usando Stream para filtrar a lista de forma mais eficiente e legível
+        return listarTodos().stream() // Pega todos os pedidos
+                .filter(pedido -> idVendedor.equals(pedido.getIdVendedor())) // Mantém apenas os pedidos cujo idVendedor corresponde
+                .collect(Collectors.toList()); // Coleta os resultados em uma nova lista
+    }
+
 
     public void atualizarPedido(Pedido pedidoAtualizado) throws PersistenciaException {
         if (pedidoMap.containsKey(pedidoAtualizado.getId())) {

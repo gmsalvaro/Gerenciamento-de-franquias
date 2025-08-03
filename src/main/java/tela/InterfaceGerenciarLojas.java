@@ -201,7 +201,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         labelFaturamento.setAlignmentX(Component.LEFT_ALIGNMENT); // Garante alinhamento à esquerda
         infoPanel.add(labelFaturamento);
 
-        // Pedidos Realizados (LINHA CORRIGIDA)
+        // Pedidos Realizados
         int numeroPedidos = (loja.getIdPedidos() != null) ? loja.getIdPedidos().size() : 0;
         JLabel labelNumeroPedidos = new JLabel(String.format("<html><b>Pedidos Realizados:</b> %d</html>", numeroPedidos));
         labelNumeroPedidos.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -225,22 +225,27 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         labelTemGerente.setAlignmentX(Component.LEFT_ALIGNMENT);
         infoPanel.add(labelTemGerente);
 
-        // Painel de botões de ação específicos do card
+        /// Painel de botões de ação específicos do card
         JPanel botoesPanel = new JPanel();
-        botoesPanel.setLayout(new BoxLayout(botoesPanel, BoxLayout.Y_AXIS));
+        // GridLayout(0, 1) -> Linhas flexíveis, 1 coluna.
+        // (0, 5) -> 0 de espaço horizontal, 5 de espaço vertical entre os botões.
+        botoesPanel.setLayout(new GridLayout(0, 1, 0, 5));
         botoesPanel.setOpaque(false);
 
+        // Cria os botões
         JButton btnGerenciarUsuarios = new JButton("Gerenciar Usuários");
         btnGerenciarUsuarios.addActionListener(e -> new InterfaceGerenciarUsuario(loja, serviceManager, franquia).setVisible(true));
-        botoesPanel.add(btnGerenciarUsuarios);
 
         JButton btnDesignarGerente = new JButton("Designar Gerente");
-        btnDesignarGerente.addActionListener(e -> acaoDesignarGerente(loja)); // Chama o novo metodo de ação
-        botoesPanel.add(btnDesignarGerente);
+        btnDesignarGerente.addActionListener(e -> acaoDesignarGerente(loja));
 
-        JButton btnFinanceiro = new JButton("Financeiro");
-        btnFinanceiro.addActionListener(e -> JOptionPane.showMessageDialog(this, "Função em desenvolvimento", "Aviso", JOptionPane.WARNING_MESSAGE));
-        botoesPanel.add(btnFinanceiro);
+        JButton btnVerDesempenho = new JButton("Ver Desempenho");
+        btnVerDesempenho.addActionListener(e -> acaoVerDesempenhoLoja());
+
+        // Adiciona os botões ao painel. O GridLayout cuidará do tamanho e espaçamento.
+        botoesPanel.add(btnGerenciarUsuarios);
+        botoesPanel.add(btnDesignarGerente);
+        botoesPanel.add(btnVerDesempenho);
 
         card.add(infoPanel, BorderLayout.CENTER);
         card.add(botoesPanel, BorderLayout.EAST);
@@ -263,6 +268,68 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         }
 
         return new Font(nomeFonte, fonteBase.getStyle(), fonteBase.getSize());
+    }
+
+
+    private void acaoVerDesempenhoLoja(){
+        configurarPainelConteudo("Desempenho Financeiro da loja: " + franquia.getNome());
+        painelConteudo.setLayout(new BorderLayout());
+
+        JPanel painelMetricas = new JPanel();
+        // Usando GridBagLayout para um alinhamento mais limpo
+        painelMetricas.setLayout(new GridBagLayout());
+        painelMetricas.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // --- Métricas Financeiras ---
+        // TODO: A lógica de cálculo deve vir dos seus serviços.
+        // Por enquanto, usaremos valores de exemplo.
+
+        // Faturamento Bruto Total
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        JLabel lblTituloFaturamento = new JLabel("Faturamento Bruto Total:");
+        lblTituloFaturamento.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        painelMetricas.add(lblTituloFaturamento, gbc);
+
+        gbc.gridx = 1;
+        // double faturamentoTotal = serviceManager.getServiceRelatorio().calcularFaturamentoTotal(franquia);
+        JLabel lblValorFaturamento = new JLabel(String.format("R$ %.2f", 31501.60));
+        lblValorFaturamento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        painelMetricas.add(lblValorFaturamento, gbc);
+
+        // Número Total de Pedidos
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        JLabel lblTituloPedidos = new JLabel("Número Total de Pedidos:");
+        lblTituloPedidos.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        painelMetricas.add(lblTituloPedidos, gbc);
+
+        gbc.gridx = 1;
+        // int totalPedidos = serviceManager.getServiceRelatorio().contarPedidosTotais(franquia);
+        JLabel lblValorPedidos = new JLabel("0");
+        lblValorPedidos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        painelMetricas.add(lblValorPedidos, gbc);
+
+        // Ticket Médio
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        JLabel lblTituloTicket = new JLabel("Ticket Médio:");
+        lblTituloTicket.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        painelMetricas.add(lblTituloTicket, gbc);
+
+        gbc.gridx = 1;
+        // double ticketMedio = faturamentoTotal / totalPedidos;
+        JLabel lblValorTicket = new JLabel("R$ 0,00");
+        lblValorTicket.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        painelMetricas.add(lblValorTicket, gbc);
+
+        painelConteudo.add(painelMetricas, BorderLayout.NORTH);
+
+        painelConteudo.revalidate();
+        painelConteudo.repaint();
     }
 
     private void acaoDesignarGerente(Loja loja) {
@@ -323,7 +390,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
             }
 
         } else if (resultado == 1) { // Botão "Criar Novo Gerente"
-            // Chama a NOVA versão do método, passando a loja de destino
+            // Chama a NOVA versão do metodo, passando a loja de destino
             gerenteParaDesignar = CriaGerente.criarNovoGerente(this, serviceManager, loja);
 
             // Como a vinculação já foi feita dentro do helper, não precisamos mais do bloco 'if (gerenteParaDesignar != null)'
@@ -460,7 +527,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
 
             if (confirmacaoFinal == JOptionPane.YES_OPTION) {
                 try {
-                    serviceManager.getServiceLoja().removerLoja(lojaSelecionada, serviceManager.getServiceFranquia()); // Remove a loja
+                    serviceManager.getServiceLoja().removerLoja(lojaSelecionada, serviceManager); // Remove a loja
                     serviceManager.getServiceFranquia().atualizar(franquia); // Salva a mudança na franquia
 
                     JOptionPane.showMessageDialog(this, "Loja removida com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);

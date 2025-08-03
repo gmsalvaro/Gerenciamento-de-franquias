@@ -1,6 +1,7 @@
 package Model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,14 +14,15 @@ public class Pedido implements Serializable {
     private Map<String, Integer> produtosNoPedido;
     private Date dataPedido;
     private String status;
+    private String idVendedor;
+    private BigDecimal precoTotal;
 
+    public Pedido(){}
 
-    public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, String status) {
+    public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, String status, String idVendedor,  BigDecimal precoTotal) {
         this.id = UUID.randomUUID().toString();
-    }
-
-    public Pedido(){
-
+        this.idVendedor = idVendedor;
+        this.precoTotal = precoTotal;
     }
 
     public void setIdLoja(String idLoja) {
@@ -28,6 +30,17 @@ public class Pedido implements Serializable {
         this.produtosNoPedido = new HashMap<>(produtosNoPedido);
         this.dataPedido = dataPedido;
         this.status = status;
+    }
+
+    public BigDecimal getPrecoTotal() {
+        return precoTotal;
+    }
+
+    public String getIdVendedor(){
+        return this.idVendedor;
+    }
+    public void setIdVendedor(String idVendedor){
+        this.idVendedor = idVendedor;
     }
 
 

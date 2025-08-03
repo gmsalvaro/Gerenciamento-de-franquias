@@ -171,7 +171,8 @@ public class InterfaceGerenciarUsuario extends JFrame {
         JTextField dialogEmail = new JTextField(20);
         JTextField dialogTelefone = new JTextField(20);
         JTextField dialogCpf = new JTextField(20);
-        String[] tiposUsuario = {"Vendedor", "Gerente", "Dono"};
+        JTextField dialogSenha = new JTextField(20);
+        String[] tiposUsuario = {"Vendedor", "Gerente"};
         JComboBox<String> dialogTipo = new JComboBox<>(tiposUsuario);
 
         JPanel panel = new JPanel(new GridLayout(0, 2, 5, 5));
@@ -179,6 +180,8 @@ public class InterfaceGerenciarUsuario extends JFrame {
         panel.add(dialogNome);
         panel.add(new JLabel("Email:"));
         panel.add(dialogEmail);
+        panel.add(new JLabel("Senha:"));
+        panel.add(dialogSenha);
         panel.add(new JLabel("Telefone:"));
         panel.add(dialogTelefone);
         panel.add(new JLabel("CPF:"));
@@ -194,20 +197,21 @@ public class InterfaceGerenciarUsuario extends JFrame {
             String email = dialogEmail.getText().trim();
             String telefone = dialogTelefone.getText().trim();
             String cpf = dialogCpf.getText().trim(); // Pega o valor do CPF
+            String senha = dialogSenha.getText().trim();
             String tipoSelecionado = (String) dialogTipo.getSelectedItem();
 
-            if (nome.isEmpty() || email.isEmpty() || cpf.isEmpty()) {
+            if (nome.isEmpty() || email.isEmpty() || cpf.isEmpty() || senha.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Nome, Email e CPF são obrigatórios.", "Erro de Validação", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             Usuario novoUsuario;
             if ("Dono".equals(tipoSelecionado)) {
-                novoUsuario = new Gerente(nome, email, telefone, cpf);
+                novoUsuario = new Gerente(nome, email, senha, cpf);
             } else if ("Gerente".equals(tipoSelecionado)) {
-                novoUsuario = new Gerente(nome, email, telefone, cpf);
+                novoUsuario = new Gerente(nome, email, senha, cpf);
             } else { // Vendedor
-                novoUsuario = new Vendedor(nome, email, telefone, cpf);
+                novoUsuario = new Vendedor(nome, email, senha, cpf);
             }
 
             try {

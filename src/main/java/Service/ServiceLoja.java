@@ -44,32 +44,48 @@ public class ServiceLoja {
     public void auxRemoverLoja(String id) throws PersistenciaException {
         if (lojasMap.containsKey(id)) {
             dadosLojas.remover(id);
-            lojasMap = dadosLojas.getLojasMap();
+            //lojasMap = dadosLojas.getLojasMap();
         } else {
             throw new LojaNaoRemovidaException("Loja não encontrada para remoção.");
         }
     }
 
-    public void removerLoja(Loja lojaParaRemover, ServiceFranquia serviceFranquia) throws PersistenciaException {
-        // 1. Verifica se a loja existe antes de tentar qualquer coisa
-        if (lojaParaRemover == null || !lojasMap.containsKey(lojaParaRemover.getId())) {
-            throw new LojaNaoRemovidaException("Loja não encontrada para remoção.");
+    public void removerLoja(Loja lojaParaRemover, ServiceManager serviceManager) throws PersistenciaException {
+        if (lojaParaRemover == null) {
+            // Se a loja não existe, não há nada a fazer.
+            return;
         }
 
-        // 2. Busca a franquia-mãe usando o ID armazenado na loja
+        // --- LÓGICA 'PARA CIMA': ATUALIZAR A FRANQUIA-MÃE (do seu metodo) ---
         String idFranquia = lojaParaRemover.getFranquiaId();
-        Franquia franquiaMae = serviceFranquia.buscarPorId(idFranquia);
-
-        if (franquiaMae != null) {
-            // 3. Remove a associação da loja na franquia
-            franquiaMae.removeIDLoja(lojaParaRemover.getId());
-
-            // 4. Salva o estado atualizado da franquia
-            serviceFranquia.atualizar(franquiaMae);
+        if (idFranquia != null) {
+            Franquia franquiaMae = serviceManager.getServiceFranquia().buscarPorId(idFranquia);
+            if (franquiaMae != null) {
+                franquiaMae.removeIDLoja(lojaParaRemover.getId());
+                serviceManager.getServiceFranquia().atualizar(franquiaMae);
+            }
         }
 
-        // 5. Remove a loja do seu próprio arquivo de dados
-        // Chama o metodo remover(id) que já existe na classe
+        // --- LÓGICA 'PARA BAIXO': REMOVER DADOS INTERNOS DA LOJA (da minha sugestão) ---
+
+        // 1. Remove todos os usuários associados a esta loja
+        List<String> idsUsuarios = new ArrayList<>(lojaParaRemover.getIdsUsuarios());
+        for (String idUsuario : idsUsuarios) {
+            Usuario usuario = serviceManager.getServiceUsuario().buscarPorId(idUsuario).orElse(null);
+            if (usuario != null) {
+                serviceManager.getServiceUsuario().removeUsuario(usuario);
+            }
+        }
+
+        // 2. Remove todos os produtos associados a esta loja
+        // ... (lógica para remover produtos, se aplicável) ...
+
+
+        // 3. Remove todos os pedidos associados a esta loja
+        // ... (lógica para remover pedidos, se aplicável) ...
+
+
+        // 4. Finalmente, remove a própria loja do sistema
         this.auxRemoverLoja(lojaParaRemover.getId());
     }
 
@@ -150,7 +166,7 @@ public class ServiceLoja {
 
     public void designarGerenteParaLoja(Gerente novoGerente, Loja novaLoja, ServiceUsuario serviceUsuario) throws PersistenciaException {
         // 1. VERIFICA SE O GERENTE JÁ ESTÁ EM OUTRA LOJA
-        Optional<Loja> lojaAntigaOpt = buscarLojaPorGerente(novoGerente);
+        Optional<Loja> lojaAntigaOpt = buscarLojaPorUsuario(novoGerente);
 
         if (lojaAntigaOpt.isPresent()) {
             Loja lojaAntiga = lojaAntigaOpt.get();
@@ -204,7 +220,7 @@ public class ServiceLoja {
                 .collect(Collectors.toList()); // Coleta o resultado em uma nova lista
     }
 
-    public Optional<Loja> buscarLojaPorGerente(Usuario usuario) {
+    public Optional<Loja> buscarLojaPorUsuario(Usuario usuario) {
         if (usuario == null) {
             return Optional.empty();
         }
@@ -214,5 +230,6 @@ public class ServiceLoja {
                 .filter(loja -> loja.getIdsUsuarios() != null && loja.getIdsUsuarios().contains(usuario.getId()))
                 .findFirst(); // Retorna a primeira loja que encontrar
     }
+
 }
 

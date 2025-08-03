@@ -1,1 +1,8 @@
-[]
+[ {
+  "nome" : "agua",
+  "id" : "6705d7c3-f796-4e92-b1fa-4f7de96a4d62",
+  "descricao" : "agua mineral sem gás",
+  "preco" : 2.99,
+  "estoque" : 10,
+  "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
+} ]

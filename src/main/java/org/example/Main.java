@@ -45,7 +45,7 @@ public class Main {
                                 new InterfaceDono(serviceManager, (Dono) usuarioLogado);
                                 break;
                             case 2:
-                                JOptionPane.showMessageDialog(null, "Login como GERENTE OK. Tela em construção.");
+                                new InterfaceGerente(serviceManager, (Gerente) usuarioLogado);
                                 break;
                             case 3:
                                 JOptionPane.showMessageDialog(null, "Login como VENDEDOR OK. Tela em construção.");

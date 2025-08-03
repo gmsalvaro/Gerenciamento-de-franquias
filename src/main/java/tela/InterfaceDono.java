@@ -3,16 +3,20 @@ package tela;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import Model.Franquia;
-import Model.Gerente;
-import Model.Loja;
-import Model.Usuario;
+
+import Model.*;
 import Service.*;
 
 public class InterfaceDono extends PainelPrincipal {
     private ServiceManager serviceManager;
+    private JRadioButton radioPorVolume, radioPorValor;
+    private JPanel painelListaRanking;
+    private JScrollPane scrollPaneRanking;
+
 
     public InterfaceDono(ServiceManager serviceManager, Usuario usuario) {
         super("Painel do Dono - " + usuario.getNome());
@@ -40,6 +44,9 @@ public class InterfaceDono extends PainelPrincipal {
         JButton btnGerentes = criarBotaoMenu("Administrar Gerentes");
         sidebar.add(btnGerentes);
 
+        JButton btnRankingVendedores = criarBotaoMenu("Ranking de Vendedores");
+        sidebar.add(btnRankingVendedores);
+
         sidebar.add(Box.createVerticalGlue());
         JButton btnSair = criarBotaoMenu("Sair");
         sidebar.add(btnSair);
@@ -53,6 +60,8 @@ public class InterfaceDono extends PainelPrincipal {
 
 
         btnGerentes.addActionListener(e -> mostrarGerentes());
+
+        btnRankingVendedores.addActionListener(e -> mostrarRankingVendedores());
 
     }
 
@@ -287,20 +296,14 @@ public class InterfaceDono extends PainelPrincipal {
         // 5. Cria o painel inferior para os botões de ação
         JPanel painelBotoesAcao = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10)); // Alinha botões à direita
         JButton btnAdicionar = new JButton("Adicionar Franquia");
-        JButton btnRemover = new JButton("Remover Franquia");
 
         painelBotoesAcao.add(btnAdicionar);
-        painelBotoesAcao.add(btnRemover);
 
         painelConteudo.add(painelBotoesAcao, BorderLayout.SOUTH); // Adiciona o painel de botões na parte de baixo
 
         // Ações dos botões de Adicionar e Remover
         btnAdicionar.addActionListener(e -> acaoAdicionarFranquia());
 
-        btnRemover.addActionListener(e -> {
-            // Lógica para remover uma franquia selecionada
-            JOptionPane.showMessageDialog(this, "Funcionalidade 'Remover' a ser implementada.");
-        });
 
         // Revalida e redesenha o painel para exibir as alterações
         painelConteudo.revalidate();
@@ -315,14 +318,12 @@ public class InterfaceDono extends PainelPrincipal {
      */
     private JPanel criarCardFranquia(Franquia franquia) {
         JPanel card = new JPanel(new BorderLayout(10, 10));
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
         card.setBackground(new Color(245, 245, 245));
 
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
         Border bordaLinha = BorderFactory.createLineBorder(new Color(200, 200, 200));
         card.setBorder(BorderFactory.createCompoundBorder(bordaLinha, padding));
-
-        // --- AQUI ESTÁ A MUDANÇA ---
 
         // 1. Cria um painel para agrupar as informações da esquerda (nome e n° de lojas)
         JPanel painelInfo = new JPanel();
@@ -345,19 +346,78 @@ public class InterfaceDono extends PainelPrincipal {
         // 4. Adiciona o painel de informações ao CENTRO do card principal
         card.add(painelInfo, BorderLayout.CENTER);
 
-        // 5. O botão "Gerenciar" agora fica sozinho na região LESTE
-        JButton btnGerenciar = new JButton("Gerenciar");
-        btnGerenciar.addActionListener(e -> {
-            new InterfaceGerenciarLojas(serviceManager, franquia);
-        });
+        // --- PAINEL DE BOTÕES DENTRO DO CARD (ATUALIZADO) ---
+        JPanel painelBotoesCard = new JPanel();
 
-        // Para centralizar o botão verticalmente, o colocamos dentro de outro painel
-        JPanel painelBotao = new JPanel(new GridBagLayout());
-        painelBotao.setOpaque(false);
-        painelBotao.add(btnGerenciar);
-        card.add(painelBotao, BorderLayout.EAST);
+        // A MUDANÇA PRINCIPAL: Usamos GridLayout para criar uma coluna única de botões.
+        // GridLayout(0, 1) -> Linhas flexíveis, 1 coluna.
+        // (0, 5) -> 0 de espaço horizontal, 5 de espaço vertical entre os botões.
+        painelBotoesCard.setLayout(new GridLayout(0, 1, 0, 5));
+        painelBotoesCard.setOpaque(false);
+
+        // Cria os botões
+        JButton btnGerenciar = new JButton("Gerenciar");
+        btnGerenciar.addActionListener(e -> new InterfaceGerenciarLojas(serviceManager, franquia));
+
+        JButton btnEditar = new JButton("Editar Franquia");
+        btnEditar.addActionListener(e -> acaoEditarFranquia(franquia));
+
+        JButton btnRemover = new JButton("Remover Franquia");
+        btnRemover.addActionListener(e -> acaoRemoverFranquia(franquia));
+
+        // Adiciona os botões ao painel. O GridLayout cuidará do tamanho.
+        painelBotoesCard.add(btnGerenciar);
+        painelBotoesCard.add(btnEditar);
+        painelBotoesCard.add(btnRemover);
+
+        // Não precisamos mais de 'setAlignmentX' nem 'Box.createVerticalStrut'
+
+        card.add(painelBotoesCard, BorderLayout.EAST);
 
         return card;
+    }
+
+    private void acaoEditarFranquia(Franquia franquiaParaEditar) {
+        // Cria os campos de texto e já preenche com os dados atuais da franquia
+        JTextField txtNome = new JTextField(franquiaParaEditar.getNome());
+        JTextField txtEndereco = new JTextField(franquiaParaEditar.getEndereco());
+        JTextField txtTelefone = new JTextField(franquiaParaEditar.getTelefone());
+
+        JPanel painelFormulario = new JPanel(new GridLayout(0, 1, 5, 5));
+        painelFormulario.add(new JLabel("Nome da Franquia:"));
+        painelFormulario.add(txtNome);
+        painelFormulario.add(new JLabel("Endereço:"));
+        painelFormulario.add(txtEndereco);
+        painelFormulario.add(new JLabel("Telefone:"));
+        painelFormulario.add(txtTelefone);
+
+        int resultado = JOptionPane.showConfirmDialog(this, painelFormulario, "Editar Franquia",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (resultado == JOptionPane.OK_OPTION) {
+            // Pega os novos dados e atualiza o objeto
+            franquiaParaEditar.setNome(txtNome.getText().trim());
+            franquiaParaEditar.setEndereco(txtEndereco.getText().trim());
+            franquiaParaEditar.setTelefone(txtTelefone.getText().trim());
+
+            try {
+                // Validação de duplicidade (reutilizando a lógica que já tínhamos)
+                if (serviceManager.getServiceFranquia().existeDuplicata(franquiaParaEditar)) {
+                    JOptionPane.showMessageDialog(this, "Já existe uma franquia com este nome ou endereço.", "Erro de Duplicidade", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Salva a atualização
+                serviceManager.getServiceFranquia().atualizar(franquiaParaEditar);
+                JOptionPane.showMessageDialog(this, "Franquia atualizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+                // Atualiza a tela para refletir a mudança
+                mostrarFranquias();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao editar franquia: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private void acaoAdicionarFranquia() {
@@ -405,7 +465,131 @@ public class InterfaceDono extends PainelPrincipal {
         }
     }
 
+
+    private void acaoRemoverFranquia(Franquia franquiaParaRemover) {
+        if (franquiaParaRemover == null) return;
+
+        // Pede uma confirmação final, alertando sobre a gravidade da ação
+        int confirmacaoFinal = JOptionPane.showConfirmDialog(
+                this,
+                "<html>Tem certeza que deseja remover a franquia <b>'" + franquiaParaRemover.getNome() + "'</b>?<br>" +
+                        "<font color='red'><b>ATENÇÃO:</b> Esta ação é irreversível e removerá todos os dados associados.</font></html>",
+                "Confirmar Remoção Permanente",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirmacaoFinal == JOptionPane.YES_OPTION) {
+            try {
+                // Chama o serviço para remover a franquia em cascata
+                serviceManager.getServiceFranquia().removeFranquia(franquiaParaRemover, serviceManager);
+                JOptionPane.showMessageDialog(this, "Franquia removida com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+                // Atualiza a tela para refletir a remoção
+                mostrarFranquias();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao remover franquia: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void mostrarRankingVendedores() {
+        configurarPainelConteudo("Ranking de Vendedores");
+        painelConteudo.setLayout(new BorderLayout(10, 10));
+
+        // --- PAINEL DE CONTROLES (NORTE) ---
+        JPanel painelControles = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        radioPorVolume = new JRadioButton("Ordenar por Volume de Vendas");
+        radioPorValor = new JRadioButton("Ordenar por Valor Total");
+        ButtonGroup grupoRadios = new ButtonGroup();
+        grupoRadios.add(radioPorVolume);
+        grupoRadios.add(radioPorValor);
+        painelControles.add(new JLabel("Critério de Ordenação:"));
+        painelControles.add(radioPorVolume);
+        painelControles.add(radioPorValor);
+
+        ActionListener listenerRadios = e -> atualizarListaRanking();
+        radioPorVolume.addActionListener(listenerRadios);
+        radioPorValor.addActionListener(listenerRadios);
+
+        radioPorValor.setSelected(true); // Ordenar por valor como padrão
+        painelConteudo.add(painelControles, BorderLayout.NORTH);
+
+        // --- PAINEL DE CONTEÚDO (CENTRO) ---
+        painelListaRanking = new JPanel();
+        painelListaRanking.setLayout(new BoxLayout(painelListaRanking, BoxLayout.Y_AXIS));
+        painelListaRanking.setBackground(Color.WHITE);
+        scrollPaneRanking = new JScrollPane(painelListaRanking);
+        scrollPaneRanking.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        painelConteudo.add(scrollPaneRanking, BorderLayout.CENTER);
+
+        atualizarListaRanking();
+        painelConteudo.revalidate();
+        painelConteudo.repaint();
+    }
+
+    private void atualizarListaRanking() {
+        painelListaRanking.removeAll();
+
+        List<PerformanceVendedor> performance = serviceManager.getServiceRelatorio().gerarRankingVendedores();
+
+        // --- ORDENAÇÃO ATUALIZADA ---
+        if (radioPorVolume.isSelected()) {
+            // Ordena pelo número de vendas (inteiro), do maior para o menor
+            performance.sort(Comparator.comparingInt(PerformanceVendedor::getNumeroDeVendas).reversed());
+        } else {
+            // Ordena pelo valor total (BigDecimal), do maior para o menor
+            performance.sort(Comparator.comparing(PerformanceVendedor::getValorTotalVendas).reversed());
+        }
+
+        if (performance.isEmpty()) {
+            painelListaRanking.add(new JLabel("Nenhum vendedor com vendas encontradas."));
+        } else {
+            int rank = 1;
+            for (PerformanceVendedor p : performance) {
+                painelListaRanking.add(criarCardVendedor(p, rank++));
+                painelListaRanking.add(Box.createRigidArea(new Dimension(0, 10)));
+            }
+        }
+
+        painelListaRanking.revalidate();
+        painelListaRanking.repaint();
+    }
+
+    private JPanel criarCardVendedor(PerformanceVendedor performance, int rank) {
+        JPanel card = new JPanel(new BorderLayout(10, 10));
+        // ... (estilização do card)
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 110));
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+
+        JPanel painelInfo = new JPanel();
+        painelInfo.setLayout(new BoxLayout(painelInfo, BoxLayout.Y_AXIS));
+        painelInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel lblNome = new JLabel(String.format("%dº. %s", rank, performance.getVendedor().getNome()));
+        lblNome.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        painelInfo.add(lblNome);
+
+        String nomeLoja = (performance.getLoja() != null) ? performance.getLoja().getNome() : "N/A";
+        String nomeFranquia = (performance.getFranquia() != null) ? performance.getFranquia().getNome() : "N/A";
+
+        painelInfo.add(new JLabel("Franquia: " + nomeFranquia + " | Loja: " + nomeLoja));
+        painelInfo.add(Box.createVerticalStrut(5));
+        painelInfo.add(new JLabel(String.format("Número de Vendas: %d pedidos", performance.getNumeroDeVendas())));
+
+        painelInfo.add(new JLabel(String.format("Valor Total Vendido: R$ %.2f", performance.getValorTotalVendas())));
+
+        card.add(painelInfo);
+        return card;
+    }
+
 }
+
 
 
 

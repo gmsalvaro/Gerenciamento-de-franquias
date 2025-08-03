@@ -2,14 +2,11 @@ package Service;
 
 import Dados.*;
 import Model.*;
-import exception.ValidacaoException;
-import exception.autenticacao.AutenticacaoException;
 import exception.autenticacao.SenhaInvalidaException;
 import exception.autenticacao.UsuarioInvalidoException;
 import exception.persistencia.PersistenciaException;
 import exception.usuario.CPFInvalidoException;
 import exception.usuario.EmailInvalidoException;
-import exception.usuario.UsuarioJaExistenteException;
 import exception.usuario.ValidacaoUsuarioException;
 import Model.Vendedor;
 
@@ -46,6 +43,15 @@ public class ServiceUsuario{
         return usuarios;
     }
 
+    public List<Vendedor> getVendedoresPorLoja(Loja loja) {
+        return getUsuariosPorLoja(loja).stream()
+                .filter(usuario -> usuario instanceof Vendedor)
+                .map(usuario -> (Vendedor) usuario)
+                .collect(Collectors.toList());
+    }
+
+
+
     public List<Usuario> getUsuarios() {
         return new ArrayList<>(usuarioMap.values());
     }
@@ -56,6 +62,16 @@ public class ServiceUsuario{
                 .map(u -> (Gerente) u)
                 .collect(Collectors.toList());
     }
+
+    public List<Vendedor> listarVendedores() {
+        return getUsuarios().stream()
+                .filter(u-> u instanceof Vendedor)
+                .map(u ->(Vendedor)u )
+                .collect(Collectors.toList());
+    }
+
+
+
 
     public void addUsuario(Usuario usuario) throws ValidacaoUsuarioException {
 
@@ -151,7 +167,7 @@ public class ServiceUsuario{
         // Pega todos os gerentes
         return listarGerentes().stream()
                 // Filtra, mantendo apenas aqueles para os quais a busca por loja retorna um Optional vazio
-                .filter(gerente -> serviceLoja.buscarLojaPorGerente(gerente).isEmpty())
+                .filter(gerente -> serviceLoja.buscarLojaPorUsuario(gerente).isEmpty())
                 .collect(Collectors.toList());
     }
 }
