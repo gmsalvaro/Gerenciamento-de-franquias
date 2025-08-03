@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 public class ServiceUsuario{
     private final String FILE_USUARIOS;
     private final DadosUsuario dadosUsuarios;
-    private Map<String, Usuario> usuarioMap;
-    private  ValidadorEmail validadorEmail;
-    private ValidadorCPF validadorCPF;
-    private ValidadorSenha validadorSenha;
+    protected Map<String, Usuario> usuarioMap;
+    protected ValidadorEmail validadorEmail;
+    protected ValidadorCPF validadorCPF;
+    protected ValidadorSenha validadorSenha;
 
     public ServiceUsuario(String FILE_USUARIOS)  {
         this.FILE_USUARIOS = FILE_USUARIOS;
@@ -145,7 +145,4 @@ public class ServiceUsuario{
         // 3. Chama o novo metodo de substituição diretamente em dadosUsuarios.
         dadosUsuarios.substituir(novoVendedor);
     }
-
-
-
 }

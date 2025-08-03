@@ -22,6 +22,7 @@ public class DadosProdutos {
 
     public DadosProdutos(String filePath) throws PersistenciaException{
         this.LOJAS_FILE = filePath;
+        produtoMap = new ConcurrentHashMap<>();
         mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         carregar();

@@ -17,23 +17,24 @@ public class Pedido implements Serializable {
 
     public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, String status) {
         this.id = UUID.randomUUID().toString();
-    }
-
-    public Pedido(){
-
-    }
-
-    public void setIdLoja(String idLoja) {
         this.idLoja = idLoja;
         this.produtosNoPedido = new HashMap<>(produtosNoPedido);
         this.dataPedido = dataPedido;
         this.status = status;
     }
 
+    public Pedido(){}
+
+    public void setIdLoja(String idLoja) {
+        this.idLoja = idLoja;
+    }
+
 
     public String getId() {
         return id;
     }
+
+    public void setId(String id) {this.id = id;}
 
     public String getIdLoja() {
         return idLoja;

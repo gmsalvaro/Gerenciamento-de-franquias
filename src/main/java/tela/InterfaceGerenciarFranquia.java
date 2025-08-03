@@ -25,7 +25,7 @@ public class InterfaceGerenciarFranquia extends JFrame {
 
     private ServiceManager serviceManager;
 
-    public InterfaceGerenciarFranquia(ServiceManager serviceManager) {
+    public InterfaceGerenciarFranquia(ServiceManager serviceManager) throws PersistenciaException {
         super("Gerenciar Franquias");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(700, 500);
@@ -136,7 +136,7 @@ public class InterfaceGerenciarFranquia extends JFrame {
         btnAdicionar.setEnabled(true);
     }
 
-    private void carregarFranquias() {
+    private void carregarFranquias() throws PersistenciaException {
         listModel.clear();
         List<Franquia> franquias = serviceManager.getServiceFranquia().listarFranquias();
         for (Franquia f : franquias) {

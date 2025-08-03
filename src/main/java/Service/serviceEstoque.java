@@ -1,9 +1,9 @@
 package Service;
 
-import Model.Loja;
-import Model.Pedido;
-import Model.Produto;
+import Model.*;
 import exception.persistencia.PersistenciaException;
+
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class serviceEstoque {
     }
 
 
-    public Pedido finalizarCompra(Map<String, Integer> itensComprados)  throws PersistenciaException {
+    public Pedido finalizarCompra(Map<String, Integer> itensComprados, formaPagamento formaPagamento)  throws PersistenciaException {
         if (itensComprados == null || itensComprados.isEmpty()) {
             throw new PersistenciaException("Nenhum item selecionado para a compra.");
         }
@@ -63,7 +63,7 @@ public class serviceEstoque {
             produtosNoPedido.put(produto.getId(), quantidadeDesejada);
         }
 
-        Pedido novoPedido = new Pedido(lojaAssociada.getId(), produtosNoPedido, new Date(), "Pendente");
+        Pedido novoPedido = new Pedido(lojaAssociada.getId(), produtosNoPedido, Instant.now(), StatusPedido.PENDENTE, formaPagamento);
         serviceManager.getServicePedido().addPedido(novoPedido);
 
         for (Produto p : produtosAtualizados) {
