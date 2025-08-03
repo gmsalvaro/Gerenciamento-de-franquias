@@ -17,7 +17,6 @@ public class Pedido implements Serializable {
     private String idVendedor;
     private BigDecimal precoTotal;
 
-    public Pedido(){}
 
     public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, String status, String idVendedor,  BigDecimal precoTotal) {
         this.id = UUID.randomUUID().toString();
@@ -47,6 +46,8 @@ public class Pedido implements Serializable {
     public String getId() {
         return id;
     }
+
+    public void setId(String id) {this.id = id;}
 
     public String getIdLoja() {
         return idLoja;

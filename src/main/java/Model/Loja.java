@@ -11,8 +11,8 @@ public class Loja {
     private String nome;
     private String endereco;
     private String franquiaId;
+    private String idGerente;
     private List<String> idUsuario;
-
     private List<String> idPedidos;
     private List<String> idProdutos;
 

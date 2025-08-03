@@ -51,7 +51,7 @@ public class ServicePedido {
         return new ArrayList<>(pedidoMap.values());
     }
 
-    public List<Pedido> listarPorIDLoja(String idLoja) {
+    public List<Pedido> listarPorIDLoja(String idLoja) throws PersistenciaException{
         List<Pedido> pedidosDaLoja = new ArrayList<>();
         for(Pedido p : pedidoMap.values()) {
             if (p.getIdLoja().equals(idLoja)) {

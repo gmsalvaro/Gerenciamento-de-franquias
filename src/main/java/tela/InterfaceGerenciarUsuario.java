@@ -31,14 +31,12 @@ public class InterfaceGerenciarUsuario extends JFrame {
     private JButton btnEditar;
 
     private Loja loja;
-    private Franquia franquia;
     private ServiceManager serviceManager;
 
-    public InterfaceGerenciarUsuario(Loja loja, ServiceManager serviceManager, Franquia franquia) {
+    public InterfaceGerenciarUsuario(ServiceManager serviceManager, Loja loja) {
         super("Gerenciar Usuários");
         this.loja = loja;
         this.serviceManager = serviceManager;
-        this.franquia = franquia;
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(700, 500);

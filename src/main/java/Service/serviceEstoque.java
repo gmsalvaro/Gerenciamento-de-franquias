@@ -4,7 +4,6 @@ import Model.Loja;
 import Model.Pedido;
 import Model.Produto;
 import exception.persistencia.PersistenciaException;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +31,7 @@ public class serviceEstoque {
     }
 
 
-    public Pedido finalizarCompra(Map<String, Integer> itensComprados, Vendedor vendedor)  throws PersistenciaException {
+    public Pedido finalizarCompra(Map<String, Integer> itensComprados)  throws PersistenciaException {
         if (itensComprados == null || itensComprados.isEmpty()) {
             throw new PersistenciaException("Nenhum item selecionado para a compra.");
         }
