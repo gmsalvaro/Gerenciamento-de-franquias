@@ -147,5 +147,11 @@ public class ServiceUsuario{
     }
 
 
-
+    public List<Gerente> listarGerentesDisponiveis(ServiceLoja serviceLoja) {
+        // Pega todos os gerentes
+        return listarGerentes().stream()
+                // Filtra, mantendo apenas aqueles para os quais a busca por loja retorna um Optional vazio
+                .filter(gerente -> serviceLoja.buscarLojaPorGerente(gerente).isEmpty())
+                .collect(Collectors.toList());
+    }
 }

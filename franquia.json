@@ -3,7 +3,7 @@
   "nome" : "Franquia Principal",
   "endereco" : "Rua A, 1",
   "telefone" : "12345",
-  "idLojas" : [ "870c1f96-591c-4699-86a6-e279c7b2f927", "c42fde73-9a94-4391-893a-9878620452ab" ]
+  "idLojas" : [ "870c1f96-591c-4699-86a6-e279c7b2f927", "c42fde73-9a94-4391-893a-9878620452ab", "589ef643-0dd7-43b7-96b9-4c261846d64f" ]
 }, {
   "id" : "e17bdf2b-101f-4881-835b-ab320de4572f",
   "nome" : "Mcdonaids",

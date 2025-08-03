@@ -1,4 +1,13 @@
 [ {
+  "tipo" : "vendedor",
+  "id" : "126567e2-48c5-4cd9-959d-013905626782",
+  "nome" : "GerenteDesgrama",
+  "email" : "gerenteee@email.com",
+  "cpf" : "11112222222",
+  "telefone" : "123456789",
+  "permissao" : 3,
+  "senha" : "Gerente111"
+}, {
   "tipo" : "dono",
   "id" : "50d109fd-cfd4-4ba4-a94d-015bf1dc654e",
   "nome" : "alvaro",
@@ -24,18 +33,18 @@
   "email" : "pedro@email.com",
   "cpf" : "22222222222",
   "telefone" : "123456789",
-  "permissao" : 2 ,
-  "senha" : "Senha@123"
+  "permissao" : 2,
+  "senha" : "Senha@123",
+  "idloja" : null
 }, {
-  "tipo" : "gerente",
+  "tipo" : "vendedor",
   "id" : "12c38747-73b9-4b07-802f-d4dd9fa0f3d1",
   "nome" : "gerenteTeste1",
   "email" : "gerenteTeste@email.com",
   "cpf" : "11111111222",
   "telefone" : "123456789",
-  "permissao" : 2,
-  "senha" : "Gerente12345",
-  "idloja" : null
+  "permissao" : 3,
+  "senha" : "Gerente12345"
 }, {
   "tipo" : "vendedor",
   "id" : "900f2338-1695-4895-af23-efd3b771a3a6",

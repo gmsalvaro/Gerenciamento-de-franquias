@@ -107,14 +107,16 @@ public class InterfaceDono extends PainelPrincipal {
         JPanel card = new JPanel(new BorderLayout(10, 10));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
         card.setBackground(new Color(245, 245, 245));
-        // ... (estilização do card)
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        Border bordaLinha = BorderFactory.createLineBorder(new Color(200, 200, 200));
+        card.setBorder(BorderFactory.createCompoundBorder(bordaLinha, padding));
 
         JPanel painelInfo = new JPanel();
         painelInfo.setLayout(new BoxLayout(painelInfo, BoxLayout.Y_AXIS));
         painelInfo.setOpaque(false);
-
         painelInfo.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
+        // Exibe Nome e Email (sem alterações)
         JLabel lblNome = new JLabel(gerente.getNome());
         lblNome.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblNome.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -125,125 +127,96 @@ public class InterfaceDono extends PainelPrincipal {
         lblEmail.setAlignmentX(Component.LEFT_ALIGNMENT);
         painelInfo.add(lblEmail);
 
-        // Mostra a loja que ele gerencia
-        String statusLoja = serviceManager.getServiceLoja().buscarStatusLojaPorGerente(gerente);
-        String textoLoja = "Loja: " + (statusLoja.equals("Gerente disponível") ? "Nenhuma" : statusLoja);
+        // --- INÍCIO DA CORREÇÃO ---
 
-        JLabel lblLoja = new JLabel(textoLoja);
-        lblLoja.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblLoja.setAlignmentX(Component.LEFT_ALIGNMENT);
-        painelInfo.add(lblLoja);
+        // 1. Busca a franquia do gerente, sabendo que o resultado pode ser nulo.
+        Franquia franquiaDoGerente = serviceManager.getServiceFranquia().getFranquiaDoGerente(gerente, serviceManager.getServiceLoja());
 
+        String textoExibicao;
+        // 2. VERIFICA SE O RESULTADO É NULO antes de usá-lo.
+        if (franquiaDoGerente != null) {
+            // Se a franquia foi encontrada, exibe o nome dela.
+            textoExibicao = "Franquia: " + franquiaDoGerente.getNome();
+        } else {
+            // Se for nulo, o gerente está disponível e não associado a uma franquia.
+            textoExibicao = "Status: Disponível (sem loja/franquia)";
+        }
 
-        JLabel lblFranquiaGerente = new JLabel((serviceManager.getServiceFranquia().getFranquiaDoGerente(gerente, serviceManager.getServiceLoja())).getNome());
-        lblFranquiaGerente.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblFranquiaGerente.setAlignmentX(Component.LEFT_ALIGNMENT);
-        painelInfo.add(lblFranquiaGerente);
+        JLabel lblFranquia = new JLabel(textoExibicao);
+        lblFranquia.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+        lblFranquia.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelInfo.add(lblFranquia);
+
+        // --- FIM DA CORREÇÃO ---
 
         card.add(painelInfo, BorderLayout.CENTER);
         return card;
     }
 
     private void acaoAdicionarGerente() {
-        // O formulário para criar o gerente permanece o mesmo
-        JTextField txtNome = new JTextField();
-        JTextField txtEmail = new JTextField();
-        JTextField txtCpf = new JTextField();
-        JPasswordField txtSenha = new JPasswordField();
+        Gerente novoGerente = CriaGerente.criarNovoGerente(this, serviceManager);
 
-        JPanel painelFormulario = new JPanel(new GridLayout(0, 1, 5, 5));
-        painelFormulario.add(new JLabel("Nome:"));
-        painelFormulario.add(txtNome);
-        painelFormulario.add(new JLabel("Email:"));
-        painelFormulario.add(txtEmail);
-        painelFormulario.add(new JLabel("CPF:"));
-        painelFormulario.add(txtCpf);
-        painelFormulario.add(new JLabel("Senha:"));
-        painelFormulario.add(txtSenha);
-
-        int resultado = JOptionPane.showConfirmDialog(this, painelFormulario, "Adicionar Novo Gerente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (resultado == JOptionPane.OK_OPTION) {
-            try {
-                // Cria e salva o novo gerente
-                Gerente novoGerente = new Gerente(txtNome.getText(), txtEmail.getText(), new String(txtSenha.getPassword()), txtCpf.getText());
-                serviceManager.getServiceUsuario().addUsuario(novoGerente);
-                JOptionPane.showMessageDialog(this, "Gerente '" + novoGerente.getNome() + "' adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-
-                // --- INÍCIO DO NOVO FLUXO ---
-
-                // 1. Pergunta ao usuário se ele quer vincular o gerente a uma loja
-                int vincularAgora = JOptionPane.showConfirmDialog(this,
-                        "Deseja vincular este novo gerente a uma loja agora?",
-                        "Vincular Gerente",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-
-                if (vincularAgora == JOptionPane.YES_OPTION) {
-                    // 2. Busca as lojas que não têm gerente
-                    List<Loja> lojasDisponiveis = serviceManager.getServiceLoja().listarLojasSemGerente(serviceManager);
-
-                    if (lojasDisponiveis.isEmpty()) {
-                        JOptionPane.showMessageDialog(this, "Não há lojas disponíveis sem gerente no momento.", "Aviso", JOptionPane.WARNING_MESSAGE);
-                    } else {
-                        // 3. Mostra as lojas disponíveis em um JComboBox
-                        JComboBox<Loja> comboBoxLojas = new JComboBox<>(lojasDisponiveis.toArray(new Loja[0]));
-                        comboBoxLojas.setRenderer(new DefaultListCellRenderer() {
-                            @Override
-                            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                                if (value instanceof Loja) {
-                                    setText(((Loja) value).getNome());
-                                }
-                                return this;
-                            }
-                        });
-
-                        int resultadoVinculo = JOptionPane.showConfirmDialog(this, comboBoxLojas, "Selecione a Loja",
-                                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-                        if (resultadoVinculo == JOptionPane.OK_OPTION) {
-                            Loja lojaSelecionada = (Loja) comboBoxLojas.getSelectedItem();
-                            // 4. Chama o serviço para efetivar a designação
-                            serviceManager.getServiceLoja().designarGerenteParaLoja(novoGerente, lojaSelecionada, serviceManager.getServiceUsuario());
-                            JOptionPane.showMessageDialog(this, "Gerente vinculado à loja '" + lojaSelecionada.getNome() + "' com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }
-                }
-                // --- FIM DO NOVO FLUXO ---
-
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao adicionar gerente: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            } finally {
-                // Independentemente do que acontecer, atualiza a tela de gerentes no final
-                mostrarGerentes();
-            }
+        // Se um gerente foi realmente criado (usuário não cancelou), atualiza a tela
+        if (novoGerente != null) {
+            mostrarGerentes();
         }
     }
 
 
     private void acaoRemoverGerente(List<Gerente> gerentes) {
-        if (gerentes.isEmpty()) { /* ... (mesma lógica do acaoRemoverLoja) ... */ return; }
+        if (gerentes.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Não há gerentes para remover.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         JComboBox<Gerente> comboBox = new JComboBox<>(gerentes.toArray(new Gerente[0]));
 
+        // Configura o renderer para exibir o nome do gerente
         comboBox.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Gerente) {
-                    // Se o objeto na lista for um Gerente, define o texto do item para o nome dele
                     setText(((Gerente) value).getNome());
                 }
                 return this;
             }
         });
 
-        // ... (configurar o renderer do comboBox)
         int resultado = JOptionPane.showConfirmDialog(this, comboBox, "Selecione o Gerente para Remover", JOptionPane.OK_CANCEL_OPTION);
+
+        // --- INÍCIO DA LÓGICA IMPLEMENTADA ---
         if (resultado == JOptionPane.OK_OPTION) {
-            // Lógica de confirmação e chamada ao serviceManager.getServiceUsuario().removeUsuario(...)
-            // Depois, chamar mostrarGerentes() para atualizar a tela
+            // 1. Pega o gerente selecionado
+            Gerente gerenteSelecionado = (Gerente) comboBox.getSelectedItem();
+            if (gerenteSelecionado == null) {
+                return; // Nenhuma seleção foi feita
+            }
+
+            // 2. Pede uma confirmação final para segurança
+            int confirmacaoFinal = JOptionPane.showConfirmDialog(
+                    this,
+                    "Tem certeza que deseja remover o gerente '" + gerenteSelecionado.getNome() + "'?\nEsta ação é irreversível.",
+                    "Confirmar Remoção",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (confirmacaoFinal == JOptionPane.YES_OPTION) {
+                // 3. Tenta remover o usuário através do serviço
+                try {
+                    serviceManager.getServiceUsuario().removeUsuario(gerenteSelecionado);
+                    JOptionPane.showMessageDialog(this, "Gerente removido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+                    // 4. Atualiza a tela para refletir a remoção
+                    mostrarGerentes();
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao remover gerente: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
+        // --- FIM DA LÓGICA IMPLEMENTADA ---
     }
 
     private void acaoRebaixarGerente(List<Gerente> gerentes) {

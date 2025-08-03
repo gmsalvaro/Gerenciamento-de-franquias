@@ -24,7 +24,7 @@ public class ServiceLoja {
         this.lojasMap = dadosLojas.getLojasMap();
     }
 
-    public void addLoja(Loja loja, Franquia franquia) throws PersistenciaException {
+    public void addLoja(Loja loja, Franquia franquia, Gerente gerenteResponsavel) throws PersistenciaException {
         for (Loja l : lojasMap.values()) { // verificar essa validação !
             if (l.getNome().equalsIgnoreCase(loja.getNome()) ||
                 l.getEndereco().equalsIgnoreCase(loja.getEndereco())) {
@@ -36,6 +36,7 @@ public class ServiceLoja {
         }
         loja.setFranquiaId(franquia.getId());
         franquia.adicionarIdLoja(loja.getId());
+        loja.addUsuarioID(gerenteResponsavel.getId());
         dadosLojas.adicionar(loja);
         lojasMap = dadosLojas.getLojasMap();
     }

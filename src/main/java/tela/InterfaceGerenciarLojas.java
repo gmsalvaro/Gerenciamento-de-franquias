@@ -3,6 +3,7 @@ package tela;
 import Model.Franquia;
 import Model.Gerente;
 import Model.Loja;
+import Service.CriaGerente;
 import Service.ServiceManager;
 import exception.persistencia.PersistenciaException;
 
@@ -39,13 +40,84 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         sidebar.add(lblTituloSidebar);
         sidebar.add(Box.createVerticalStrut(30));
 
+        JButton btnVerLojas = criarBotaoMenu("Ver Lojas");
+        sidebar.add(btnVerLojas);
+
+        JButton btnDesempenho = criarBotaoMenu("Desempenho da Franquia");
+        sidebar.add(btnDesempenho);
+
         sidebar.add(Box.createVerticalGlue()); // Empurra o botão para baixo
 
         JButton btnVoltar = criarBotaoMenu("Voltar");
         sidebar.add(btnVoltar);
 
         // Ação do botão Voltar: fecha a janela atual, retornando à anterior
+
+        btnVerLojas.addActionListener(e -> mostrarLojas());
+        btnDesempenho.addActionListener(e -> mostrarDesempenhoFranquia());
         btnVoltar.addActionListener(e -> this.dispose());
+    }
+
+
+    private void mostrarDesempenhoFranquia() {
+        configurarPainelConteudo("Desempenho Financeiro: " + franquia.getNome());
+        painelConteudo.setLayout(new BorderLayout());
+
+        JPanel painelMetricas = new JPanel();
+        // Usando GridBagLayout para um alinhamento mais limpo
+        painelMetricas.setLayout(new GridBagLayout());
+        painelMetricas.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // --- Métricas Financeiras ---
+        // TODO: A lógica de cálculo deve vir dos seus serviços.
+        // Por enquanto, usaremos valores de exemplo.
+
+        // Faturamento Bruto Total
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        JLabel lblTituloFaturamento = new JLabel("Faturamento Bruto Total:");
+        lblTituloFaturamento.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        painelMetricas.add(lblTituloFaturamento, gbc);
+
+        gbc.gridx = 1;
+        // double faturamentoTotal = serviceManager.getServiceRelatorio().calcularFaturamentoTotal(franquia);
+        JLabel lblValorFaturamento = new JLabel(String.format("R$ %.2f", 31501.60));
+        lblValorFaturamento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        painelMetricas.add(lblValorFaturamento, gbc);
+
+        // Número Total de Pedidos
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        JLabel lblTituloPedidos = new JLabel("Número Total de Pedidos:");
+        lblTituloPedidos.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        painelMetricas.add(lblTituloPedidos, gbc);
+
+        gbc.gridx = 1;
+        // int totalPedidos = serviceManager.getServiceRelatorio().contarPedidosTotais(franquia);
+        JLabel lblValorPedidos = new JLabel("0");
+        lblValorPedidos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        painelMetricas.add(lblValorPedidos, gbc);
+
+        // Ticket Médio
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        JLabel lblTituloTicket = new JLabel("Ticket Médio:");
+        lblTituloTicket.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        painelMetricas.add(lblTituloTicket, gbc);
+
+        gbc.gridx = 1;
+        // double ticketMedio = faturamentoTotal / totalPedidos;
+        JLabel lblValorTicket = new JLabel("R$ 0,00");
+        lblValorTicket.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        painelMetricas.add(lblValorTicket, gbc);
+
+        painelConteudo.add(painelMetricas, BorderLayout.NORTH);
+
+        painelConteudo.revalidate();
+        painelConteudo.repaint();
     }
 
     private void mostrarLojas() {
@@ -137,15 +209,19 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         infoPanel.add(labelNumeroPedidos);
 
         String nomeGerente = serviceManager.getServiceLoja().getNomeGerenteDaLoja(loja, serviceManager);
+        char iconeGerente;
         String statusGerente;
-        if(nomeGerente != null)
-            statusGerente = "✅ "+ nomeGerente;
-        else
-            statusGerente = "❌ Loja sem gerente!";
 
+        if(nomeGerente != null){
+            iconeGerente = '✅';
+            statusGerente = nomeGerente;
+        } else{
+            iconeGerente = '❌';
+            statusGerente = "Loja sem gerente!";
+        }
 
-        JLabel labelTemGerente = new JLabel("<html><b>Gerente:</b> " + statusGerente +"</html>");
-        labelTemGerente.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        JLabel labelTemGerente = new JLabel("<html><b>Gerente:</b> " +iconeGerente +" "+ statusGerente +"</html>");
+        labelTemGerente.setFont(getFonteDeEmoji(labelTemGerente.getFont()));
         labelTemGerente.setAlignmentX(Component.LEFT_ALIGNMENT);
         infoPanel.add(labelTemGerente);
 
@@ -172,40 +248,99 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         return card;
     }
 
-    private void acaoDesignarGerente(Loja loja) {
-        // Busca a lista de todos os gerentes cadastrados no sistema
-        List<Gerente> gerentes = serviceManager.getServiceUsuario().listarGerentes();
 
-        if (gerentes.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Não há gerentes cadastrados no sistema para designar.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
+    private Font getFonteDeEmoji(Font fonteBase) {
+        String os = System.getProperty("os.name").toLowerCase();
+        String nomeFonte;
+
+        if (os.contains("win")) {
+            nomeFonte = "Segoe UI Emoji";
+        } else if (os.contains("mac")) {
+            nomeFonte = "Apple Color Emoji";
+        } else {
+            // Assume Linux ou outro Unix-like como padrão
+            nomeFonte = "Noto Color Emoji";
         }
 
-        // Cria um JComboBox para o usuário escolher um gerente
-        JComboBox<Gerente> comboBoxGerentes = new JComboBox<>(gerentes.toArray(new Gerente[0]));
+        return new Font(nomeFonte, fonteBase.getStyle(), fonteBase.getSize());
+    }
 
+    private void acaoDesignarGerente(Loja loja) {
+        // Busca a lista de gerentes disponíveis (não os que já têm loja)
+        List<Gerente> gerentesDisponiveis = serviceManager.getServiceUsuario().listarGerentesDisponiveis(serviceManager.getServiceLoja());
+
+        // --- Montagem do Painel para o Diálogo ---
+        JPanel painelDialogo = new JPanel(new BorderLayout(5, 5));
+        painelDialogo.add(new JLabel("Selecione um gerente disponível ou crie um novo:"), BorderLayout.NORTH);
+
+        JComboBox<Gerente> comboBoxGerentes = new JComboBox<>(gerentesDisponiveis.toArray(new Gerente[0]));
+
+        // Se não houver gerentes disponíveis, desabilita a combobox
+        if (gerentesDisponiveis.isEmpty()) {
+            comboBoxGerentes.setEnabled(false);
+        }
+
+        // Configura o renderer para exibir o nome
         comboBoxGerentes.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Gerente) {
-                    setText(((Gerente) value).getNome() + " -> "+ serviceManager.getServiceLoja().buscarStatusLojaPorGerente((Gerente) value));
+                    setText(((Gerente) value).getNome());
                 }
                 return this;
             }
         });
+        painelDialogo.add(comboBoxGerentes, BorderLayout.CENTER);
 
-        int resultado = JOptionPane.showConfirmDialog(this, comboBoxGerentes, "Selecione um Gerente para a Loja",
-                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        // --- Criação do Diálogo com Botões Customizados ---
+        String[] options = {"Designar Selecionado", "Criar Novo Gerente", "Cancelar"};
 
-        if (resultado == JOptionPane.OK_OPTION) {
-            Gerente gerenteSelecionado = (Gerente) comboBoxGerentes.getSelectedItem();
-            if (gerenteSelecionado == null) return;
+        int resultado = JOptionPane.showOptionDialog(
+                this,                             // Janela pai
+                painelDialogo,                    // Painel com a JComboBox
+                "Designar Gerente para a Loja",   // Título
+                JOptionPane.DEFAULT_OPTION,       // Tipo de opção
+                JOptionPane.QUESTION_MESSAGE,     // Ícone
+                null,                             // Ícone customizado (nenhum)
+                options,                          // Os textos dos botões
+                options[0]                        // Botão padrão
+        );
 
+        Gerente gerenteParaDesignar = null;
+
+        // --- Lógica para tratar a escolha do usuário ---
+        if (resultado == 0) { // Botão "Designar Selecionado"
+            if (comboBoxGerentes.isEnabled()) {
+                gerenteParaDesignar = (Gerente) comboBoxGerentes.getSelectedItem();
+                if (gerenteParaDesignar == null) {
+                    JOptionPane.showMessageDialog(this, "Nenhum gerente foi selecionado.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Não há gerentes disponíveis para selecionar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+        } else if (resultado == 1) { // Botão "Criar Novo Gerente"
+            // Chama a NOVA versão do método, passando a loja de destino
+            gerenteParaDesignar = CriaGerente.criarNovoGerente(this, serviceManager, loja);
+
+            // Como a vinculação já foi feita dentro do helper, não precisamos mais do bloco 'if (gerenteParaDesignar != null)'
+            // Apenas atualizamos a tela
+            mostrarLojas();
+            return; // Encerra o método aqui, pois o fluxo já foi concluído.
+
+        } else { // Usuário fechou ou cancelou
+            return;
+        }
+
+// O bloco de código abaixo será executado apenas se o usuário escolher "Designar Selecionado"
+        if (gerenteParaDesignar != null) {
             try {
-                serviceManager.getServiceLoja().designarGerenteParaLoja(gerenteSelecionado, loja,  serviceManager.getServiceUsuario());
-                JOptionPane.showMessageDialog(this, "Gerente '" + gerenteSelecionado.getNome() + "' designado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-                mostrarLojas(); // Atualiza a tela para mostrar o novo status
+                serviceManager.getServiceLoja().designarGerenteParaLoja(gerenteParaDesignar, loja, serviceManager.getServiceUsuario());
+                JOptionPane.showMessageDialog(this, "Gerente '" + gerenteParaDesignar.getNome() + "' designado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                mostrarLojas(); // Atualiza a tela
             } catch (PersistenciaException e) {
                 JOptionPane.showMessageDialog(this, "Erro ao designar gerente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
@@ -235,9 +370,50 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
                 return;
             }
 
+
+            Gerente gerenteDesignado = null;
+            while (gerenteDesignado == null) {
+                List<Gerente> gerentesDisponiveis = serviceManager.getServiceUsuario().listarGerentesDisponiveis(serviceManager.getServiceLoja());
+
+                // Opções para o diálogo: a lista de gerentes + a opção de criar um novo
+                Object[] opcoes;
+                if (gerentesDisponiveis.isEmpty()) {
+                    opcoes = new Object[]{"Criar Novo Gerente"};
+                } else {
+                    opcoes = new Object[gerentesDisponiveis.size() + 1];
+                    for (int i = 0; i < gerentesDisponiveis.size(); i++) {
+                        opcoes[i] = gerentesDisponiveis.get(i).getNome();
+                    }
+                    opcoes[gerentesDisponiveis.size()] = "Criar Novo Gerente";
+                }
+
+                String escolha = (String) JOptionPane.showInputDialog(this,
+                        "Selecione um gerente responsável para a nova loja:",
+                        "Designar Gerente (Etapa 2 de 2)",
+                        JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+
+                if (escolha == null) {
+                    return; // Usuário cancelou
+                }
+
+                if (escolha.equals("Criar Novo Gerente")) {
+                    // Reutiliza a lógica de adicionar gerente que já existe na InterfaceDono
+                    // (Poderia ser refatorado para um metodo auxiliar estático no futuro)
+                    gerenteDesignado = acaoCriarNovoGerente();
+                } else {
+                    // Encontra o gerente selecionado na lista
+                    for (Gerente g : gerentesDisponiveis) {
+                        if (g.getNome().equals(escolha)) {
+                            gerenteDesignado = g;
+                            break;
+                        }
+                    }
+                }
+            }
+
             try {
                 Loja novaLoja = new Loja(nome, endereco, franquia.getId());
-                serviceManager.getServiceLoja().addLoja(novaLoja, franquia);
+                serviceManager.getServiceLoja().addLoja(novaLoja, franquia, gerenteDesignado);
                 serviceManager.getServiceFranquia().atualizar(franquia); // Atualiza a franquia para salvar a nova associação de loja
 
                 JOptionPane.showMessageDialog(this, "Loja adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -246,6 +422,10 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
                 JOptionPane.showMessageDialog(this, "Erro ao adicionar loja: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    private Gerente acaoCriarNovoGerente() {
+        return CriaGerente.criarNovoGerente(this, serviceManager);
     }
 
     private void acaoRemoverLoja(List<Loja> lojas) {
