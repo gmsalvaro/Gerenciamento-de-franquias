@@ -1,35 +1,39 @@
 package Model;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
-public class Pedido implements Serializable {
+import static org.junit.jupiter.api.Assertions.*;
 
+
+public class Pedido {
     private String id;
     private String idLoja;
     private Map<String, Integer> produtosNoPedido;
     private Date dataPedido;
     private String status;
 
+    // Construtor padrão necessário para o Jackson
+    public Pedido() {
+        this.id = UUID.randomUUID().toString();
+        this.produtosNoPedido = new HashMap<>();
+    }
 
     public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, String status) {
-        this.id = UUID.randomUUID().toString();
-    }
-
-    public Pedido(){
-
-    }
-
-    public void setIdLoja(String idLoja) {
+        this();
         this.idLoja = idLoja;
         this.produtosNoPedido = new HashMap<>(produtosNoPedido);
         this.dataPedido = dataPedido;
         this.status = status;
     }
 
+    public void setIdLoja(String idLoja) {
+        this.idLoja = idLoja;
+    }
 
     public String getId() {
         return id;
@@ -55,4 +59,7 @@ public class Pedido implements Serializable {
         this.status = status;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 }
