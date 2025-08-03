@@ -2,6 +2,7 @@ package Service;
 
 import Dados.DadosPedidos;
 import Model.Pedido;
+import Model.StatusPedido;
 import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;
@@ -61,6 +62,21 @@ public class ServicePedido {
         return pedidosDaLoja;
     }
 
+    public List<Pedido> listarPorIDLoja(String idLoja, boolean incluirConcluidos) {
+        List<Pedido> todosOsPedidos = listarPorIDLoja(idLoja);
+
+        if (incluirConcluidos) {
+            return todosOsPedidos; // Retorna tudo
+        } else {
+            // Retorna apenas os pedidos que NÃO estão concluídos ou cancelados
+            return todosOsPedidos.stream()
+                    .filter(p -> p.getStatus() != StatusPedido.CONCLUIDO &&
+                            p.getStatus() != StatusPedido.ENTREGUE &&
+                            p.getStatus() != StatusPedido.CANCELADO)
+                    .collect(Collectors.toList());
+        }
+    }
+
     public List<Pedido> listarPorIdVendedor(String idVendedor) {
         if (idVendedor == null || idVendedor.trim().isEmpty()) {
             return new ArrayList<>(); // Retorna lista vazia se o ID for inválido
@@ -72,6 +88,22 @@ public class ServicePedido {
                 .collect(Collectors.toList()); // Coleta os resultados em uma nova lista
     }
 
+    public List<Pedido> listarPorIdVendedor(String idVendedor, boolean incluirConcluidos) {
+        // 1. Reutiliza o método acima para pegar todos os pedidos do vendedor primeiro
+        List<Pedido> todosOsPedidosDoVendedor = listarPorIdVendedor(idVendedor);
+
+        if (incluirConcluidos) {
+            return todosOsPedidosDoVendedor; // Retorna a lista completa
+        } else {
+            // 2. Filtra a lista para retornar apenas os pedidos em andamento
+            return todosOsPedidosDoVendedor.stream()
+                    .filter(p -> p.getStatus() != StatusPedido.CONCLUIDO &&
+                            p.getStatus() != StatusPedido.ENTREGUE &&
+                            p.getStatus() != StatusPedido.CANCELADO)
+                    .collect(Collectors.toList());
+        }
+    }
+
 
     public void atualizarPedido(Pedido pedidoAtualizado) throws PersistenciaException {
         if (pedidoMap.containsKey(pedidoAtualizado.getId())) {
@@ -80,5 +112,17 @@ public class ServicePedido {
         } else {
             throw new PersistenciaException("Pedido não encontrado para atualização.");
         }
+    }
+
+    public void atualizarStatusPedido(Pedido pedido, StatusPedido novoStatus) throws PersistenciaException {
+        if (pedido == null) {
+            throw new IllegalArgumentException("O pedido não pode ser nulo.");
+        }
+
+        // Altera o status do objeto em memória
+        pedido.setStatus(novoStatus);
+
+        // Chama o método 'atualizar' que já existe para salvar a mudança no arquivo JSON
+        this.atualizarPedido(pedido);
     }
 }

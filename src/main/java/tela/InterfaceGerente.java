@@ -16,12 +16,14 @@ public class InterfaceGerente extends PainelPrincipal {
      private final Loja lojaDoGerente;
      private JRadioButton radioPorVolume, radioPorValor;
      private JPanel painelListaVendedores;
+     private final GerenciaFluxoLogin fluxoLogin;
 
-     public InterfaceGerente(ServiceManager serviceManager, Gerente gerenteLogado) {
+     public InterfaceGerente(ServiceManager serviceManager, Gerente gerenteLogado, GerenciaFluxoLogin fluxoLogin) {
           super("Painel do Gerente - " + gerenteLogado.getNome());
           this.serviceManager = serviceManager;
           this.gerenteLogado = gerenteLogado;
           this.lojaDoGerente = serviceManager.getServiceLoja().buscarLojaPorUsuario(gerenteLogado).orElse(null);
+          this.fluxoLogin = fluxoLogin;
 
           if (lojaDoGerente == null) {
                JOptionPane.showMessageDialog(null, "ERRO: Você não está designado a nenhuma loja.", "Acesso Negado", JOptionPane.ERROR_MESSAGE);
@@ -61,15 +63,16 @@ public class InterfaceGerente extends PainelPrincipal {
           // Ações dos botões
           btnGerenciarVendedores.addActionListener(e -> mostrarGerenciarVendedores());
           btnGerenciarProdutos.addActionListener(e -> new InterfaceGerenciarProdutos(lojaDoGerente, serviceManager));
-          // Adicionar ações para Ver Pedidos e Relatórios
-          btnSair.addActionListener(e -> this.dispose());
+          btnVerPedidos.addActionListener(e -> new InterfaceGerenciarPedidos(lojaDoGerente, serviceManager));
+          btnSair.addActionListener(e -> fluxoLogin.fazerLogout());
+          btnRelatorios.addActionListener(e -> new InterfaceRelatorioLoja(lojaDoGerente, serviceManager));
      }
 
      private void mostrarBoasVindas() {
           configurarPainelConteudo("Bem-vindo, " + gerenteLogado.getNome());
      }
 
-     // --- NOVA FUNCIONALIDADE: GERENCIAR VENDEDORES ---
+
 
      private void mostrarGerenciarVendedores() {
           configurarPainelConteudo("Vendedores da Loja");

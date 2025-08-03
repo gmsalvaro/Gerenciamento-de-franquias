@@ -13,23 +13,28 @@ public class Pedido implements Serializable {
     private String idLoja;
     private Map<String, Integer> produtosNoPedido;
     private Date dataPedido;
-    private String status;
+    private StatusPedido status;
     private String idVendedor;
     private BigDecimal precoTotal;
+    private FormaDePagamento formaDePagamento;
 
-    public Pedido(){}
+    public Pedido(){
+        this.produtosNoPedido = new HashMap<>();
+    }
 
-    public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, String status, String idVendedor,  BigDecimal precoTotal) {
+    public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, StatusPedido status, String idVendedor,  BigDecimal precoTotal, FormaDePagamento formaDePagamento) {
         this.id = UUID.randomUUID().toString();
+        this.idLoja = idLoja;
+        this.produtosNoPedido = new HashMap<>(produtosNoPedido); // Cria uma cópia segura
+        this.dataPedido = dataPedido;
+        this.status = status;
         this.idVendedor = idVendedor;
         this.precoTotal = precoTotal;
+        this.formaDePagamento = formaDePagamento;
     }
 
     public void setIdLoja(String idLoja) {
         this.idLoja = idLoja;
-        this.produtosNoPedido = new HashMap<>(produtosNoPedido);
-        this.dataPedido = dataPedido;
-        this.status = status;
     }
 
     public BigDecimal getPrecoTotal() {
@@ -60,11 +65,11 @@ public class Pedido implements Serializable {
         return dataPedido;
     }
 
-    public String getStatus() {
+    public StatusPedido getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusPedido status) {
         this.status = status;
     }
 

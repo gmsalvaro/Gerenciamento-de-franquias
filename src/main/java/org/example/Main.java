@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import exception.persistencia.PersistenciaException;
 import exception.usuario.ValidacaoUsuarioException;
 import tela.*;
-
 import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -19,47 +18,55 @@ import java.util.List;
 public class Main {
 
     private static final String DATA_PATH = "data";
+    private static JFrame frameAtual;
 
     public static void main(String[] args) {
-        System.out.println("--- INICIANDO APLICAÇÃO ---");
+        // A aplicação agora é iniciada por este metodo
+        iniciarAplicacao();
+    }
+
+    /**
+     * Inicia a aplicação, configurando os serviços e mostrando a tela de login.
+     * Este metodo será chamado tanto no início quanto no logout.
+     */
+    public static void iniciarAplicacao() {
         SwingUtilities.invokeLater(() -> {
             try {
-                System.out.println("step 1 -> Criando o diretório de dados...");
-                new File(DATA_PATH).mkdirs();
-                System.out.println("Diretório '" + DATA_PATH + "' verificado/criado.");
-
-                System.out.println("step 2 -> Inicializando o ServiceManager...");
+                new File(DATA_PATH).mkdirs(); // Garante que a pasta de dados exista
                 ServiceManager serviceManager = new ServiceManager(DATA_PATH);
-                System.out.println("ServiceManager inicializado com sucesso.");
-
-                System.out.println("step 3 -> Executando seedInitialData...");
                 seedInitialData(serviceManager);
-                System.out.println("seedInitialData finalizado.");
 
-                System.out.println("step 4 -> Criando a tela de Login...");
+                // Cria a implementação do callback de login e logout
                 GerenciaFluxoLogin fluxoLogin = new GerenciaFluxoLogin() {
                     @Override
                     public void sucessoLogin(Usuario usuarioLogado) {
+                        if (frameAtual != null) {
+                            frameAtual.dispose();
+                        }
+
+                        // Abre a janela correta e GUARDA a referência dela
                         switch (usuarioLogado.getPermissao()) {
-                            case 1:
-                                new InterfaceDono(serviceManager, (Dono) usuarioLogado);
-                                break;
-                            case 2:
-                                new InterfaceGerente(serviceManager, (Gerente) usuarioLogado);
-                                break;
-                            case 3:
-                                JOptionPane.showMessageDialog(null, "Login como VENDEDOR OK. Tela em construção.");
-                                break;
-                            default:
-                                JOptionPane.showMessageDialog(null, "Permissão desconhecida.", "Erro", JOptionPane.ERROR_MESSAGE);
+                            case 1 -> frameAtual = new InterfaceDono(serviceManager, usuarioLogado, this);
+                            case 2 -> frameAtual = new InterfaceGerente(serviceManager, (Gerente) usuarioLogado, this);
+                            case 3 -> frameAtual = new InterfaceVendedor(serviceManager, (Vendedor) usuarioLogado, this);
+                            default -> JOptionPane.showMessageDialog(null, "Permissão desconhecida.", "Erro", JOptionPane.ERROR_MESSAGE);
                         }
                     }
+
+                    @Override
+                    public void fazerLogout() {
+                        // Fecha a janela atual e reinicia o ciclo mostrando o login
+                        if (frameAtual != null) {
+                            frameAtual.dispose();
+                        }
+                        iniciarAplicacao();
+                    }
                 };
+
+                // Mostra a primeira tela de Login
                 new Login(serviceManager, fluxoLogin);
-                System.out.println("Tela de Login criada.");
 
             } catch (Exception e) {
-                System.err.println("!!! ERRO CRÍTICO NA INICIALIZAÇÃO !!!");
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Ocorreu um erro crítico ao iniciar a aplicação:\n" + e.getMessage(), "Erro Fatal", JOptionPane.ERROR_MESSAGE);
             }
@@ -103,56 +110,3 @@ public class Main {
     }
 }
 
-//new Login(caminhoUsuario));
-//
-//List<Franquia> franquias = List.of(
-//        new Franquia("Franquia A", "Rua 1", "123"),
-//        new Franquia("Franquia B", "Rua 2", "123"),
-//        new Franquia("Franquia C", "Rua 3", "123")
-//);
-//List<Loja> lojas = List.of(
-//        new Loja("Franquia A", "Rua 1", "123"),
-//        new Loja("Franquia B", "Rua 2", "123"),
-//        new Loja("Franquia C", "Rua 3", "123")
-//);
-//
-//        SwingUtilities.invokeLater(() -> new InterfaceDono(franquias));
-//        SwingUtilities.invokeLater(() -> new InterfaceGerenciarLojas(lojas));
-//        SwingUtilities.invokeLater(() -> {
-//List<Usuario> usuariosDeExemplo = new ArrayList<>();
-//// Adicione alguns usuários de exemplo aqui
-//            usuariosDeExemplo.add(new Vendedor("Carlos Silva", "carlos@exemplo.com", "(31) 98765-4321", "Cliente VIP"));
-//        usuariosDeExemplo.add(new Vendedor("Ana Paula", "ana@exemplo.com", "(21) 91234-5678", "Novo Cadastro"));
-//        usuariosDeExemplo.add(new Vendedor("Pedro Costa", "pedro@exemplo.com", "(11) 99887-6655", "Suporte Técnico"));
-//
-//        new InterfaceGerenciarUsuario(usuariosDeExemplo).setVisible(true);
-//        });
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//ServiceManager serviceManager = new ServiceManager("Arquivos");
-//    ServiceUsuario serviceUsuario = serviceManager.getServiceUsuario();
-//    ServiceLoja serviceLoja = serviceManager.getServiceLoja();
-//    List<Usuario> usuarios = serviceUsuario.getUsuarios();
-//    Franquia franquia = new Franquia("lerdadasdasdasddddo", "leroasdaasdsassddddo", "leroddasdadasdlero");
-//    Loja loja = new Loja("lerdasdasdaadasdadsasdo", "leasdasdasdasdsasdsaro", franquia.getId());
-//        serviceManager.getServiceLoja().addLoja(loja, franquia);
-//        for (Usuario usuario : usuarios) {
-//        loja.addUsuarioID(usuario.getId());
-//    }
-//
-//    InterfaceGerenciarFranquia interfaceGerenciarFranquia = new InterfaceGerenciarFranquia(serviceManager);
-//    //InterfaceGerenciarUsuario interfaceGerenciarUsuario = new InterfaceGerenciarUsuario(loja, serviceManager, franquia);
-//    // interfaceGerenciarUsuario.setVisible(true);
-//    InterfaceGerenciarLojas interfaceGerenciarLojas = new InterfaceGerenciarLojas(serviceManager, franquia);
-//        interfaceGerenciarLojas.setVisible(true);

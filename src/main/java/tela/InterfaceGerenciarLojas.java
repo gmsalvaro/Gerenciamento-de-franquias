@@ -10,6 +10,7 @@ import exception.persistencia.PersistenciaException;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 // Passo 1: Fazer esta classe estender a mesma base da InterfaceDono
@@ -76,6 +77,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         // Por enquanto, usaremos valores de exemplo.
 
         // Faturamento Bruto Total
+        BigDecimal faturamentoTotal = serviceManager.getServiceRelatorio().calcularFaturamentoFranquia(franquia);
         gbc.gridx = 0;
         gbc.gridy = 0;
         JLabel lblTituloFaturamento = new JLabel("Faturamento Bruto Total:");
@@ -83,8 +85,8 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         painelMetricas.add(lblTituloFaturamento, gbc);
 
         gbc.gridx = 1;
-        // double faturamentoTotal = serviceManager.getServiceRelatorio().calcularFaturamentoTotal(franquia);
-        JLabel lblValorFaturamento = new JLabel(String.format("R$ %.2f", 31501.60));
+
+        JLabel lblValorFaturamento = new JLabel(String.format("R$ %.2f", faturamentoTotal));
         lblValorFaturamento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         painelMetricas.add(lblValorFaturamento, gbc);
 
@@ -96,8 +98,8 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         painelMetricas.add(lblTituloPedidos, gbc);
 
         gbc.gridx = 1;
-        // int totalPedidos = serviceManager.getServiceRelatorio().contarPedidosTotais(franquia);
-        JLabel lblValorPedidos = new JLabel("0");
+        int totalPedidos = serviceManager.getServiceRelatorio().contarPedidosTotaisFranquia(franquia);
+        JLabel lblValorPedidos = new JLabel(String.valueOf(totalPedidos));
         lblValorPedidos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         painelMetricas.add(lblValorPedidos, gbc);
 
@@ -109,8 +111,13 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         painelMetricas.add(lblTituloTicket, gbc);
 
         gbc.gridx = 1;
-        // double ticketMedio = faturamentoTotal / totalPedidos;
-        JLabel lblValorTicket = new JLabel("R$ 0,00");
+
+        BigDecimal ticketMedio = BigDecimal.ZERO;
+        if(totalPedidos > 0)
+          ticketMedio = faturamentoTotal.divide(new BigDecimal(totalPedidos));
+
+
+        JLabel lblValorTicket = new JLabel(String.format("R$ %.2f", ticketMedio));
         lblValorTicket.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         painelMetricas.add(lblValorTicket, gbc);
 
@@ -195,13 +202,13 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
       //  infoPanel.add(Box.createVerticalStrut(15));
 
         // Faturamento
-        double faturamentoExemplo = 15750.80;
-        JLabel labelFaturamento = new JLabel(String.format("<html><b>Faturamento:</b> R$ %.2f</html>", faturamentoExemplo));
+        BigDecimal faturamentoLoja = serviceManager.getServiceRelatorio().calcularFaturamentoLoja(loja);
+        JLabel labelFaturamento = new JLabel(String.format("<html><b>Faturamento:</b> R$ %.2f</html>", faturamentoLoja));
         labelFaturamento.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         labelFaturamento.setAlignmentX(Component.LEFT_ALIGNMENT); // Garante alinhamento à esquerda
         infoPanel.add(labelFaturamento);
 
-        // Pedidos Realizados
+
         int numeroPedidos = (loja.getIdPedidos() != null) ? loja.getIdPedidos().size() : 0;
         JLabel labelNumeroPedidos = new JLabel(String.format("<html><b>Pedidos Realizados:</b> %d</html>", numeroPedidos));
         labelNumeroPedidos.setFont(new Font("Segoe UI", Font.PLAIN, 12));

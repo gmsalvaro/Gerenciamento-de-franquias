@@ -16,13 +16,14 @@ public class InterfaceDono extends PainelPrincipal {
     private JRadioButton radioPorVolume, radioPorValor;
     private JPanel painelListaRanking;
     private JScrollPane scrollPaneRanking;
+    private final GerenciaFluxoLogin fluxoLogin;
 
 
-    public InterfaceDono(ServiceManager serviceManager, Usuario usuario) {
+    public InterfaceDono(ServiceManager serviceManager, Usuario usuario, GerenciaFluxoLogin fluxoLogin) {
         super("Painel do Dono - " + usuario.getNome());
         this.serviceManager = serviceManager;
         contruirSidebar();
-
+        this.fluxoLogin = fluxoLogin;
         setVisible(true);
 
     }
@@ -53,10 +54,7 @@ public class InterfaceDono extends PainelPrincipal {
 
 
         btnFranquias.addActionListener(e -> mostrarFranquias());
-        btnSair.addActionListener(e -> {
-            this.dispose();
-            // Lógica para voltar ao Login
-        });
+        btnSair.addActionListener(e -> fluxoLogin.fazerLogout());
 
 
         btnGerentes.addActionListener(e -> mostrarGerentes());

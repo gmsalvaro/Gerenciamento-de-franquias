@@ -1,8 +1,6 @@
 package Service;
 
-import Model.Loja;
-import Model.Pedido;
-import Model.Produto;
+import Model.*;
 import exception.persistencia.PersistenciaException;
 
 import java.math.BigDecimal;
@@ -11,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import Model.Vendedor;
 import java.util.UUID; // Para gerar IDs únicos
 
 public class serviceEstoque {
@@ -32,7 +29,7 @@ public class serviceEstoque {
     }
 
 
-    public Pedido finalizarCompra(Map<String, Integer> itensComprados, Vendedor vendedor)  throws PersistenciaException {
+    public Pedido finalizarCompra(Map<String, Integer> itensComprados, Vendedor vendedor, FormaDePagamento formaDePagamento)  throws PersistenciaException {
         if (itensComprados == null || itensComprados.isEmpty()) {
             throw new PersistenciaException("Nenhum item selecionado para a compra.");
         }
@@ -68,7 +65,7 @@ public class serviceEstoque {
             totalComprado = totalComprado.add(calcularSubtotalItem(produto, quantidadeDesejada));
         }
 
-        Pedido novoPedido = new Pedido(lojaAssociada.getId(), produtosNoPedido, new Date(), "Pendente", vendedor.getId(), totalComprado);
+        Pedido novoPedido = new Pedido(lojaAssociada.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), totalComprado, formaDePagamento);
         novoPedido.setIdLoja(lojaAssociada.getId());
 
         serviceManager.getServicePedido().addPedido(novoPedido);
