@@ -1,4 +1,4 @@
-package Dados;
+package Persistencia.Test;
 
 import Model.Usuario;
 import com.fasterxml.jackson.annotation.JsonTypeName;
