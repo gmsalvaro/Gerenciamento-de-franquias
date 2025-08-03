@@ -5,7 +5,6 @@ import Model.Pedido;
 import Model.Produto;
 import Service.ServiceManager;
 import Service.serviceEstoque;
-import Model.formaPagamento;
 import exception.persistencia.PersistenciaException;
 
 import javax.swing.*;

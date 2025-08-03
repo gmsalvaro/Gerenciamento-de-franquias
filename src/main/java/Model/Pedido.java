@@ -23,9 +23,7 @@ public class Pedido implements Serializable {
         this.status = status;
     }
 
-    public Pedido(){
-
-    }
+    public Pedido(){}
 
     public void setIdLoja(String idLoja) {
         this.idLoja = idLoja;
