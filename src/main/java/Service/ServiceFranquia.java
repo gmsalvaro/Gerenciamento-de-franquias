@@ -91,7 +91,7 @@ public class    ServiceFranquia {
         }
     }
 
-    public List<Franquia> listarFranquias() {
+    public List<Franquia> listarFranquias() throws PersistenciaException {
         return new ArrayList<>(franquiasMap.values());
     }
 
@@ -99,7 +99,14 @@ public class    ServiceFranquia {
         return franquiasMap.get(id);
     }
 
-
+    public int numLojasFranquia(String idLoja) throws PersistenciaException {
+        for(Franquia f:  franquiasMap.values()) {
+            if(f.getId().equals(idLoja)) {
+                return f.getIdLojas().size();
+            }
+        }
+        return 0;
+    }
 
     public void atualizar(Franquia franquia) throws PersistenciaException {
         if (franquiasMap.containsKey(franquia.getId())) {

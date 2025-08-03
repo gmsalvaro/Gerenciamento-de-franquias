@@ -12,9 +12,10 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(String nome, double preco) {
+    public Produto(String nome, double preco, int estoque) {
         this.nome = nome;
         this.preco = preco;
+        this.estoque = estoque;
         this.id = UUID.randomUUID().toString();
     }
 
