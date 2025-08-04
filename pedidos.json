@@ -10,6 +10,17 @@
   "precoTotal" : 5.98,
   "justificativa" : null
 }, {
+  "id" : "eedf8ec3-3d50-472a-8636-12cfdd0ea7ea",
+  "idLoja" : "c71aa16c-63ca-407c-b736-a3ff21c8a07b",
+  "produtosNoPedido" : {
+    "e7977228-1ea7-469d-b940-ad53660291f4" : 10
+  },
+  "dataPedido" : 1754347521980,
+  "status" : "Entregue",
+  "idVendedor" : "5ff1333b-4bd0-46e5-b4dd-14aa900f68b3",
+  "precoTotal" : 200,
+  "justificativa" : null
+}, {
   "id" : "578a1307-b74b-4127-8b04-019035bf8363",
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
   "produtosNoPedido" : {

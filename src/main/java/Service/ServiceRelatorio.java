@@ -23,7 +23,7 @@ public class ServiceRelatorio {
     }
 
     public BigDecimal calcularFaturamentoLoja(Loja loja) {
-        if (loja != null)
+        if (loja == null)
             return BigDecimal.ZERO;
         List<Pedido> pedidosDaLoja = servicePedido.listarPorIDLoja(loja.getId());
         return pedidosDaLoja.stream()

@@ -145,6 +145,9 @@ public class ServiceLoja {
         System.out.println("Adicionando gerente '" + novoGerente.getNome() + "' à nova loja '" + novaLoja.getNome() + "'");
         novaLoja.addUsuarioID(novoGerente.getId());
         this.atualizar(novaLoja);
+
+        novoGerente.setIloja(novaLoja.getId());
+        serviceUsuario.atualizarUsuario(novoGerente);
     }
 
     public List<Loja> listarLojasSemGerente(ServiceManager serviceManager) {

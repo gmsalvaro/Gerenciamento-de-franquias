@@ -1,12 +1,22 @@
 [ {
   "tipo" : "vendedor",
-  "id" : "bd4f65d0-95f3-4e54-8c60-5e4b083a2f02",
-  "nome" : "vendedor1",
-  "email" : "vendedor1@email.com",
-  "cpf" : "44444444444",
+  "id" : "5ff1333b-4bd0-46e5-b4dd-14aa900f68b3",
+  "nome" : "AAAAAAAAA",
+  "email" : "aa@gmai.com",
+  "cpf" : "66655544478",
   "telefone" : "123456789",
   "permissao" : 3,
   "senha" : "Senha@123"
+}, {
+  "tipo" : "gerente",
+  "id" : "6f16e50e-9a44-49c2-ad45-6e1d602b0e77",
+  "nome" : "Pedro",
+  "email" : "pedronalon@email.com",
+  "cpf" : "11122244468",
+  "telefone" : "123456789",
+  "permissao" : 2,
+  "senha" : "Senha@123",
+  "idloja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
 }, {
   "tipo" : "vendedor",
   "id" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
@@ -25,26 +35,6 @@
   "telefone" : "123456789",
   "permissao" : 1,
   "senha" : "Senha@123"
-}, {
-  "tipo" : "gerente",
-  "id" : "08f998da-123f-4eb1-b18a-59d53dc67fb0",
-  "nome" : "Heitor",
-  "email" : "heitor@email.com",
-  "cpf" : "77777777777",
-  "telefone" : "123456789",
-  "permissao" : 2,
-  "senha" : "Senha@123",
-  "idloja" : null
-}, {
-  "tipo" : "gerente",
-  "id" : "4773d15b-6468-4c50-ad7a-73596de5d714",
-  "nome" : "Pedro",
-  "email" : "pedro@email.com",
-  "cpf" : "22222222222",
-  "telefone" : "123456789",
-  "permissao" : 2,
-  "senha" : "Senha@123",
-  "idloja" : null
 }, {
   "tipo" : "vendedor",
   "id" : "900f2338-1695-4895-af23-efd3b771a3a6",

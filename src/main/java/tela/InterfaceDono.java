@@ -142,12 +142,12 @@ public class InterfaceDono extends PainelPrincipal {
 
         String textoExibicao;
         // 2. VERIFICA SE O RESULTADO É NULO antes de usá-lo.
-        if (franquiaDoGerente.isPresent()) {
-            // Se a franquia foi encontrada, exibe o nome dela.
-            textoExibicao = "Franquia: " + franquiaDoGerente.get().getNome();
-        } else {
+        if (franquiaDoGerente == null || franquiaDoGerente.isEmpty()) {
             // Se for nulo, o gerente está disponível e não associado a uma franquia.
             textoExibicao = "Status: Disponível (sem loja/franquia)";
+        } else {
+            // Se a franquia foi encontrada, exibe o nome dela.
+            textoExibicao = "Franquia: " + franquiaDoGerente.get().getNome();
         }
 
         JLabel lblFranquia = new JLabel(textoExibicao);
