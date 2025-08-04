@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID; // Para gerar IDs únicos
 
 public class serviceEstoque {
     private ServiceManager serviceManager;
@@ -21,7 +20,7 @@ public class serviceEstoque {
     }
 
     public List<Produto> listarProdutosDisponiveis() throws PersistenciaException {
-        return serviceManager.getServiceProduto().listarPorIDLoja(lojaAssociada.getId());
+        return serviceManager.getServiceProduto().listarPorLoja(lojaAssociada.getId());
     }
 
     public List<Pedido> listarPedidosDaLoja() throws PersistenciaException {
@@ -42,7 +41,7 @@ public class serviceEstoque {
             String idProduto = entry.getKey();
             Integer quantidadeDesejada = entry.getValue();
 
-            Produto produto = serviceManager.getServiceProduto().getProdutoById(idProduto);
+            Produto produto = serviceManager.getServiceProduto().getProduto(idProduto);
 
             if (produto == null) {
                 throw new PersistenciaException("Produto com ID " + idProduto + " não encontrado.");
@@ -75,7 +74,7 @@ public class serviceEstoque {
         }
 
         lojaAssociada.adicionarIdPedido(novoPedido.getId());
-        serviceManager.getServiceLoja().atualizarLoja(lojaAssociada);
+        serviceManager.getServiceLoja().atualizar(lojaAssociada);
         return novoPedido;
     }
 

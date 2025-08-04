@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import Model.*;
 import Service.*;
@@ -137,13 +138,13 @@ public class InterfaceDono extends PainelPrincipal {
         // --- INÍCIO DA CORREÇÃO ---
 
         // 1. Busca a franquia do gerente, sabendo que o resultado pode ser nulo.
-        Franquia franquiaDoGerente = serviceManager.getServiceFranquia().getFranquiaDoGerente(gerente, serviceManager.getServiceLoja());
+        Optional<Franquia> franquiaDoGerente = serviceManager.getServiceFranquia().getFranquiaDoGerente(gerente, serviceManager.getServiceLoja());
 
         String textoExibicao;
         // 2. VERIFICA SE O RESULTADO É NULO antes de usá-lo.
-        if (franquiaDoGerente != null) {
+        if (franquiaDoGerente.isPresent()) {
             // Se a franquia foi encontrada, exibe o nome dela.
-            textoExibicao = "Franquia: " + franquiaDoGerente.getNome();
+            textoExibicao = "Franquia: " + franquiaDoGerente.get().getNome();
         } else {
             // Se for nulo, o gerente está disponível e não associado a uma franquia.
             textoExibicao = "Status: Disponível (sem loja/franquia)";
@@ -276,7 +277,7 @@ public class InterfaceDono extends PainelPrincipal {
         painelListaCards.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // 3. Busca os dados e cria um card para cada franquia
-        List<Franquia> listaDeFranquias = serviceManager.getServiceFranquia().listarFranquias();
+        List<Franquia> listaDeFranquias = serviceManager.getServiceFranquia().listarTodos();
         if (listaDeFranquias.isEmpty()) {
             painelListaCards.add(new JLabel("Nenhuma franquia cadastrada."));
         } else {
@@ -450,7 +451,7 @@ public class InterfaceDono extends PainelPrincipal {
             try {
                 // Cria a nova franquia e a adiciona através do serviço
                 Franquia novaFranquia = new Franquia(nome, endereco, telefone);
-                serviceManager.getServiceFranquia().addFranquia(novaFranquia);
+                serviceManager.getServiceFranquia().adicionar(novaFranquia);
 
                 JOptionPane.showMessageDialog(this, "Franquia '" + nome + "' adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
@@ -480,7 +481,7 @@ public class InterfaceDono extends PainelPrincipal {
         if (confirmacaoFinal == JOptionPane.YES_OPTION) {
             try {
                 // Chama o serviço para remover a franquia em cascata
-                serviceManager.getServiceFranquia().removeFranquia(franquiaParaRemover, serviceManager);
+                serviceManager.getServiceFranquia().remover(franquiaParaRemover, serviceManager);
                 JOptionPane.showMessageDialog(this, "Franquia removida com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
                 // Atualiza a tela para refletir a remoção

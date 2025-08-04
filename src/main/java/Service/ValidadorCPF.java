@@ -1,13 +1,12 @@
 package Service;
 
-import Model.Usuario;
 import exception.usuario.CPFInvalidoException;
 
 
 public class ValidadorCPF implements Validador<String> {
 
     @Override
-    public boolean validar(String cpf) throws CPFInvalidoException {
+    public void validar(String cpf) throws CPFInvalidoException {
         if (cpf == null || cpf.isEmpty()) {
             throw new CPFInvalidoException("ERRO: CPF não pode ser vazio!");
         }
@@ -20,9 +19,6 @@ public class ValidadorCPF implements Validador<String> {
 
         if(cpf.length() != 11)
             throw new CPFInvalidoException("ERRO: CPF fora dos padrões!");
-
-
-        return true;
     }
 
 }

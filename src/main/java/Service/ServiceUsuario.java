@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class ServiceUsuario{
     private final String FILE_USUARIOS;
     private final DadosUsuario dadosUsuarios;
-    private Map<String, Usuario> usuarioMap;
     private  ValidadorEmail validadorEmail;
     private ValidadorCPF validadorCPF;
     private ValidadorSenha validadorSenha;
@@ -24,7 +23,6 @@ public class ServiceUsuario{
     public ServiceUsuario(String FILE_USUARIOS)  {
         this.FILE_USUARIOS = FILE_USUARIOS;
         this.dadosUsuarios = new DadosUsuario(FILE_USUARIOS);
-        this.usuarioMap = dadosUsuarios.getUsuariosMap();
         this.validadorEmail = new ValidadorEmail();
         this.validadorCPF = new ValidadorCPF();
         this.validadorSenha = new ValidadorSenha();
@@ -34,7 +32,7 @@ public class ServiceUsuario{
         List<Usuario> usuarios = new ArrayList<>();
         if (loja != null && loja.getIdsUsuarios() != null) {
             for (String idUsuario : loja.getIdsUsuarios()) {
-                Usuario u = usuarioMap.get(idUsuario);
+                Usuario u = dadosUsuarios.listarMap().get(idUsuario);
                 if (u != null) {
                     usuarios.add(u);
                 }
@@ -50,10 +48,8 @@ public class ServiceUsuario{
                 .collect(Collectors.toList());
     }
 
-
-
     public List<Usuario> getUsuarios() {
-        return new ArrayList<>(usuarioMap.values());
+        return new ArrayList<>(dadosUsuarios.listarMap().values());
     }
 
     public List<Gerente> listarGerentes() {
@@ -70,11 +66,7 @@ public class ServiceUsuario{
                 .collect(Collectors.toList());
     }
 
-
-
-
-    public void addUsuario(Usuario usuario) throws ValidacaoUsuarioException {
-
+    public void adicionar(Usuario usuario) throws ValidacaoUsuarioException {
         try{
             validadorCPF.validar(usuario.getCpf());
             validadorEmail.validar(usuario.getEmail());
@@ -88,9 +80,7 @@ public class ServiceUsuario{
             }
         }
 
-
-
-        for (Usuario u : usuarioMap.values()) {
+        for (Usuario u : dadosUsuarios.listarMap().values()) {
             if (u.getNome().equalsIgnoreCase(usuario.getNome())) {
                 throw new ValidacaoUsuarioException("Usuário com o nome '" + usuario.getNome() + "' já existe.");
             }
@@ -101,32 +91,27 @@ public class ServiceUsuario{
                 throw new CPFInvalidoException("Usuario com o CPF '"+ usuario.getCpf()+"' já existe.");
             }
         }
-
-
-            dadosUsuarios.adicionar(usuario);
-            this.usuarioMap = dadosUsuarios.getUsuariosMap();
+        dadosUsuarios.adicionar(usuario);
     }
 
     public void removeUsuario(Usuario usuario) throws PersistenciaException {
-        if (usuarioMap.containsKey(usuario.getId())) {
+        if (dadosUsuarios.listarMap().containsKey(usuario.getId())) {
             dadosUsuarios.remover(usuario.getId());
-            this.usuarioMap = dadosUsuarios.getUsuariosMap();
         } else {
             throw new PersistenciaException("Usuário '" + usuario.getNome() + "' não encontrado para remoção.");
         }
     }
 
     public void atualizarUsuario(Usuario usuarioAtualizado) throws PersistenciaException {
-        if (usuarioMap.containsKey(usuarioAtualizado.getId())) {
+        if (dadosUsuarios.listarMap().containsKey(usuarioAtualizado.getId())) {
             dadosUsuarios.atualizar(usuarioAtualizado);
-            this.usuarioMap = dadosUsuarios.getUsuariosMap();
         } else {
             throw new PersistenciaException("Usuário '" + usuarioAtualizado.getNome() + "' não encontrado para atualização.");
         }
     }
 
     public Usuario autenticarUsuario(String email, String senha) throws UsuarioInvalidoException {
-        for (Usuario usuario : usuarioMap.values()) {
+        for (Usuario usuario : dadosUsuarios.listarMap().values()) {
             if (usuario.getEmail().equalsIgnoreCase(email) && usuario.getSenha().equals(senha)) {
                 return usuario;
             }
@@ -135,7 +120,7 @@ public class ServiceUsuario{
     }
 
     public Usuario getUsuarioById(String idUsuario) {
-        return usuarioMap.get(idUsuario);
+        return dadosUsuarios.listarMap().get(idUsuario);
     }
 
     public Optional<Usuario> buscarPorId(String id) {
@@ -146,27 +131,18 @@ public class ServiceUsuario{
         if (gerente == null) {
             throw new IllegalArgumentException("Gerente não pode ser nulo.");
         }
-
-        // 1. Cria um novo objeto Vendedor com os dados do Gerente
         Vendedor novoVendedor = new Vendedor(
                 gerente.getNome(),
                 gerente.getEmail(),
                 gerente.getSenha(),
                 gerente.getCpf()
         );
-
-        // 2. Atribui o MESMO ID do gerente antigo ao novo vendedor.
         novoVendedor.setId(gerente.getId());
-
-        // 3. Chama o novo metodo de substituição diretamente em dadosUsuarios.
-        dadosUsuarios.substituir(novoVendedor);
+        dadosUsuarios.atualizar(novoVendedor);
     }
 
-
     public List<Gerente> listarGerentesDisponiveis(ServiceLoja serviceLoja) {
-        // Pega todos os gerentes
         return listarGerentes().stream()
-                // Filtra, mantendo apenas aqueles para os quais a busca por loja retorna um Optional vazio
                 .filter(gerente -> serviceLoja.buscarLojaPorUsuario(gerente).isEmpty())
                 .collect(Collectors.toList());
     }

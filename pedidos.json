@@ -7,7 +7,8 @@
   "dataPedido" : 1754258933220,
   "status" : "Entregue",
   "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
-  "precoTotal" : 5.98
+  "precoTotal" : 5.98,
+  "justificativa" : null
 }, {
   "id" : "578a1307-b74b-4127-8b04-019035bf8363",
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
@@ -17,7 +18,8 @@
   "dataPedido" : 1754265442317,
   "status" : "Entregue",
   "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
-  "precoTotal" : 9.90
+  "precoTotal" : 9.90,
+  "justificativa" : null
 }, {
   "id" : "b5cbdf9e-0311-4373-a717-afdd69f9acbf",
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
@@ -26,9 +28,21 @@
     "efab9865-cb48-4401-9e59-098675612cef" : 2
   },
   "dataPedido" : 1754260820356,
-  "status" : "Concluído",
+  "status" : "Análise de Alteração",
   "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
-  "precoTotal" : 103.60
+  "precoTotal" : 1004.60,
+  "justificativa" : null
+}, {
+  "id" : "3d7b4a46-28fe-4e86-a700-4c9d6f08803e",
+  "idLoja" : "c42fde73-9a94-4391-893a-9878620452ab",
+  "produtosNoPedido" : {
+    "0008d280-8253-4490-92bd-5623c9a24e39" : 100
+  },
+  "dataPedido" : 1754268687697,
+  "status" : "Análise de Alteração",
+  "idVendedor" : "bd4f65d0-95f3-4e54-8c60-5e4b083a2f02",
+  "precoTotal" : 199.00,
+  "justificativa" : "Alterar quantidade\n"
 }, {
   "id" : "dae527fb-dcfa-4f9c-9fe8-53628d406f48",
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
@@ -38,5 +52,6 @@
   "dataPedido" : 1754263968303,
   "status" : "Concluído",
   "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
-  "precoTotal" : 8.97
+  "precoTotal" : 8.97,
+  "justificativa" : null
 } ]

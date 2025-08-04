@@ -17,6 +17,7 @@ public class Pedido implements Serializable {
     private String idVendedor;
     private BigDecimal precoTotal;
     private FormaDePagamento formaDePagamento;
+    private String justificativa;
 
     public Pedido(){
         this.produtosNoPedido = new HashMap<>();
@@ -25,7 +26,7 @@ public class Pedido implements Serializable {
     public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, StatusPedido status, String idVendedor,  BigDecimal precoTotal, FormaDePagamento formaDePagamento) {
         this.id = UUID.randomUUID().toString();
         this.idLoja = idLoja;
-        this.produtosNoPedido = new HashMap<>(produtosNoPedido); // Cria uma cópia segura
+        this.produtosNoPedido = new HashMap<>(produtosNoPedido);
         this.dataPedido = dataPedido;
         this.status = status;
         this.idVendedor = idVendedor;
@@ -35,6 +36,17 @@ public class Pedido implements Serializable {
 
     public void setIdLoja(String idLoja) {
         this.idLoja = idLoja;
+    }
+
+    public void setJustificativa(String justificativa) {
+        this.justificativa = justificativa;
+    }
+    public String getJustificativa() {
+        return justificativa;
+    }
+
+    public void setEstoque(String id, Integer estoque) {
+        produtosNoPedido.put(id, estoque);
     }
 
     public BigDecimal getPrecoTotal() {
@@ -73,4 +85,15 @@ public class Pedido implements Serializable {
         this.status = status;
     }
 
+    public void setPrecoTotal(BigDecimal novoPrecoTotal) {
+        this.precoTotal = novoPrecoTotal;
+    }
+
+    public void setProdutosNoPedido(Map<String, Integer> novosProdutosNoPedido) {
+        if (novosProdutosNoPedido == null) {
+            this.produtosNoPedido = new HashMap<>();
+        } else {
+            this.produtosNoPedido = new HashMap<>(novosProdutosNoPedido);
+        }
+    }
 }

@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DadosFranquias {
+public class DadosFranquias implements IDados<Franquia, String> {
     private final String LOJAS_FILE;
     private final ObjectMapper mapper;
     private Map<String, Franquia> lojasMap;
@@ -53,17 +53,27 @@ public class DadosFranquias {
             throw new ErroSalvarLojaException("Erro ao salvar lojas: " + e.getMessage());
         }
     }
-
+    @Override
     public Map<String, Franquia> listarMap() {
         return new HashMap<>(lojasMap);
     }
 
+    @Override
+    public List<Franquia> listarTodas() {
+        return new ArrayList<>(lojasMap.values());
+    }
 
+    @Override
+    public Optional<Franquia> buscarPorId(String id) {
+        return Optional.ofNullable(lojasMap.get(id));
+    }
+
+    @Override
     public void adicionar(Franquia loja) throws PersistenciaException{
         lojasMap.put(loja.getId(), loja);
         salvar();
     }
-
+    @Override
     public void atualizar(Franquia lojaAtualizada) throws PersistenciaException{
         if (lojasMap.containsKey(lojaAtualizada.getId())) {
             lojasMap.put(lojaAtualizada.getId(), lojaAtualizada);
@@ -72,7 +82,7 @@ public class DadosFranquias {
             throw new LojaNaoAtualizadaException("Loja com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
         }
     }
-
+    @Override
     public void remover(String id) throws PersistenciaException {
         if (lojasMap.remove(id) != null) {
             salvar();

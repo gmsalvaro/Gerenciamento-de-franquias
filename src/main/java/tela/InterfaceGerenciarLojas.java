@@ -8,7 +8,6 @@ import Service.ServiceManager;
 import exception.persistencia.PersistenciaException;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.List;
@@ -138,7 +137,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         painelListaCards.setBackground(Color.WHITE);
         painelListaCards.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        List<Loja> lojas = serviceManager.getServiceLoja().listarPorIDFranquia(franquia.getId());
+        List<Loja> lojas = serviceManager.getServiceLoja().listarPorFranquia(franquia.getId());
 
         if (lojas.isEmpty()) {
             painelListaCards.add(new JLabel("Nenhuma loja cadastrada para esta franquia."));
@@ -487,7 +486,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
 
             try {
                 Loja novaLoja = new Loja(nome, endereco, franquia.getId());
-                serviceManager.getServiceLoja().addLoja(novaLoja, franquia, gerenteDesignado);
+                serviceManager.getServiceLoja().adicionar(novaLoja, franquia, gerenteDesignado);
                 serviceManager.getServiceFranquia().atualizar(franquia); // Atualiza a franquia para salvar a nova associação de loja
 
                 JOptionPane.showMessageDialog(this, "Loja adicionada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -534,7 +533,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
 
             if (confirmacaoFinal == JOptionPane.YES_OPTION) {
                 try {
-                    serviceManager.getServiceLoja().removerLoja(lojaSelecionada, serviceManager); // Remove a loja
+                    serviceManager.getServiceLoja().remover(lojaSelecionada, serviceManager); // Remove a loja
                     serviceManager.getServiceFranquia().atualizar(franquia); // Salva a mudança na franquia
 
                     JOptionPane.showMessageDialog(this, "Loja removida com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);

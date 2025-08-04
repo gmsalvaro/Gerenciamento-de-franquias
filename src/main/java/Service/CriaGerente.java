@@ -2,7 +2,6 @@ package Service;
 
 import Model.Gerente;
 import Model.Loja;
-import Service.ServiceManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -101,7 +100,7 @@ public class CriaGerente {
                 }
 
                 Gerente novoGerente = new Gerente(nome, email, senha, cpf);
-                serviceManager.getServiceUsuario().addUsuario(novoGerente);
+                serviceManager.getServiceUsuario().adicionar(novoGerente);
                 return novoGerente;
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(parent, "Erro ao adicionar gerente: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);

@@ -26,7 +26,6 @@ public class InterfaceRelatorioLoja extends JFrame{
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        // --- PAINEL DE MÉTRICAS (TOPO) ---
         JPanel painelMetricas = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
         // Calcula e exibe o faturamento

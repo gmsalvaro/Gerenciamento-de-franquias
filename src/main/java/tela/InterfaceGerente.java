@@ -6,7 +6,6 @@ import Service.ServiceManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 
@@ -201,7 +200,7 @@ public class InterfaceGerente extends PainelPrincipal {
                try {
                     // Vincula o novo vendedor à loja gerenciada
                     this.lojaDoGerente.addUsuarioID(novoVendedor.getId());
-                    serviceManager.getServiceLoja().atualizarLoja(this.lojaDoGerente);
+                    serviceManager.getServiceLoja().atualizar(this.lojaDoGerente);
 
                     JOptionPane.showMessageDialog(this, "Vendedor '" + novoVendedor.getNome() + "' adicionado e vinculado a esta loja com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
@@ -317,7 +316,7 @@ public class InterfaceGerente extends PainelPrincipal {
                     try {
                          // 1. Desvincula o vendedor da loja
                          this.lojaDoGerente.removeUsuario(vendedorSelecionado.getId());
-                         serviceManager.getServiceLoja().atualizarLoja(this.lojaDoGerente);
+                         serviceManager.getServiceLoja().atualizar(this.lojaDoGerente);
 
                          // 2. Remove o usuário do sistema
                          serviceManager.getServiceUsuario().removeUsuario(vendedorSelecionado);

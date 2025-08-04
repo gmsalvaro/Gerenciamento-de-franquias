@@ -3,7 +3,7 @@
   "id" : "0008d280-8253-4490-92bd-5623c9a24e39",
   "descricao" : "agua mineral",
   "preco" : 1.99,
-  "estoque" : 100,
+  "estoque" : 0,
   "idLoja" : "c42fde73-9a94-4391-893a-9878620452ab"
 }, {
   "nome" : "refri",

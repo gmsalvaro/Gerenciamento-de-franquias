@@ -6,7 +6,6 @@ import Model.Usuario;
 import Model.Vendedor;
 import Model.Gerente; // Importar Gerente
 import Service.ServiceManager;
-import exception.autenticacao.SenhaInvalidaException;
 import exception.persistencia.PersistenciaException;
 import exception.usuario.ValidacaoUsuarioException;
 
@@ -215,9 +214,9 @@ public class InterfaceGerenciarUsuario extends JFrame {
             }
 
             try {
-                serviceManager.getServiceUsuario().addUsuario(novoUsuario);
+                serviceManager.getServiceUsuario().adicionar(novoUsuario);
                 loja.addUsuarioID(novoUsuario.getId());
-                serviceManager.getServiceLoja().atualizarLoja(loja);
+                serviceManager.getServiceLoja().atualizar(loja);
 
                 JOptionPane.showMessageDialog(this, "Usuário '" + nome + "' adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 listModel.addElement(novoUsuario);
@@ -250,7 +249,7 @@ public class InterfaceGerenciarUsuario extends JFrame {
             try {
                 serviceManager.getServiceUsuario().removeUsuario(selecionado);
                 loja.removeUsuario(selecionado.getId());
-                serviceManager.getServiceLoja().atualizarLoja(loja);
+                serviceManager.getServiceLoja().atualizar(loja);
 
                 JOptionPane.showMessageDialog(this, "Usuário removido com sucesso!", "Removido", JOptionPane.INFORMATION_MESSAGE);
                 listModel.removeElement(selecionado);

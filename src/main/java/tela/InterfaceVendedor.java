@@ -46,7 +46,6 @@ public class InterfaceVendedor extends PainelPrincipal {
         sidebar.add(lblTituloSidebar);
         sidebar.add(Box.createVerticalStrut(30));
 
-        // Botões para cada funcionalidade do Vendedor
         JButton btnRegistrarVenda = criarBotaoMenu("Registrar Nova Venda");
         JButton btnMeusPedidos = criarBotaoMenu("Meus Pedidos");
 
@@ -56,17 +55,15 @@ public class InterfaceVendedor extends PainelPrincipal {
         JButton btnSair = criarBotaoMenu("Sair");
         sidebar.add(btnSair);
 
-        // Ações dos botões
         btnRegistrarVenda.addActionListener(e -> {
             try {
-                // Abre a tela de vendas, passando a loja e o vendedor logado
                 new InterfaceGerenciarVendas(serviceManager, lojaDoVendedor, vendedorLogado);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Erro ao abrir a tela de vendas: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         });
         btnMeusPedidos.addActionListener(e -> mostrarMeusPedidos(false));
-        btnSair.addActionListener(e -> fluxoLogin.fazerLogout()); // Supondo que você use o fluxo de logout
+        btnSair.addActionListener(e -> fluxoLogin.fazerLogout());
     }
 
     private void mostrarBoasVindas() {
@@ -76,15 +73,11 @@ public class InterfaceVendedor extends PainelPrincipal {
         painelConteudo.repaint();
     }
 
-    /**
-     * Constrói e exibe a tela com a lista de pedidos do vendedor logado.
-     */
     private void mostrarMeusPedidos(boolean incluirConcluidos) {
         String titulo = incluirConcluidos ? "Histórico Completo de Pedidos" : "Meus Pedidos em Andamento";
         configurarPainelConteudo(titulo);
         painelConteudo.setLayout(new BorderLayout(10, 10));
 
-        // --- Tabela de Pedidos (Painel Central) ---
         String[] colunas = {"ID do Pedido", "Data", "Valor Total (R$)", "Status"};
         modeloTabela = new DefaultTableModel(colunas, 0) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
@@ -94,13 +87,11 @@ public class InterfaceVendedor extends PainelPrincipal {
         JScrollPane scrollTabela = new JScrollPane(tabelaPedidos);
         painelConteudo.add(scrollTabela, BorderLayout.CENTER);
 
-        // --- Painel de Botões (Inferior) ---
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         JButton btnVerDetalhes = new JButton("Ver Detalhes");
         JButton btnSolicitarAlteracao = new JButton("Solicitar Alteração");
         JButton btnSolicitarExclusao = new JButton("Solicitar Exclusão");
 
-        // O vendedor só pode solicitar alteração/exclusão de pedidos em andamento
         btnSolicitarAlteracao.setEnabled(!incluirConcluidos);
         btnSolicitarExclusao.setEnabled(!incluirConcluidos);
 
@@ -109,12 +100,14 @@ public class InterfaceVendedor extends PainelPrincipal {
         painelBotoes.add(btnSolicitarExclusao);
         painelConteudo.add(painelBotoes, BorderLayout.SOUTH);
 
-        // Ações (placeholders)
         btnVerDetalhes.addActionListener(e -> JOptionPane.showMessageDialog(this, "Funcionalidade para ver detalhes em construção.", "Aviso", JOptionPane.INFORMATION_MESSAGE));
-        btnSolicitarAlteracao.addActionListener(e -> JOptionPane.showMessageDialog(this, "Uma solicitação de alteração será enviada ao gerente.", "Aviso", JOptionPane.INFORMATION_MESSAGE));
-        btnSolicitarExclusao.addActionListener(e -> JOptionPane.showMessageDialog(this, "Uma solicitação de exclusão será enviada ao gerente.", "Aviso", JOptionPane.INFORMATION_MESSAGE));
 
-        // Chama o método para carregar os dados na tabela, passando o filtro
+        // Listener alterado: agora chama o novo método sem depender da seleção da tabela
+        btnSolicitarAlteracao.addActionListener(e -> solicitarAlteracaoPedido());
+
+        // Listener alterado: agora chama o novo método sem depender da seleção da tabela
+        btnSolicitarExclusao.addActionListener(e -> solicitarCancelamentoPedido());
+
         carregarPedidosDoVendedor(incluirConcluidos);
 
         painelConteudo.revalidate();
@@ -124,8 +117,7 @@ public class InterfaceVendedor extends PainelPrincipal {
     private void carregarPedidosDoVendedor(boolean incluirConcluidos) {
         modeloTabela.setRowCount(0);
         try {
-            // Usa o novo método de serviço que aceita o filtro
-            List<Pedido> pedidos = serviceManager.getServicePedido().listarPorIdVendedor(vendedorLogado.getId(), incluirConcluidos);
+            List<Pedido> pedidos = serviceManager.getServicePedido().listarPorVendedor(vendedorLogado.getId(), incluirConcluidos);
             SimpleDateFormat formatadorData = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
             for (Pedido p : pedidos) {
@@ -138,6 +130,123 @@ public class InterfaceVendedor extends PainelPrincipal {
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao carregar pedidos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Método modificado: agora utiliza um JComboBox para a seleção
+    private void solicitarAlteracaoPedido() {
+        List<Pedido> pedidos;
+        try {
+            pedidos = serviceManager.getServicePedido().listarPorVendedor(vendedorLogado.getId(), false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar pedidos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (pedidos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Não há pedidos em andamento para solicitar alteração.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        JComboBox<Pedido> comboPedidos = new JComboBox<>(pedidos.toArray(new Pedido[0]));
+        JTextArea areaJustificativa = new JTextArea(5, 20);
+        areaJustificativa.setLineWrap(true);
+        areaJustificativa.setWrapStyleWord(true);
+        JScrollPane scrollJustificativa = new JScrollPane(areaJustificativa);
+
+        JPanel painel = new JPanel(new GridLayout(0, 1));
+        painel.add(new JLabel("Selecione o Pedido:"));
+        painel.add(comboPedidos);
+        painel.add(new JLabel("Justificativa:"));
+        painel.add(scrollJustificativa);
+
+        int result = JOptionPane.showConfirmDialog(this, painel, "Solicitar Alteração de Pedido",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            Pedido pedidoSelecionado = (Pedido) comboPedidos.getSelectedItem();
+            String justificativa = areaJustificativa.getText();
+
+            if (justificativa.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "A justificativa não pode ser vazia.", "Justificativa Inválida", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            try {
+                if (pedidoSelecionado.getStatus() == StatusPedido.ANALISE_ALTERACAO || pedidoSelecionado.getStatus() == StatusPedido.ANALISE_CANCELAMENTO) {
+                    JOptionPane.showMessageDialog(this, "Este pedido já possui uma solicitação de alteração ou cancelamento em análise.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                pedidoSelecionado.setStatus(StatusPedido.ANALISE_ALTERACAO);
+                pedidoSelecionado.setJustificativa(justificativa);
+                serviceManager.getServicePedido().atualizarPedido(pedidoSelecionado);
+                JOptionPane.showMessageDialog(this, "Solicitação de alteração do pedido " + pedidoSelecionado.getId() + " enviada com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                carregarPedidosDoVendedor(false);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao enviar a solicitação: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    // Método modificado: agora utiliza um JComboBox para a seleção
+    private void solicitarCancelamentoPedido() {
+        List<Pedido> pedidos;
+        try {
+            pedidos = serviceManager.getServicePedido().listarPorVendedor(vendedorLogado.getId(), false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar pedidos: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (pedidos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Não há pedidos em andamento para solicitar cancelamento.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        JComboBox<Pedido> comboPedidos = new JComboBox<>(pedidos.toArray(new Pedido[0]));
+        JTextArea areaJustificativa = new JTextArea(5, 20);
+        areaJustificativa.setLineWrap(true);
+        areaJustificativa.setWrapStyleWord(true);
+        JScrollPane scrollJustificativa = new JScrollPane(areaJustificativa);
+
+        JPanel painel = new JPanel(new GridLayout(0, 1));
+        painel.add(new JLabel("Selecione o Pedido:"));
+        painel.add(comboPedidos);
+        painel.add(new JLabel("Justificativa:"));
+        painel.add(scrollJustificativa);
+
+        int result = JOptionPane.showConfirmDialog(this, painel, "Solicitar Cancelamento de Pedido",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            Pedido pedidoSelecionado = (Pedido) comboPedidos.getSelectedItem();
+            String justificativa = areaJustificativa.getText();
+
+            if (justificativa.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "A justificativa não pode ser vazia.", "Justificativa Inválida", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            int confirmacao = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja solicitar o cancelamento do pedido " + pedidoSelecionado.getId() + "?", "Confirmação de Cancelamento", JOptionPane.YES_NO_OPTION);
+
+            if (confirmacao == JOptionPane.YES_OPTION) {
+                try {
+                    if (pedidoSelecionado.getStatus() == StatusPedido.ANALISE_ALTERACAO || pedidoSelecionado.getStatus() == StatusPedido.ANALISE_CANCELAMENTO) {
+                        JOptionPane.showMessageDialog(this, "Este pedido já possui uma solicitação de alteração ou cancelamento em análise.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                    pedidoSelecionado.setStatus(StatusPedido.ANALISE_CANCELAMENTO);
+                    pedidoSelecionado.setJustificativa(justificativa);
+                    serviceManager.getServicePedido().atualizarPedido(pedidoSelecionado);
+                    JOptionPane.showMessageDialog(this, "Solicitação de cancelamento do pedido " + pedidoSelecionado.getId() + " enviada com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    carregarPedidosDoVendedor(false);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao enviar a solicitação: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
     }
 }

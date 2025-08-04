@@ -1,4 +1,5 @@
 package Dados;
+import Model.Franquia;
 import Model.Loja;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DadosLojas {
+public class DadosLojas implements IDados<Loja, String> {
     private final String LOJAS_FILE;
     private final ObjectMapper mapper;
     private Map<String, Loja> lojasMap; // Memoria em execução
@@ -56,23 +57,28 @@ public class DadosLojas {
         }
     }
 
-    public Map<String, Loja> getLojasMap() {
+    @Override
+    public Map<String, Loja> listarMap() {
         return lojasMap;
     }
 
+    @Override
     public List<Loja> listarTodas() {
         return new ArrayList<>(lojasMap.values());
     }
 
+    @Override
     public Optional<Loja> buscarPorId(String id) {
         return Optional.ofNullable(lojasMap.get(id));
     }
 
+    @Override
     public void adicionar(Loja loja) throws PersistenciaException{
         lojasMap.put(loja.getId(), loja);
         salvar();
     }
 
+    @Override
     public void atualizar(Loja lojaAtualizada) throws PersistenciaException{
         if (lojasMap.containsKey(lojaAtualizada.getId())) {
             lojasMap.put(lojaAtualizada.getId(), lojaAtualizada);
@@ -82,6 +88,7 @@ public class DadosLojas {
         }
     }
 
+    @Override
     public void remover(String id) throws PersistenciaException{
         if (lojasMap.remove(id) != null) {
             salvar();

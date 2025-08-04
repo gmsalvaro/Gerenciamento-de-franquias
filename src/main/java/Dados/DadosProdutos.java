@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DadosProdutos {
+public class DadosProdutos implements IDados<Produto, String>{
     private final String LOJAS_FILE;
     private final ObjectMapper mapper;
     private Map<String, Produto> produtoMap;
@@ -56,19 +56,23 @@ public class DadosProdutos {
         }
     }
 
+    @Override
     public List<Produto> listarTodas() {
         return new ArrayList<>(produtoMap.values());
     }
 
+    @Override
     public Optional<Produto> buscarPorId(String id) {
         return Optional.ofNullable(produtoMap.get(id));
     }
 
+    @Override
     public void adicionar(Produto produto) throws PersistenciaException{
         produtoMap.put(produto.getId(), produto);
         salvar();
     }
 
+    @Override
     public void atualizar(Produto lojaAtualizada) throws PersistenciaException{
         if (produtoMap.containsKey(lojaAtualizada.getId())) {
             produtoMap.put(lojaAtualizada.getId(), lojaAtualizada);
@@ -77,7 +81,7 @@ public class DadosProdutos {
             throw new LojaNaoAtualizadaException("Loja com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
         }
     }
-
+    @Override
     public void remover(String id) throws PersistenciaException{
         if (produtoMap.remove(id) != null) {
             salvar();
@@ -86,7 +90,8 @@ public class DadosProdutos {
         }
     }
 
-    public Map<String, Produto> getProdutosMap() {
+    @Override
+    public Map<String, Produto> listarMap() {
         return produtoMap;
     }
 }

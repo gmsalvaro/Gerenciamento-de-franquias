@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum StatusPedido {
     PENDENTE("Pendente"),
     EM_PREPARO("Em Preparo"),
+    ANALISE_CANCELAMENTO("Análise de Cancelamento"),
+    ANALISE_ALTERACAO("Análise de Alteração"),
     PRONTO_PARA_RETIRADA("Pronto para Retirada"),
     ENTREGUE("Entregue"),
     CONCLUIDO("Concluído"),
-    CANCELADO("Cancelado");
+    CANCELADO("Cancelado"), NEGADO("Alteração Negada");
 
     private final String descricao;
 

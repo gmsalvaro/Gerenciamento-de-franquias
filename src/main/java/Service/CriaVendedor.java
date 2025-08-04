@@ -1,7 +1,7 @@
 package Service;
 
 import Model.Vendedor;
-import Service.ServiceManager;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -46,7 +46,7 @@ public class CriaVendedor {
                 }
 
                 Vendedor novoVendedor = new Vendedor(nome, email, senha, cpf);
-                serviceManager.getServiceUsuario().addUsuario(novoVendedor);
+                serviceManager.getServiceUsuario().adicionar(novoVendedor);
                 return novoVendedor;
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(parent, "Erro ao adicionar vendedor: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);

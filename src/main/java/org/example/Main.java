@@ -1,19 +1,10 @@
 package org.example;
 
-import Dados.*;
 import Model.*;
-import Service.ServiceLoja;
 import Service.ServiceManager;
-import Service.ServiceUsuario;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import exception.persistencia.PersistenciaException;
-import exception.usuario.ValidacaoUsuarioException;
 import tela.*;
 import javax.swing.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 
@@ -85,16 +76,16 @@ public class Main {
                 Vendedor vendedor = new Vendedor("Vendedor teste", "vendedor@email.com", "Senha@123", "33333333333");
 
                 System.out.println("    Adicionando Dono...");
-                serviceManager.getServiceUsuario().addUsuario(dono);
+                serviceManager.getServiceUsuario().adicionar(dono);
                 System.out.println("    Dono adicionado.");
 
                 System.out.println("    Adicionando Gerente...");
-                serviceManager.getServiceUsuario().addUsuario(gerente);
-                serviceManager.getServiceUsuario().addUsuario(gerente2);
+                serviceManager.getServiceUsuario().adicionar(gerente);
+                serviceManager.getServiceUsuario().adicionar(gerente2);
                 System.out.println("    Gerente adicionado.");
 
                 System.out.println("    Adicionando Vendedor...");
-                serviceManager.getServiceUsuario().addUsuario(vendedor);
+                serviceManager.getServiceUsuario().adicionar(vendedor);
                 System.out.println("    Vendedor adicionado.");
 
                 System.out.println("  [Dentro de seedInitialData] Usuários de teste criados com sucesso!");

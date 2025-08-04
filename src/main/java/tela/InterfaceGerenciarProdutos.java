@@ -86,7 +86,7 @@ public class InterfaceGerenciarProdutos extends JFrame {
                 String descricao = txtDescricaoForm.getText().trim();
 
                 Produto novoProduto = new Produto(nome, preco, estoque, descricao);
-                serviceManager.getServiceProduto().addProduto(novoProduto, this.loja, serviceManager.getServiceLoja());
+                serviceManager.getServiceProduto().adicionar(novoProduto, this.loja, serviceManager.getServiceLoja());
 
                 JOptionPane.showMessageDialog(this, "Produto '" + nome + "' adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 carregarProdutos(); // Atualiza a tabela
@@ -103,7 +103,7 @@ public class InterfaceGerenciarProdutos extends JFrame {
             return;
         }
         String idProduto = (String) modeloTabela.getValueAt(linhaSelecionada, 0);
-        Produto produtoParaEditar = serviceManager.getServiceProduto().getProdutoById(idProduto);
+        Produto produtoParaEditar = serviceManager.getServiceProduto().getProduto(idProduto);
 
         if (produtoParaEditar == null) {
             JOptionPane.showMessageDialog(this, "Produto não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -170,7 +170,7 @@ public class InterfaceGerenciarProdutos extends JFrame {
     private void carregarProdutos() {
         modeloTabela.setRowCount(0); // Limpa a tabela
         try {
-            List<Produto> produtos = serviceManager.getServiceProduto().listarPorIDLoja(loja.getId());
+            List<Produto> produtos = serviceManager.getServiceProduto().listarPorLoja(loja.getId());
             for (Produto p : produtos) {
                 modeloTabela.addRow(new Object[]{
                         p.getId(),
@@ -194,13 +194,13 @@ public class InterfaceGerenciarProdutos extends JFrame {
         }
 
         String idProduto = (String) modeloTabela.getValueAt(linhaSelecionada, 0);
-        Produto produtoParaRemover = serviceManager.getServiceProduto().getProdutoById(idProduto);
+        Produto produtoParaRemover = serviceManager.getServiceProduto().getProduto(idProduto);
 
         int confirmacao = JOptionPane.showConfirmDialog(this, "Tem certeza que deseja remover o produto '" + produtoParaRemover.getNome() + "'?", "Confirmar Remoção", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
         if (confirmacao == JOptionPane.YES_OPTION) {
             try {
-                serviceManager.getServiceProduto().removerProduto(produtoParaRemover, this.loja, serviceManager.getServiceLoja());
+                serviceManager.getServiceProduto().remover(produtoParaRemover, this.loja, serviceManager.getServiceLoja());
                 JOptionPane.showMessageDialog(this, "Produto removido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 carregarProdutos();
             } catch (Exception ex) {

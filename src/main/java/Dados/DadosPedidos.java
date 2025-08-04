@@ -1,7 +1,6 @@
 package Dados;
 
 import Model.Pedido;
-import Model.Produto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -20,7 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap; // Bom para uso multi-thread se aplicável
 
-public class DadosPedidos {
+public class DadosPedidos  implements IDados<Pedido, String>{
     private final String LOJAS_FILE;
     private final ObjectMapper mapper;
     private Map<String, Pedido> lojasMap;
@@ -61,23 +60,27 @@ public class DadosPedidos {
         }
     }
 
-    public Map<String, Pedido> getPedidosMap() {
+    @Override
+    public Map<String, Pedido> listarMap() {
         return lojasMap;
     }
 
+    @Override
     public List<Pedido> listarTodas() {
         return new ArrayList<>(lojasMap.values());
     }
 
+    @Override
     public Optional<Pedido> buscarPorId(String id) {
         return Optional.ofNullable(lojasMap.get(id));
     }
 
+    @Override
     public void adicionar(Pedido loja) throws PersistenciaException{
         lojasMap.put(loja.getId(), loja);
         salvar();
     }
-
+    @Override
     public void atualizar(Pedido lojaAtualizada) throws PersistenciaException{
         if (lojasMap.containsKey(lojaAtualizada.getId())) {
             lojasMap.put(lojaAtualizada.getId(), lojaAtualizada);
@@ -86,7 +89,7 @@ public class DadosPedidos {
             System.err.println("Loja com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
         }
     }
-
+    @Override
     public void remover(String id) throws PersistenciaException{
         if (lojasMap.remove(id) != null) {
             salvar();

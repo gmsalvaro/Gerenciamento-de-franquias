@@ -16,7 +16,6 @@ public class PerformanceVendedor {
             this.valorTotalVendas = valorTotalVendas;
         }
 
-        // Getters para todos os campos
         public Vendedor getVendedor() { return vendedor; }
         public Loja getLoja() { return loja; }
         public Franquia getFranquia() { return franquia; }

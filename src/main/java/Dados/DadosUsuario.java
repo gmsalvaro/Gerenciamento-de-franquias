@@ -6,9 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
-import com.fasterxml.jackson.databind.jsontype.NamedType;
-import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import exception.persistencia.PersistenciaException;
 
 import java.io.File;
@@ -23,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class DadosUsuario {
+public class DadosUsuario implements IDados<Usuario, String>{
     private final String USUARIO_FILE;
     private final ObjectMapper mapper;
     private Map<String, Usuario> usuariosMap;
@@ -62,34 +59,25 @@ public class DadosUsuario {
 
     private void salvar() {
         try {
-            // ANTIGO: mapper.writeValue(new File(USUARIO_FILE), new ArrayList<>(usuariosMap.values()));
-
-            // --- CÓDIGO NOVO E CORRIGIDO ---
-
-            // 1. Cria um "escritor" especializado para uma Lista de Usuários.
-            //    Isso força o Jackson a olhar as anotações da classe Usuario.
             ObjectWriter writer = mapper.writerFor(new TypeReference<List<Usuario>>() {});
-
-            // 2. Adiciona a formatação (pretty print) ao escritor especializado.
             writer = writer.with(SerializationFeature.INDENT_OUTPUT);
-
-            // 3. Usa o escritor especializado para salvar o arquivo.
             writer.writeValue(new File(USUARIO_FILE), new ArrayList<>(usuariosMap.values()));
-
         } catch (IOException e) {
-            // Mude a exceção para uma mais genérica para cobrir qualquer erro de persistência
             System.out.println("TA ERRADO!");
         }
     }
 
-    public Map<String, Usuario> getUsuariosMap() {
+    @Override
+    public Map<String, Usuario> listarMap() {
         return usuariosMap;
     }
 
+    @Override
     public List<Usuario> listarTodas() {
         return new ArrayList<>(usuariosMap.values());
     }
 
+    @Override
     public Optional<Usuario> buscarPorId(String id) {
         return Optional.ofNullable(usuariosMap.get(id));
     }
@@ -105,11 +93,13 @@ public class DadosUsuario {
                 .anyMatch(u -> u.getCpf().equals(cpf));
     }
 
+    @Override
     public void adicionar(Usuario usuario) {
         usuariosMap.put(usuario.getId(), usuario);
         salvar();
     }
 
+    @Override
     public void atualizar(Usuario usuarioAtualizado) {
         if (usuariosMap.containsKey(usuarioAtualizado.getId())) {
             usuariosMap.put(usuarioAtualizado.getId(), usuarioAtualizado);
@@ -119,6 +109,7 @@ public class DadosUsuario {
         }
     }
 
+    @Override
     public void remover(String id) {
         if (usuariosMap.remove(id) != null) {
             salvar();
@@ -127,27 +118,16 @@ public class DadosUsuario {
         }
     }
 
-    public void remover(Predicate<Usuario> condicao) {
-        List<String> idsParaRemover = usuariosMap.values().stream()
-                .filter(condicao)
-                .map(Usuario::getId)
-                .collect(Collectors.toList());
-
-        idsParaRemover.forEach(usuariosMap::remove);
-
-        if (!idsParaRemover.isEmpty()) {
-            salvar();
-        }
-    }
-
-    public void substituir(Usuario usuarioAtualizado) throws PersistenciaException {
-        // Verifica se um usuário com este ID já existe no mapa
-        if (usuariosMap.containsKey(usuarioAtualizado.getId())) {
-            // Coloca o novo objeto de usuário no lugar do antigo
-            usuariosMap.put(usuarioAtualizado.getId(), usuarioAtualizado);
-            salvar(); // Salva o estado atualizado no arquivo JSON
-        } else {
-            throw new PersistenciaException("Usuário com ID " + usuarioAtualizado.getId() + " não encontrado para substituição.");
-        }
-    }
+//    public void remover(Predicate<Usuario> condicao) {
+//        List<String> idsParaRemover = usuariosMap.values().stream()
+//                .filter(condicao)
+//                .map(Usuario::getId)
+//                .collect(Collectors.toList());
+//
+//        idsParaRemover.forEach(usuariosMap::remove);
+//
+//        if (!idsParaRemover.isEmpty()) {
+//            salvar();
+//        }
+//    }
 }

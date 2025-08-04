@@ -6,7 +6,6 @@ import Model.StatusPedido;
 import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,42 +18,38 @@ public class ServicePedido {
     public ServicePedido(String FILE_PEDIDOS) throws PersistenciaException {
         this.FILE_PEDIDOS = FILE_PEDIDOS;
         this.dadosPedidos = new DadosPedidos(FILE_PEDIDOS);
-        this.pedidoMap = dadosPedidos.getPedidosMap();
     }
 
     public void addPedido(Pedido pedido) throws PersistenciaException {
-
-        // if (pedidoMap.containsKey(pedido.getId())) {
-        //     throw new PersistenciaException("Pedido com ID '" + pedido.getId() + "' já existe.");
-        // }
+         if (pedidoMap.containsKey(pedido.getId())) {
+             throw new PersistenciaException("Pedido com ID '" + pedido.getId() + "' já existe.");
+         }
         dadosPedidos.adicionar(pedido);
-        this.pedidoMap = dadosPedidos.getPedidosMap();
     }
 
-    public void removerPedido(Pedido pedido) throws PersistenciaException {
-        if (pedidoMap.containsKey(pedido.getId())) {
+    public void remover(Pedido pedido) throws PersistenciaException {
+        if (dadosPedidos.listarMap().containsKey(pedido.getId())) {
             dadosPedidos.remover(pedido.getId());
-            this.pedidoMap = dadosPedidos.getPedidosMap();
         } else {
             throw new PersistenciaException("Pedido '" + pedido.getId() + "' não encontrado para remoção.");
         }
     }
 
     public Pedido getPedidoById(String idPedido) {
-        return pedidoMap.get(idPedido);
+        return dadosPedidos.listarMap().get(idPedido);
     }
 
     public Map<String, Pedido> getPedidoMap() {
-        return pedidoMap;
+        return dadosPedidos.listarMap();
     }
 
     public List<Pedido> listarTodos() {
-        return new ArrayList<>(pedidoMap.values());
+        return new ArrayList<>(dadosPedidos.listarMap().values());
     }
 
     public List<Pedido> listarPorIDLoja(String idLoja) {
         List<Pedido> pedidosDaLoja = new ArrayList<>();
-        for(Pedido p : pedidoMap.values()) {
+        for(Pedido p : dadosPedidos.listarMap().values()) {
             if (p.getIdLoja().equals(idLoja)) {
                 pedidosDaLoja.add(p);
             }
@@ -62,40 +57,21 @@ public class ServicePedido {
         return pedidosDaLoja;
     }
 
-    public List<Pedido> listarPorIDLoja(String idLoja, boolean incluirConcluidos) {
-        List<Pedido> todosOsPedidos = listarPorIDLoja(idLoja);
 
-        if (incluirConcluidos) {
-            return todosOsPedidos; // Retorna tudo
-        } else {
-            // Retorna apenas os pedidos que NÃO estão concluídos ou cancelados
-            return todosOsPedidos.stream()
-                    .filter(p -> p.getStatus() != StatusPedido.CONCLUIDO &&
-                            p.getStatus() != StatusPedido.ENTREGUE &&
-                            p.getStatus() != StatusPedido.CANCELADO)
-                    .collect(Collectors.toList());
-        }
-    }
-
-    public List<Pedido> listarPorIdVendedor(String idVendedor) {
+    public List<Pedido> listarPorVendedor(String idVendedor) {
         if (idVendedor == null || idVendedor.trim().isEmpty()) {
-            return new ArrayList<>(); // Retorna lista vazia se o ID for inválido
+            return new ArrayList<>();
         }
-
-        // Usando Stream para filtrar a lista de forma mais eficiente e legível
-        return listarTodos().stream() // Pega todos os pedidos
-                .filter(pedido -> idVendedor.equals(pedido.getIdVendedor())) // Mantém apenas os pedidos cujo idVendedor corresponde
-                .collect(Collectors.toList()); // Coleta os resultados em uma nova lista
+        return listarTodos().stream()
+                .filter(pedido -> idVendedor.equals(pedido.getIdVendedor()))
+                .collect(Collectors.toList());
     }
 
-    public List<Pedido> listarPorIdVendedor(String idVendedor, boolean incluirConcluidos) {
-        // 1. Reutiliza o método acima para pegar todos os pedidos do vendedor primeiro
-        List<Pedido> todosOsPedidosDoVendedor = listarPorIdVendedor(idVendedor);
-
+    public List<Pedido> listarPorVendedor(String idVendedor, boolean incluirConcluidos) {
+        List<Pedido> todosOsPedidosDoVendedor = listarPorVendedor(idVendedor);
         if (incluirConcluidos) {
-            return todosOsPedidosDoVendedor; // Retorna a lista completa
+            return todosOsPedidosDoVendedor;
         } else {
-            // 2. Filtra a lista para retornar apenas os pedidos em andamento
             return todosOsPedidosDoVendedor.stream()
                     .filter(p -> p.getStatus() != StatusPedido.CONCLUIDO &&
                             p.getStatus() != StatusPedido.ENTREGUE &&
@@ -104,11 +80,9 @@ public class ServicePedido {
         }
     }
 
-
     public void atualizarPedido(Pedido pedidoAtualizado) throws PersistenciaException {
-        if (pedidoMap.containsKey(pedidoAtualizado.getId())) {
+        if (dadosPedidos.listarMap().containsKey(pedidoAtualizado.getId())) {
             dadosPedidos.atualizar(pedidoAtualizado);
-            this.pedidoMap = dadosPedidos.getPedidosMap();
         } else {
             throw new PersistenciaException("Pedido não encontrado para atualização.");
         }
@@ -118,11 +92,7 @@ public class ServicePedido {
         if (pedido == null) {
             throw new IllegalArgumentException("O pedido não pode ser nulo.");
         }
-
-        // Altera o status do objeto em memória
         pedido.setStatus(novoStatus);
-
-        // Chama o método 'atualizar' que já existe para salvar a mudança no arquivo JSON
         this.atualizarPedido(pedido);
     }
 }
