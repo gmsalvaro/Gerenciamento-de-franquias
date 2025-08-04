@@ -1,6 +1,5 @@
 package tela;
 
-
 import Model.Usuario;
 import Service.ServiceManager;
 import exception.autenticacao.UsuarioInvalidoException;
@@ -15,17 +14,13 @@ import java.awt.event.ActionEvent;
 public class Login extends JFrame {
 
     private final ServiceManager serviceManager;
-    private final GerenciaFluxoLogin gerenciaFluxoLogin;
 
     private final JTextField insereEmail;
     private final JPasswordField insereSenha;
 
-    public Login(ServiceManager serviceManager, GerenciaFluxoLogin gerenciaFluxoLogin) {
-        // CORREÇÃO 2: Removida a linha "this.dadosUsuario = dadosUsuario;"
-        this.gerenciaFluxoLogin = gerenciaFluxoLogin;
-        this.serviceManager = serviceManager; // Nome correto da variável
+    public Login(ServiceManager serviceManager) {
+        this.serviceManager = serviceManager;
 
-        // --- Configuração da Janela (código de UI permanece o mesmo) ---
         setTitle("Tela de Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(450, 480));
@@ -78,32 +73,43 @@ public class Login extends JFrame {
         botaoLogin.setForeground(Color.WHITE);
         botaoLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botaoLogin.putClientProperty("JButton.buttonType", "roundRect");
+        botaoLogin.addActionListener(this::verificarLogin);
+
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.insets = new Insets(20, 8, 8, 8);
+        gbc.gridwidth = 2;
         formPanel.add(botaoLogin, gbc);
 
         mainPanel.add(formPanel, BorderLayout.CENTER);
 
-        botaoLogin.addActionListener(this::verificarLogin);
         getRootPane().setDefaultButton(botaoLogin);
         pack();
         setVisible(true);
     }
 
-    // O método verificarLogin agora está correto e não precisa de alterações
     private void verificarLogin(ActionEvent e) {
         String email = insereEmail.getText().trim();
         String senha = new String(insereSenha.getPassword());
 
         try {
-            // Usa a variável da classe "this.serviceManager", que agora está com o nome correto
             Usuario usuarioEncontrado = this.serviceManager.getServiceUsuario().autenticarUsuario(email, senha);
 
             JOptionPane.showMessageDialog(this, "Bem-vindo, " + usuarioEncontrado.getNome() + "!");
 
-            if (this.gerenciaFluxoLogin != null) {
-                this.gerenciaFluxoLogin.sucessoLogin(usuarioEncontrado);
+            switch (usuarioEncontrado.getPermissao()) {
+                case 1:
+                    new InterfaceDono(serviceManager, usuarioEncontrado).setVisible(true);
+                    break;
+                case 2:
+                    new InterfaceGerente(serviceManager, usuarioEncontrado).setVisible(true);
+                    break;
+                case 3:
+                    new InterfaceVendedor(serviceManager, usuarioEncontrado).setVisible(true);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(this, "Permissão de usuário desconhecida.", "Erro de Permissão", JOptionPane.ERROR_MESSAGE);
+                    return; // Retorna sem fechar a janela de login
             }
 
             this.dispose();
@@ -113,89 +119,6 @@ public class Login extends JFrame {
             insereSenha.setText("");
         }
     }
+
+
 }
-
-//        //Label's
-//        JLabel usuario = new JLabel("Usuario:");
-//        usuario.setBounds(100,50,100,30);
-//        janela.add(usuario);
-//
-//        JLabel senha = new JLabel("senha: ");
-//        senha.setBounds(100,150,100,30);
-//        janela.add(senha);
-//
-//        JLabel cadas = new JLabel("Nao possui Cadastro?");
-//        cadas.setBounds(300, 200, 180, 30);
-//        janela.add(cadas);
-//
-//
-//        //Tanto o JtextFIeld quanto JPassword irao ser a parte da entrada/inserção dos dados seja usuario/CPF e senha
-////
-//        //Text
-//        JTextField insereEmail = new JTextField();
-//        insereEmail.setBounds(100, 80, 150, 30);
-//        janela.add(insereEmail);
-//
-//        //JPassword
-//        JPasswordField inserePass = new JPasswordField();
-//        inserePass.setBounds(100,180,150,30);
-//        janela.add(inserePass);
-//
-//        //Cria Botao Login
-//        JButton Login = new JButton("Entrar");
-//        janela.add(Login);
-//        Login.setBounds(100,250,150,30);
-//        Login.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                String email = insereEmail.getText();
-//                String password = new String(inserePass.getPassword());
-//                System.out.println("Entrando com o usuario: " + email);
-//                System.out.println("Senha: " + password);
-//                List<Usuario> usuarioList = dadosUsuario.listarTodas();
-//                for (Usuario usuario : usuarioList) {
-//                    if (usuario.getEmail().equals(email) && usuario.getSenha().equals(password)){
-//                        switch (usuario.getPermissao()) {
-//                            case 1:
-//                                JOptionPane.showMessageDialog(null, "Bem vindo!");
-//                                //new InterfaceDono();
-//                                janela.dispose();
-//                                break;
-//                            case 2:
-//                                //new InterfaceGerente();
-//                                janela.dispose();
-//                                break;
-//                            case 3:
-//                                //new InterfaceVendedor();
-//                                janela.dispose();
-//                                break;
-//                        }
-//                    } else { // Utilizar Excessoes
-//                        JOptionPane.showMessageDialog(janela, "Usuario ou senha incorretos");
-//                        insereEmail.setText("");
-//                        inserePass.setText("");
-//                    }
-//                }
-//
-//
-//            }
-//        });
-//
-//        //botao Cadastro
-//        JButton Cadastro = new JButton("Cadastro");
-//        janela.add(Cadastro);
-//        Cadastro.setBounds(300,250,150,30);
-//        Cadastro.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                System.out.println("Tentando Fazer Cadastro!");
-//                //Adicionar implementação para redirecionar para a interface de cadastro?
-//                //Nova Classe?? ou apenas a funcionalidade aqui?
-//                //Dependendo do caso pode ser ruim para a legebilidade do codigo ou para a memoria do programa!
-//            }
-//        });
-//
-//
-//    }
-
-

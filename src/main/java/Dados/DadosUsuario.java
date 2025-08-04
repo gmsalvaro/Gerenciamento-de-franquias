@@ -94,6 +94,7 @@ public class DadosUsuario {
         return Optional.ofNullable(usuariosMap.get(id));
     }
 
+
     public List<Usuario> buscar(Predicate<Usuario> condicao) {
         return usuariosMap.values().stream()
                 .filter(condicao)
@@ -119,7 +120,7 @@ public class DadosUsuario {
         }
     }
 
-    public void remover(String id) {
+    public void remover(String id) throws PersistenciaException {
         if (usuariosMap.remove(id) != null) {
             salvar();
         } else {

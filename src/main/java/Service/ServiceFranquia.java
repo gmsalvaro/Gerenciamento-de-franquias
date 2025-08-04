@@ -55,7 +55,8 @@ public class    ServiceFranquia {
         System.out.println("Franquia '" + franquia.getNome() + "' e todos os seus dados associados foram removidos com sucesso!");
     }
 
-    public List<Franquia> listarFranquias() {
+
+    public List<Franquia> listarFranquias() throws PersistenciaException {
         return new ArrayList<>(dadosFranquias.listarMap().values());
     }
 
@@ -63,7 +64,14 @@ public class    ServiceFranquia {
         return dadosFranquias.listarMap().get(id);
     }
 
-
+    public int numLojasFranquia(String idLoja) throws PersistenciaException {
+        for(Franquia f:  dadosFranquias.listarMap().values()) {
+            if(f.getId().equals(idLoja)) {
+                return f.getIdLojas().size();
+            }
+        }
+        return 0;
+    }
 
     public void atualizar(Franquia franquia) throws PersistenciaException {
         // Delega a chamada diretamente.
@@ -84,18 +92,22 @@ public class    ServiceFranquia {
     }
 
     public boolean existeDuplicata(Franquia franquiaParaVerificar) {
-        for (Franquia existente : listarFranquias()) {
-            // Se o ID for o mesmo, é a própria franquia, então pulamos a verificação
-            if (existente.getId().equals(franquiaParaVerificar.getId())) {
-                continue;
-            }
+       try{
+           for (Franquia existente : listarFranquias()) {
+               // Se o ID for o mesmo, é a própria franquia, então pulamos a verificação
+               if (existente.getId().equals(franquiaParaVerificar.getId())) {
+                   continue;
+               }
 
-            // Verifica se o nome ou endereço de OUTRA franquia já é igual
-            if (existente.getNome().equalsIgnoreCase(franquiaParaVerificar.getNome()) ||
-                    existente.getEndereco().equalsIgnoreCase(franquiaParaVerificar.getEndereco())) {
-                return true; // Encontrou uma duplicata
-            }
-        }
+               // Verifica se o nome ou endereço de OUTRA franquia já é igual
+               if (existente.getNome().equalsIgnoreCase(franquiaParaVerificar.getNome()) ||
+                       existente.getEndereco().equalsIgnoreCase(franquiaParaVerificar.getEndereco())) {
+                   return true; // Encontrou uma duplicata
+               }
+           }
+       }catch(PersistenciaException e){
+           System.out.println("ERRO! algum dado igual.");
+       }
         return false; // Nenhuma duplicata encontrada
     }
 

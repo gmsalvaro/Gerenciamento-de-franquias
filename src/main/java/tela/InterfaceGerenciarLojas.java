@@ -241,7 +241,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
 
         // Cria os botões
         JButton btnGerenciarUsuarios = new JButton("Gerenciar Usuários");
-        btnGerenciarUsuarios.addActionListener(e -> new InterfaceGerenciarUsuario(loja, serviceManager, franquia).setVisible(true));
+        btnGerenciarUsuarios.addActionListener(e -> new InterfaceGerenciarUsuario(serviceManager, loja).setVisible(true));
 
         JButton btnDesignarGerente = new JButton("Designar Gerente");
         btnDesignarGerente.addActionListener(e -> acaoDesignarGerente(loja));

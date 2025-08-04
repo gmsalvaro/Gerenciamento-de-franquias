@@ -14,26 +14,26 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(String nome, BigDecimal preco, int quantidade, String descricao) {
+    public Produto(String nome, BigDecimal preco, int estoque, String descricao) {
         this.nome = nome;
         this.preco = preco;
-        this.estoque = quantidade;
         this.descricao = descricao;
+        this.estoque = estoque;
         this.id = UUID.randomUUID().toString();
     }
 
-    /// id loja
     public void setIdLoja(String idLoja) {
         this.idLoja = idLoja;
     }
+
     public String getIdLoja() {
         return idLoja;
     }
 
-    /// nome
     public String getNome() {
         return nome;
     }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -51,10 +51,10 @@ public class Produto {
         this.preco = preco;
     }
 
-    /// estoque
     public int getEstoque() {
         return estoque;
     }
+
     public void setEstoque(int estoque) {
         this.estoque = estoque;
     }
@@ -65,4 +65,3 @@ public class Produto {
 
 
     }
-
