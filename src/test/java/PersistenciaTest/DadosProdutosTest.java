@@ -24,23 +24,18 @@ class DadosProdutosTest {
 
     @BeforeEach
     void setup() throws PersistenciaException, IOException {
-        // Inicializa uma nova instância de DadosProdutos antes de cada teste
-        // e garante que o arquivo de teste esteja limpo.
         Files.deleteIfExists(Paths.get(TEMP_FILE_PATH));
         dadosProdutos = new DadosProdutos(TEMP_FILE_PATH);
     }
 
     @AfterEach
     void tearDown() throws IOException {
-        // Limpa o arquivo de teste após cada execução
         Files.deleteIfExists(Paths.get(TEMP_FILE_PATH));
     }
 
     @Test
     @DisplayName("Teste de inicialização: arquivo não existe, deve ser criado vazio")
     void testInicializacaoArquivoNaoExistente() {
-        // O setup já lida com a criação do arquivo e instanciação da classe.
-        // Verificamos se o arquivo foi criado e se a lista de produtos está vazia.
         assertTrue(Files.exists(Paths.get(TEMP_FILE_PATH)));
         assertTrue(dadosProdutos.listarTodas().isEmpty());
     }
@@ -48,16 +43,11 @@ class DadosProdutosTest {
     @Test
     @DisplayName("Teste de adicionar: deve adicionar um novo produto e salvar no arquivo")
     void testAdicionarProduto() throws PersistenciaException {
-        // Cria um novo produto e o adiciona
         Produto novoProduto = new Produto("Produto Teste", BigDecimal.valueOf(99.99), 10, "Descrição de teste.");
         dadosProdutos.adicionar(novoProduto);
-
-        // Verifica se o produto existe na lista e no mapa
         Optional<Produto> produtoAdicionado = dadosProdutos.buscarPorId(novoProduto.getId());
         assertTrue(produtoAdicionado.isPresent());
         assertEquals(novoProduto.getNome(), produtoAdicionado.get().getNome());
-
-        // Verifica se o produto foi persistido corretamente no arquivo
         try {
             String conteudoArquivo = Files.readString(Paths.get(TEMP_FILE_PATH));
             assertTrue(conteudoArquivo.contains(novoProduto.getId()));
@@ -110,8 +100,6 @@ class DadosProdutosTest {
     @DisplayName("Teste de atualizar: deve lançar exceção para produto inexistente")
     void testAtualizarProdutoInexistente() {
         Produto produtoInexistente = new Produto("Produto Inexistente", BigDecimal.ZERO, 0, "Desc");
-
-        // Tenta atualizar um produto que não foi adicionado
         Assertions.assertThrows(LojaNaoAtualizadaException.class, () -> dadosProdutos.atualizar(produtoInexistente));
     }
 
@@ -121,19 +109,16 @@ class DadosProdutosTest {
         Produto produtoParaRemover = new Produto("Produto para remover", BigDecimal.valueOf(1.00), 1, "Descrição");
         dadosProdutos.adicionar(produtoParaRemover);
 
-        // Verifica que o produto existe antes da remoção
         assertTrue(dadosProdutos.buscarPorId(produtoParaRemover.getId()).isPresent());
 
         dadosProdutos.remover(produtoParaRemover.getId());
 
-        // Verifica que o produto não existe mais
         assertFalse(dadosProdutos.buscarPorId(produtoParaRemover.getId()).isPresent());
     }
 
     @Test
     @DisplayName("Teste de remover: deve lançar exceção para ID inexistente")
     void testRemoverProdutoInexistente() {
-        // Tenta remover um ID que não existe
         Assertions.assertThrows(LojaNaoRemovidaException.class, () -> dadosProdutos.remover("id-nao-existe"));
     }
 
@@ -157,12 +142,9 @@ class DadosProdutosTest {
     void testListarMap() throws PersistenciaException {
         Produto p1 = new Produto("P1", BigDecimal.TEN, 10, "D1");
         dadosProdutos.adicionar(p1);
-
-        // Adiciona um novo produto
         Produto p2 = new Produto("P2", BigDecimal.ONE, 1, "D2");
         dadosProdutos.adicionar(p2);
 
-        // Verifica se o mapa retornado contém os produtos
         Assertions.assertTrue(dadosProdutos.listarMap().containsKey(p1.getId()));
         Assertions.assertTrue(dadosProdutos.listarMap().containsKey(p2.getId()));
     }

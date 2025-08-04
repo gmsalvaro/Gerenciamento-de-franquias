@@ -1,24 +1,18 @@
 package PersistenciaTest;
-// package para os testes
 import Dados.DadosUsuario;
 import Model.*;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import exception.persistencia.PersistenciaException;
 import org.junit.jupiter.api.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-// Classes de exemplo para os subtipos de Usuario.
-// A classe de persistência precisa dessas classes para
-// o Jackson conseguir desserializar o JSON.
 class Dono extends Usuario {
     public Dono() { super(); }
     @JsonCreator
@@ -59,23 +53,18 @@ class DadosUsuarioTest {
 
     @BeforeEach
     void setup() throws IOException {
-        // Inicializa uma nova instância de DadosUsuario antes de cada teste
-        // e garante que o arquivo de teste esteja limpo.
         Files.deleteIfExists(Paths.get(TEMP_FILE_PATH));
         dadosUsuario = new DadosUsuario(TEMP_FILE_PATH);
     }
 
     @AfterEach
     void tearDown() throws IOException {
-        // Limpa o arquivo de teste após cada execução
         Files.deleteIfExists(Paths.get(TEMP_FILE_PATH));
     }
 
     @Test
     @DisplayName("Teste de inicialização: arquivo não existe, deve ser criado vazio")
     void testInicializacaoArquivoNaoExistente() {
-        // O setup já lida com a criação do arquivo e instanciação da classe.
-        // Verificamos se o arquivo foi criado e se a lista de usuários está vazia.
         assertTrue(Files.exists(Paths.get(TEMP_FILE_PATH)));
         assertTrue(dadosUsuario.listarTodas().isEmpty());
     }
@@ -83,16 +72,13 @@ class DadosUsuarioTest {
     @Test
     @DisplayName("Teste de adicionar: deve adicionar um novo usuário e salvar no arquivo")
     void testAdicionarUsuario() {
-        // Cria um novo usuário e o adiciona
         Usuario novoUsuario = new Dono("João", "joao@email.com", "senha123", "111.111.111-11");
         dadosUsuario.adicionar(novoUsuario);
 
-        // Verifica se o usuário existe na lista e no mapa
         Optional<Usuario> usuarioAdicionado = dadosUsuario.buscarPorId(novoUsuario.getId());
         assertTrue(usuarioAdicionado.isPresent());
         assertEquals(novoUsuario.getNome(), usuarioAdicionado.get().getNome());
 
-        // Verifica se o usuário foi persistido corretamente no arquivo
         try {
             String conteudoArquivo = Files.readString(Paths.get(TEMP_FILE_PATH));
             assertTrue(conteudoArquivo.contains(novoUsuario.getId()));
@@ -125,7 +111,6 @@ class DadosUsuarioTest {
         Usuario usuarioExistente = new Vendedor("Pedro", "pedro@email.com", "senha123", "333.333.333-33", "loja-y");
         dadosUsuario.adicionar(usuarioExistente);
 
-        // Cria uma nova instância com o mesmo ID, mas com dados atualizados
         Usuario usuarioAtualizado = new Vendedor("Pedro Vendedor", "pedro_novo@email.com", "novasenha", "333.333.333-33", "loja-y");
         usuarioAtualizado.setId(usuarioExistente.getId());
 
@@ -142,7 +127,6 @@ class DadosUsuarioTest {
     void testAtualizarUsuarioInexistente() {
         Usuario usuarioInexistente = new Dono("João", "joao@email.com", "senha", "111.111.111-11");
 
-        // O método não lança exceção, apenas imprime no console.
         Assertions.assertDoesNotThrow(() -> dadosUsuario.atualizar(usuarioInexistente));
     }
 
@@ -172,11 +156,9 @@ class DadosUsuarioTest {
         dadosUsuario.adicionar(new Vendedor("Vendedor B", "vendb@email.com", "senha", "222", "loja-1"));
         dadosUsuario.adicionar(new Vendedor("Vendedor C", "vendc@email.com", "senha", "333", "loja-1"));
 
-        // Busca todos os vendedores
         List<Usuario> vendedores = dadosUsuario.buscar(u -> u instanceof Vendedor);
         assertEquals(2, vendedores.size());
 
-        // Busca usuários com CPF "111"
         List<Usuario> usuarioComCpf = dadosUsuario.buscar(u -> u.getCpf().equals("111"));
         assertEquals(1, usuarioComCpf.size());
         assertEquals("Dono A", usuarioComCpf.get(0).getNome());

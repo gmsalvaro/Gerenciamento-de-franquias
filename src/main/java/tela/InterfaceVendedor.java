@@ -180,7 +180,7 @@ public class InterfaceVendedor extends PainelPrincipal {
 
                 pedidoSelecionado.setStatus(StatusPedido.ANALISE_ALTERACAO);
                 pedidoSelecionado.setJustificativa(justificativa);
-                serviceManager.getServicePedido().atualizarPedido(pedidoSelecionado);
+                serviceManager.getServicePedido().atualizar(pedidoSelecionado);
                 JOptionPane.showMessageDialog(this, "Solicitação de alteração do pedido " + pedidoSelecionado.getId() + " enviada com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 carregarPedidosDoVendedor(false);
 
@@ -240,7 +240,7 @@ public class InterfaceVendedor extends PainelPrincipal {
 
                     pedidoSelecionado.setStatus(StatusPedido.ANALISE_CANCELAMENTO);
                     pedidoSelecionado.setJustificativa(justificativa);
-                    serviceManager.getServicePedido().atualizarPedido(pedidoSelecionado);
+                    serviceManager.getServicePedido().atualizar(pedidoSelecionado);
                     JOptionPane.showMessageDialog(this, "Solicitação de cancelamento do pedido " + pedidoSelecionado.getId() + " enviada com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     carregarPedidosDoVendedor(false);
                 } catch (Exception ex) {

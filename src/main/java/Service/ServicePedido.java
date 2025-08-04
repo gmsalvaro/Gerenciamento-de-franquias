@@ -13,15 +13,14 @@ import java.util.stream.Collectors;
 public class ServicePedido {
     private final String FILE_PEDIDOS;
     private DadosPedidos dadosPedidos;
-    private Map<String, Pedido> pedidoMap;
 
     public ServicePedido(String FILE_PEDIDOS) throws PersistenciaException {
         this.FILE_PEDIDOS = FILE_PEDIDOS;
         this.dadosPedidos = new DadosPedidos(FILE_PEDIDOS);
     }
 
-    public void addPedido(Pedido pedido) throws PersistenciaException {
-         if (pedidoMap.containsKey(pedido.getId())) {
+    public void adicionar(Pedido pedido) throws PersistenciaException {
+         if (dadosPedidos.listarMap().containsKey(pedido.getId())) {
              throw new PersistenciaException("Pedido com ID '" + pedido.getId() + "' já existe.");
          }
         dadosPedidos.adicionar(pedido);
@@ -39,7 +38,7 @@ public class ServicePedido {
         return dadosPedidos.listarMap().get(idPedido);
     }
 
-    public Map<String, Pedido> getPedidoMap() {
+    public Map<String, Pedido> listarMap() {
         return dadosPedidos.listarMap();
     }
 
@@ -80,7 +79,7 @@ public class ServicePedido {
         }
     }
 
-    public void atualizarPedido(Pedido pedidoAtualizado) throws PersistenciaException {
+    public void atualizar(Pedido pedidoAtualizado) throws PersistenciaException {
         if (dadosPedidos.listarMap().containsKey(pedidoAtualizado.getId())) {
             dadosPedidos.atualizar(pedidoAtualizado);
         } else {
@@ -88,11 +87,11 @@ public class ServicePedido {
         }
     }
 
-    public void atualizarStatusPedido(Pedido pedido, StatusPedido novoStatus) throws PersistenciaException {
+    public void atualizarStatus(Pedido pedido, StatusPedido novoStatus) throws PersistenciaException {
         if (pedido == null) {
             throw new IllegalArgumentException("O pedido não pode ser nulo.");
         }
         pedido.setStatus(novoStatus);
-        this.atualizarPedido(pedido);
+        this.atualizar(pedido);
     }
 }

@@ -67,7 +67,7 @@ public class serviceEstoque {
         Pedido novoPedido = new Pedido(lojaAssociada.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), totalComprado, formaDePagamento);
         novoPedido.setIdLoja(lojaAssociada.getId());
 
-        serviceManager.getServicePedido().addPedido(novoPedido);
+        serviceManager.getServicePedido().adicionar(novoPedido);
 
         for (Produto p : produtosAtualizados) {
             serviceManager.getServiceProduto().atualizarProduto(p);

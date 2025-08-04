@@ -234,7 +234,7 @@ public class InterfaceGerenciarPedidos extends JFrame {
                 pedidoParaEditar.setStatus(StatusPedido.PENDENTE);
 
                 // 2. Persiste o objeto atualizado
-                serviceManager.getServicePedido().atualizarPedido(pedidoParaEditar);
+                serviceManager.getServicePedido().atualizar(pedidoParaEditar);
 
                 JOptionPane.showMessageDialog(this, "Pedido " + pedidoParaEditar.getId() + " editado e aprovado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 carregarPedidos();
@@ -258,7 +258,7 @@ public class InterfaceGerenciarPedidos extends JFrame {
 
     private void acaoAprovarRejeitar(Pedido pedido, StatusPedido novoStatus) {
         try {
-            serviceManager.getServicePedido().atualizarStatusPedido(pedido, novoStatus);
+            serviceManager.getServicePedido().atualizarStatus(pedido, novoStatus);
             JOptionPane.showMessageDialog(this, "Status do pedido " + pedido.getId() + " atualizado para " + novoStatus, "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             carregarPedidos();
         } catch (Exception ex) {
@@ -290,7 +290,7 @@ public class InterfaceGerenciarPedidos extends JFrame {
         if (resultado == JOptionPane.OK_OPTION) {
             StatusPedido novoStatus = (StatusPedido) comboBoxStatus.getSelectedItem();
             try {
-                serviceManager.getServicePedido().atualizarStatusPedido(pedidoParaAtualizar, novoStatus);
+                serviceManager.getServicePedido().atualizarStatus(pedidoParaAtualizar, novoStatus);
                 JOptionPane.showMessageDialog(this, "Status do pedido atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 carregarPedidos();
             } catch (Exception e) {

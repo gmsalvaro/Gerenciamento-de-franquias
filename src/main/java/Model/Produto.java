@@ -64,5 +64,8 @@ public class Produto {
     public String getDescricao() {return descricao;}
 
 
+    public void setId(String id) {
+        this.id = id;
     }
+}
 

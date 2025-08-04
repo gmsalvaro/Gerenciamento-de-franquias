@@ -13,7 +13,6 @@ class ValidadorEmailTest {
     @Test
     @DisplayName("Teste de validação com email válido")
     void testValidarEmailValido() {
-        // Um email válido, seguindo as regras da sua classe
         String emailValido = "teste.usuario+extra@dominio.com";
         Assertions.assertDoesNotThrow(() -> validadorEmail.validar(emailValido));
     }

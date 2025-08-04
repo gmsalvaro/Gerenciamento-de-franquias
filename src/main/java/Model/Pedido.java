@@ -96,4 +96,8 @@ public class Pedido implements Serializable {
             this.produtosNoPedido = new HashMap<>(novosProdutosNoPedido);
         }
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

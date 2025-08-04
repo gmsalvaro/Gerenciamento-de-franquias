@@ -87,7 +87,6 @@ public class CriaGerente {
         painelFormulario.add(txtSenha);
 
         int resultado = JOptionPane.showConfirmDialog(parent, painelFormulario, "Adicionar Novo Gerente", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
         if (resultado == JOptionPane.OK_OPTION) {
             try {
                 // Validação básica dos campos
@@ -109,11 +108,6 @@ public class CriaGerente {
         return null;
     }
 
-    /**
-     * Método PRIVADO que lida com a parte de vincular um gerente a uma loja já existente.
-     *
-     * @param gerente O gerente a ser vinculado.
-     */
     private static void vincularGerenteALoja(Frame parent, ServiceManager serviceManager, Gerente gerente) {
         List<Loja> lojasDisponiveis = serviceManager.getServiceLoja().listarLojasSemGerente(serviceManager);
 

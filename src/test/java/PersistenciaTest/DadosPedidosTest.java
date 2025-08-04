@@ -5,7 +5,6 @@ import Model.Pedido;
 import Model.StatusPedido;
 import exception.persistencia.*;
 import org.junit.jupiter.api.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -27,23 +26,18 @@ class DadosPedidosTest {
 
     @BeforeEach
     void setup() throws PersistenciaException, IOException {
-        // Inicializa uma nova instância de DadosPedidos antes de cada teste
-        // e garante que o arquivo de teste esteja limpo.
         Files.deleteIfExists(Paths.get(TEMP_FILE_PATH));
         dadosPedidos = new DadosPedidos(TEMP_FILE_PATH);
     }
 
     @AfterEach
     void tearDown() throws IOException {
-        // Limpa o arquivo de teste após cada execução
         Files.deleteIfExists(Paths.get(TEMP_FILE_PATH));
     }
 
     @Test
     @DisplayName("Teste de inicialização: arquivo não existe, deve ser criado vazio")
     void testInicializacaoArquivoNaoExistente() {
-        // O setup já lida com a criação do arquivo e instanciação da classe.
-        // Verificamos se o arquivo foi criado e se a lista de pedidos está vazia.
         assertTrue(Files.exists(Paths.get(TEMP_FILE_PATH)));
         assertTrue(dadosPedidos.listarTodas().isEmpty());
     }
@@ -51,16 +45,11 @@ class DadosPedidosTest {
     @Test
     @DisplayName("Teste de adicionar: deve adicionar um novo pedido e salvar no arquivo")
     void testAdicionarPedido() throws PersistenciaException {
-        // Cria um novo pedido e o adiciona
         Pedido novoPedido = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(100.00), FormaDePagamento.PIX);
         dadosPedidos.adicionar(novoPedido);
-
-        // Verifica se o pedido existe na lista e no mapa
         Optional<Pedido> pedidoAdicionado = dadosPedidos.buscarPorId(novoPedido.getId());
         assertTrue(pedidoAdicionado.isPresent());
         assertEquals(novoPedido.getIdLoja(), pedidoAdicionado.get().getIdLoja());
-
-        // Verifica se o pedido foi persistido corretamente no arquivo
         try {
             String conteudoArquivo = Files.readString(Paths.get(TEMP_FILE_PATH));
             assertTrue(conteudoArquivo.contains(novoPedido.getId()));
@@ -123,21 +112,16 @@ class DadosPedidosTest {
     void testRemoverPedidoExistente() throws PersistenciaException {
         Pedido pedidoParaRemover = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(50.00), FormaDePagamento.PIX);
         dadosPedidos.adicionar(pedidoParaRemover);
-
-        // Verifica que o pedido existe antes da remoção
         assertTrue(dadosPedidos.buscarPorId(pedidoParaRemover.getId()).isPresent());
 
         dadosPedidos.remover(pedidoParaRemover.getId());
 
-        // Verifica que o pedido não existe mais
         assertFalse(dadosPedidos.buscarPorId(pedidoParaRemover.getId()).isPresent());
     }
 
     @Test
     @DisplayName("Teste de remover: não deve lançar exceção para ID inexistente")
     void testRemoverPedidoInexistente() {
-        // O método 'remover' na sua classe DadosPedidos não lança exceção para IDs inexistentes,
-        // apenas imprime no System.err.
         Assertions.assertDoesNotThrow(() -> dadosPedidos.remover("id-nao-existe"));
     }
 

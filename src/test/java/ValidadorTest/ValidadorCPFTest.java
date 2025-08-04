@@ -16,7 +16,6 @@ class ValidadorCPFTest {
     void testValidarCPFValido() {
         // Um CPF válido de 11 dígitos, sem caracteres especiais
         String cpfValido = "12345678901";
-        // A validação deve passar sem lançar exceção
         Assertions.assertDoesNotThrow(() -> validadorCPF.validar(cpfValido));
     }
 
@@ -25,7 +24,6 @@ class ValidadorCPFTest {
     void testValidarCPFNulo() {
         // A validação de um CPF nulo deve lançar CPFInvalidoException
         CPFInvalidoException exception = Assertions.assertThrows(CPFInvalidoException.class, () -> validadorCPF.validar(null));
-        // Verifica a mensagem de erro esperada
         Assertions.assertEquals("ERRO: CPF não pode ser vazio!", exception.getMessage());
     }
 
@@ -34,7 +32,6 @@ class ValidadorCPFTest {
     void testValidarCPFVazio() {
         // A validação de um CPF vazio deve lançar CPFInvalidoException
         CPFInvalidoException exception = Assertions.assertThrows(CPFInvalidoException.class, () -> validadorCPF.validar(""));
-        // Verifica a mensagem de erro esperada
         Assertions.assertEquals("ERRO: CPF não pode ser vazio!", exception.getMessage());
     }
 
@@ -43,9 +40,7 @@ class ValidadorCPFTest {
     void testValidarCPFComCaracteresNaoNumericos() {
         // Um CPF com um ponto, por exemplo
         String cpfComPonto = "123.45678901";
-        // A validação deve lançar CPFInvalidoException
         CPFInvalidoException exception = Assertions.assertThrows(CPFInvalidoException.class, () -> validadorCPF.validar(cpfComPonto));
-        // Verifica a mensagem de erro esperada
         Assertions.assertEquals("ERRO: CPF deve conter apenas dígitos!", exception.getMessage());
     }
 
@@ -54,9 +49,7 @@ class ValidadorCPFTest {
     void testValidarCPFMenosDeOnzeDigitos() {
         // Um CPF com 10 dígitos, por exemplo
         String cpfCurto = "1234567890";
-        // A validação deve lançar CPFInvalidoException
         CPFInvalidoException exception = Assertions.assertThrows(CPFInvalidoException.class, () -> validadorCPF.validar(cpfCurto));
-        // Verifica a mensagem de erro esperada
         Assertions.assertEquals("ERRO: CPF fora dos padrões!", exception.getMessage());
     }
 
@@ -65,9 +58,7 @@ class ValidadorCPFTest {
     void testValidarCPFMaisDeOnzeDigitos() {
         // Um CPF com 12 dígitos, por exemplo
         String cpfLongo = "123456789012";
-        // A validação deve lançar CPFInvalidoException
         CPFInvalidoException exception = Assertions.assertThrows(CPFInvalidoException.class, () -> validadorCPF.validar(cpfLongo));
-        // Verifica a mensagem de erro esperada
         Assertions.assertEquals("ERRO: CPF fora dos padrões!", exception.getMessage());
     }
 }

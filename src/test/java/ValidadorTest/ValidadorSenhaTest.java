@@ -14,7 +14,6 @@ class ValidadorSenhaTest {
     @Test
     @DisplayName("Teste de validação com senha válida")
     void testValidarSenhaValida() {
-        // Senha com 8 a 16 caracteres, contendo letra maiúscula, minúscula e número.
         String senhaValida = "Senha123";
         Assertions.assertDoesNotThrow(() -> validadorSenha.validar(senhaValida));
     }
@@ -22,14 +21,12 @@ class ValidadorSenhaTest {
     @Test
     @DisplayName("Teste de validação com senha nula")
     void testValidarSenhaNula() {
-        // A implementação atual lida com senhas nulas e vazias, não lançando exceção.
         Assertions.assertDoesNotThrow(() -> validadorSenha.validar(null));
     }
 
     @Test
     @DisplayName("Teste de validação com senha vazia")
     void testValidarSenhaVazia() {
-        // A implementação atual lida com senhas nulas e vazias, não lançando exceção.
         Assertions.assertDoesNotThrow(() -> validadorSenha.validar(""));
     }
 
