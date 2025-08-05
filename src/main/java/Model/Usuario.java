@@ -53,6 +53,7 @@ public abstract class Usuario {
     public void setPermissao(int permissao) {
         this.permissao = permissao;
     }
+
     public String getNome() {
         return nome;
     }
@@ -62,7 +63,6 @@ public abstract class Usuario {
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -74,13 +74,15 @@ public abstract class Usuario {
     public  void setCpf(String cpf) {
         this.cpf = cpf;
     }
+
     public String getSenha() {
         return senha;
     }
-
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+    public int getPermissao() {return permissao;}
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
