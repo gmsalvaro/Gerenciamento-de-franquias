@@ -17,7 +17,7 @@
   "id" : "efab9865-cb48-4401-9e59-098675612cef",
   "descricao" : "biscoito maizena",
   "preco" : 2.30,
-  "estoque" : 8,
+  "estoque" : 4,
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
 }, {
   "nome" : "agua",

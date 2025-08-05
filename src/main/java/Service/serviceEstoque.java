@@ -20,11 +20,11 @@ public class serviceEstoque {
     }
 
     public List<Produto> listarProdutosDisponiveis() throws PersistenciaException {
-        return serviceManager.getServiceProduto().listarPorLoja(lojaAssociada.getId());
+        return new ArrayList<>(serviceManager.getServiceProduto().listarPorLoja(lojaAssociada.getId()));
     }
 
     public List<Pedido> listarPedidosDaLoja() throws PersistenciaException {
-        return serviceManager.getServicePedido().listarPorIDLoja(lojaAssociada.getId());
+        return new ArrayList<>(serviceManager.getServicePedido().listarPorIDLoja(lojaAssociada.getId()));
     }
 
 

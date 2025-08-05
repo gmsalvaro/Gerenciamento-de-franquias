@@ -151,9 +151,9 @@ public class ServiceLoja {
     }
 
     public List<Loja> listarLojasSemGerente(ServiceManager serviceManager) {
-        return listarTodos().stream()
+        return new ArrayList<>(listarTodos().stream()
                 .filter(loja -> !lojaTemGerente(loja, serviceManager))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     public Optional<Loja> buscarLojaPorUsuario(Usuario usuario) {

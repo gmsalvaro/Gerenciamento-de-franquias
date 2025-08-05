@@ -6,6 +6,7 @@ import model.Produto;
 import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,9 +41,7 @@ public class ServiceProduto {
         dadosProdutos.remover(produtoParaRemover.getId());
     }
 
-    public Map<String, Produto> getProdutosMap() {
-        return dadosProdutos.listarMap();
-    }
+    public Map<String, Produto> getProdutosMap() { return  new HashMap<>(dadosProdutos.listarMap()); }
 
     public Produto getProduto(String idProduto) {
         return dadosProdutos.listarMap().get(idProduto);
