@@ -3,7 +3,7 @@
   "nome" : "Franquia Principal",
   "endereco" : "Rua A, 1",
   "telefone" : "12345",
-  "idLojas" : [ "870c1f96-591c-4699-86a6-e279c7b2f927", "c42fde73-9a94-4391-893a-9878620452ab" ]
+  "idLojas" : [ "870c1f96-591c-4699-86a6-e279c7b2f927", "c42fde73-9a94-4391-893a-9878620452ab", "194d184c-ced1-4c06-8c80-474243101d23" ]
 }, {
   "id" : "3c30a8d0-f56b-4665-a06f-6eb2d2d88bfd",
   "nome" : "Franquia secundaria",

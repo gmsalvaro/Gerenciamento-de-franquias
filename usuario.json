@@ -34,7 +34,7 @@
   "telefone" : "123456789",
   "permissao" : 2,
   "senha" : "Senha@123",
-  "idloja" : null
+  "idloja" : "194d184c-ced1-4c06-8c80-474243101d23"
 }, {
   "tipo" : "gerente",
   "id" : "4773d15b-6468-4c50-ad7a-73596de5d714",
@@ -54,4 +54,14 @@
   "telefone" : "123456789",
   "permissao" : 3,
   "senha" : "Senha@123"
+}, {
+  "tipo" : "gerente",
+  "id" : "af0ea75d-32f8-4d3d-8ef7-934dd8f3b6da",
+  "nome" : "testa1",
+  "email" : "testa1@emaail.com",
+  "cpf" : "12341231211",
+  "telefone" : "123456789",
+  "permissao" : 2,
+  "senha" : "Senha@123",
+  "idloja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
 } ]

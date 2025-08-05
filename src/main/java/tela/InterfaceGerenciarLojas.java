@@ -78,6 +78,13 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
 
         // Faturamento Bruto Total
         BigDecimal faturamentoTotal = serviceManager.getServiceRelatorio().calcularFaturamentoFranquia(franquia);
+        int totalPedidos = serviceManager.getServiceRelatorio().contarPedidosTotaisFranquia(franquia);
+
+        BigDecimal ticketMedio = BigDecimal.ZERO; // Começa com zero
+        if (totalPedidos > 0) {
+            ticketMedio = faturamentoTotal.divide(new BigDecimal(totalPedidos), 2, java.math.RoundingMode.HALF_UP);
+        }
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         JLabel lblTituloFaturamento = new JLabel("Faturamento Bruto Total:");
@@ -98,7 +105,6 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         painelMetricas.add(lblTituloPedidos, gbc);
 
         gbc.gridx = 1;
-        int totalPedidos = serviceManager.getServiceRelatorio().contarPedidosTotaisFranquia(franquia);
         JLabel lblValorPedidos = new JLabel(String.valueOf(totalPedidos));
         lblValorPedidos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         painelMetricas.add(lblValorPedidos, gbc);
@@ -111,10 +117,6 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         painelMetricas.add(lblTituloTicket, gbc);
 
         gbc.gridx = 1;
-
-        BigDecimal ticketMedio = BigDecimal.ZERO;
-        if(totalPedidos > 0)
-          ticketMedio = faturamentoTotal.divide(new BigDecimal(totalPedidos));
 
 
         JLabel lblValorTicket = new JLabel(String.format("R$ %.2f", ticketMedio));
@@ -247,7 +249,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         btnDesignarGerente.addActionListener(e -> acaoDesignarGerente(loja));
 
         JButton btnVerDesempenho = new JButton("Ver Desempenho");
-        btnVerDesempenho.addActionListener(e -> acaoVerDesempenhoLoja());
+        btnVerDesempenho.addActionListener(e -> acaoVerDesempenhoLoja(faturamentoLoja, numeroPedidos));
 
         // Adiciona os botões ao painel. O GridLayout cuidará do tamanho e espaçamento.
         botoesPanel.add(btnGerenciarUsuarios);
@@ -278,7 +280,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
     }
 
 
-    private void acaoVerDesempenhoLoja(){
+    private void acaoVerDesempenhoLoja(BigDecimal  faturamentoLoja, Integer numeroPedidos){
         configurarPainelConteudo("Desempenho Financeiro da loja: " + franquia.getNome());
         painelConteudo.setLayout(new BorderLayout());
 
@@ -302,8 +304,11 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         painelMetricas.add(lblTituloFaturamento, gbc);
 
         gbc.gridx = 1;
-        // double faturamentoTotal = serviceManager.getServiceRelatorio().calcularFaturamentoTotal(franquia);
-        JLabel lblValorFaturamento = new JLabel(String.format("R$ %.2f", 31501.60));
+
+
+        BigDecimal faturamentoTotal = faturamentoLoja;
+
+        JLabel lblValorFaturamento = new JLabel(String.format("R$ %.2f", faturamentoTotal));
         lblValorFaturamento.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         painelMetricas.add(lblValorFaturamento, gbc);
 
@@ -315,8 +320,10 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         painelMetricas.add(lblTituloPedidos, gbc);
 
         gbc.gridx = 1;
-        // int totalPedidos = serviceManager.getServiceRelatorio().contarPedidosTotais(franquia);
-        JLabel lblValorPedidos = new JLabel("0");
+        int totalPedidos = numeroPedidos;
+
+
+        JLabel lblValorPedidos = new JLabel(String.valueOf(totalPedidos));
         lblValorPedidos.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         painelMetricas.add(lblValorPedidos, gbc);
 
@@ -328,8 +335,12 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         painelMetricas.add(lblTituloTicket, gbc);
 
         gbc.gridx = 1;
-        // double ticketMedio = faturamentoTotal / totalPedidos;
-        JLabel lblValorTicket = new JLabel("R$ 0,00");
+
+        BigDecimal ticketMedioLoja = BigDecimal.ZERO;
+        if(totalPedidos>0)
+            ticketMedioLoja = faturamentoTotal.divide(new BigDecimal(totalPedidos), 2, BigDecimal.ROUND_HALF_UP);
+
+        JLabel lblValorTicket = new JLabel(String.format("R$ " + ticketMedioLoja));
         lblValorTicket.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         painelMetricas.add(lblValorTicket, gbc);
 

@@ -195,6 +195,9 @@ public class ServiceLoja {
         System.out.println("Adicionando gerente '" + novoGerente.getNome() + "' à nova loja '" + novaLoja.getNome() + "'");
         novaLoja.addUsuarioID(novoGerente.getId());
         this.atualizarLoja(novaLoja); // Salva o estado da nova loja
+
+        novoGerente.setIloja(novaLoja.getId());
+        serviceUsuario.atualizarUsuario(novoGerente);
     }
 
 
@@ -230,6 +233,19 @@ public class ServiceLoja {
                 .filter(loja -> loja.getIdsUsuarios() != null && loja.getIdsUsuarios().contains(usuario.getId()))
                 .findFirst(); // Retorna a primeira loja que encontrar
     }
+
+    public Loja buscarLojaPorFranquia(Franquia franquia) {
+        if (franquia == null) {
+            return null;
+        }
+        for (Loja loja : listarTodasAsLojas()) {
+            if (loja.getFranquiaId().equals(franquia.getId())) {
+                return loja;
+            }
+        }
+        return null;
+    }
+
 
 }
 
