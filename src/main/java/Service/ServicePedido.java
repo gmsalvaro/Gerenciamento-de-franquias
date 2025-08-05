@@ -1,8 +1,8 @@
 package Service;
 
-import Dados.DadosPedidos;
-import Model.Pedido;
-import Model.StatusPedido;
+import repository.DadosPedidos;
+import model.Pedido;
+import model.StatusPedido;
 import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;

@@ -1,13 +1,12 @@
 package PersistenciaTest;
 
-import Dados.DadosLojas;
-import Model.Loja;
+import repository.DadosLojas;
+import model.Loja;
 import exception.persistencia.*;
 import org.junit.jupiter.api.*;
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;

@@ -1,9 +1,9 @@
 package ServiceTest;
 
-import Model.Franquia;
-import Model.Gerente;
-import Model.Loja;
-import Model.Produto;
+import model.Franquia;
+import model.Gerente;
+import model.Loja;
+import model.Produto;
 import Service.ServiceLoja;
 import Service.ServiceManager;
 import Service.ServiceProduto;

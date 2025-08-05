@@ -1,7 +1,7 @@
 package ServiceTest;
 
 
-import Model.*;
+import model.*;
 import Service.ServiceLoja;
 import Service.ServiceManager;
 import Service.ServiceUsuario;

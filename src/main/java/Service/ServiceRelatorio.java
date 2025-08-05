@@ -1,7 +1,7 @@
 package Service;
 
-import Model.*;
-import Model.PerformanceVendedor;
+import model.*;
+import model.PerformanceVendedor;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -86,7 +86,8 @@ public class ServiceRelatorio {
 
     public List<Pedido> getHistoricoVendas(Loja loja) {
         return servicePedido.listarPorIDLoja(loja.getId()).stream()
-                .filter(p -> p.getStatus() ==  StatusPedido.ENTREGUE)
+                // Filtra para incluir pedidos com status ENTREGUE ou CONCLUIDO
+                .filter(p -> p.getStatus() ==  StatusPedido.ENTREGUE || p.getStatus() == StatusPedido.CONCLUIDO)
                 .sorted(Comparator.comparing(Pedido::getDataPedido).reversed()) // Mais recentes primeiro
                 .collect(Collectors.toList());
     }

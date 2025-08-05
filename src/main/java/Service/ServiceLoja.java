@@ -1,10 +1,10 @@
 package Service;
 
-import Dados.DadosLojas;
-import Model.Franquia;
-import Model.Gerente;
-import Model.Loja;
-import Model.Usuario;
+import repository.DadosLojas;
+import model.Franquia;
+import model.Gerente;
+import model.Loja;
+import model.Usuario;
 import exception.ValidacaoException;
 import exception.persistencia.LojaInvalidaException;
 import exception.persistencia.LojaNaoAtualizadaException;

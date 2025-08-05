@@ -1,14 +1,14 @@
 package Service;
 
-import Dados.*;
-import Model.*;
+import repository.*;
+import model.*;
 import exception.autenticacao.SenhaInvalidaException;
 import exception.autenticacao.UsuarioInvalidoException;
 import exception.persistencia.PersistenciaException;
 import exception.usuario.CPFInvalidoException;
 import exception.usuario.EmailInvalidoException;
 import exception.usuario.ValidacaoUsuarioException;
-import Model.Vendedor;
+import model.Vendedor;
 
 import java.util.*;
 import java.util.stream.Collectors;

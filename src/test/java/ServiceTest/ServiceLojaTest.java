@@ -1,9 +1,9 @@
 package ServiceTest;
 
-import Model.Franquia;
-import Model.Gerente;
-import Model.Loja;
-import Model.Vendedor;
+import model.Franquia;
+import model.Gerente;
+import model.Loja;
+import model.Vendedor;
 import Service.ServiceFranquia;
 import Service.ServiceLoja;
 import Service.ServiceManager;
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Optional;
 
 @DisplayName("Testes para a classe ServiceLoja")
 class ServiceLojaTest {

@@ -1,15 +1,14 @@
 package PersistenciaTest;
-import Dados.DadosPedidos;
-import Model.FormaDePagamento;
-import Model.Pedido;
-import Model.StatusPedido;
+import repository.DadosPedidos;
+import model.FormaDePagamento;
+import model.Pedido;
+import model.StatusPedido;
 import exception.persistencia.*;
 import org.junit.jupiter.api.*;
-import java.io.File;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.HashMap;

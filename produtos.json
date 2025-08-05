@@ -10,7 +10,7 @@
   "id" : "e8311eb3-36ab-49d3-89d8-867b4285af62",
   "descricao" : "coca-cola",
   "preco" : 9.90,
-  "estoque" : 89,
+  "estoque" : 1,
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
 }, {
   "nome" : "biscoito",
@@ -24,6 +24,6 @@
   "id" : "6705d7c3-f796-4e92-b1fa-4f7de96a4d62",
   "descricao" : "agua mineral sem gás",
   "preco" : 2.99,
-  "estoque" : 5,
+  "estoque" : 1,
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
 } ]

@@ -1,15 +1,13 @@
 package PersistenciaTest;
 
-import Dados.DadosProdutos;
-import Model.Produto;
+import repository.DadosProdutos;
+import model.Produto;
 import exception.persistencia.*;
 import org.junit.jupiter.api.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;

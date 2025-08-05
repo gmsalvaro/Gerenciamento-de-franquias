@@ -1,8 +1,8 @@
 package org.example;
 
-import Model.*;
+import model.*;
 import Service.ServiceManager;
-import tela.*;
+import views.*;
 import javax.swing.*;
 import java.io.File;
 

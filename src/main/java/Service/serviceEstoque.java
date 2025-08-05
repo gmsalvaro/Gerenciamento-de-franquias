@@ -1,6 +1,6 @@
 package Service;
 
-import Model.*;
+import model.*;
 import exception.persistencia.PersistenciaException;
 
 import java.math.BigDecimal;

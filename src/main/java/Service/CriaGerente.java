@@ -1,7 +1,7 @@
 package Service;
 
-import Model.Gerente;
-import Model.Loja;
+import model.Gerente;
+import model.Loja;
 
 import javax.swing.*;
 import java.awt.*;

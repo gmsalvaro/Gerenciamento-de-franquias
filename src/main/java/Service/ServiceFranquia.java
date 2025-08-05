@@ -1,7 +1,7 @@
 package Service;
 
-import Dados.DadosFranquias;
-import Model.*;
+import repository.DadosFranquias;
+import model.*;
 import exception.ValidacaoException;
 import exception.persistencia.*;
 

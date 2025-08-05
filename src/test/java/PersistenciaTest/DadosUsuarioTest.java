@@ -1,11 +1,10 @@
 package PersistenciaTest;
-import Dados.DadosUsuario;
-import Model.*;
+import repository.DadosUsuario;
+import model.*;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import exception.persistencia.PersistenciaException;
 import org.junit.jupiter.api.*;
-import java.io.File;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

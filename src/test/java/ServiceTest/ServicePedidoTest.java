@@ -1,13 +1,13 @@
 // package para os testes
 package ServiceTest;
 
-import Model.FormaDePagamento;
-import Model.Franquia;
-import Model.Gerente;
-import Model.Loja;
-import Model.Pedido;
-import Model.StatusPedido;
-import Model.Vendedor;
+import model.FormaDePagamento;
+import model.Franquia;
+import model.Gerente;
+import model.Loja;
+import model.Pedido;
+import model.StatusPedido;
+import model.Vendedor;
 import Service.*;
 import exception.ValidacaoException;
 import exception.persistencia.PersistenciaException;

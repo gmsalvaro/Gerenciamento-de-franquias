@@ -35,13 +35,14 @@
   "id" : "b5cbdf9e-0311-4373-a717-afdd69f9acbf",
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
   "produtosNoPedido" : {
-    "e8311eb3-36ab-49d3-89d8-867b4285af62" : 10,
-    "efab9865-cb48-4401-9e59-098675612cef" : 2
+    "e8311eb3-36ab-49d3-89d8-867b4285af62" : 1,
+    "efab9865-cb48-4401-9e59-098675612cef" : 2,
+    "6705d7c3-f796-4e92-b1fa-4f7de96a4d62" : 1
   },
   "dataPedido" : 1754260820356,
-  "status" : "Análise de Alteração",
+  "status" : "Concluído",
   "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
-  "precoTotal" : 1004.60,
+  "precoTotal" : 17.49,
   "justificativa" : null
 }, {
   "id" : "3d7b4a46-28fe-4e86-a700-4c9d6f08803e",

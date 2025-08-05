@@ -1,8 +1,8 @@
 package Service;
 
-import Dados.DadosProdutos;
-import Model.Loja;
-import Model.Produto;
+import repository.DadosProdutos;
+import model.Loja;
+import model.Produto;
 import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;

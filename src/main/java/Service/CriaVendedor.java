@@ -1,6 +1,6 @@
 package Service;
 
-import Model.Vendedor;
+import model.Vendedor;
 
 import javax.swing.*;
 import java.awt.*;
