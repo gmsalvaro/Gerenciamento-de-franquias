@@ -33,7 +33,7 @@ public class DadosProdutos implements IDados<Produto, String>{
             try {
                 Files.write(Paths.get(LOJAS_FILE), "[]".getBytes());
             } catch (IOException e) {
-                throw new ArquivoNaoCriadoException("Erro ao criar arquivo de lojas: " + e.getMessage());
+                throw new ArquivoNaoCriadoException("Erro ao criar arquivo de produtos: " + e.getMessage());
             }
             produtoMap = new ConcurrentHashMap<>();
             return;
@@ -44,7 +44,7 @@ public class DadosProdutos implements IDados<Produto, String>{
             lista.forEach(produto -> produtoMap.put(produto.getId(), produto));
         } catch (IOException e) {
             produtoMap = new ConcurrentHashMap<>();
-            throw new LojaNaoCarregadaException("Erro ao carregar lojas: " + e.getMessage());
+            throw new LojaNaoCarregadaException("Erro ao carregar produtos: " + e.getMessage());
         }
     }
 
@@ -52,7 +52,7 @@ public class DadosProdutos implements IDados<Produto, String>{
         try {
             mapper.writeValue(new File(LOJAS_FILE), new ArrayList<>(produtoMap.values()));
         } catch (IOException e) {
-            throw new ErroSalvarLojaException("Erro ao salvar lojas: " + e.getMessage());
+            throw new ErroSalvarLojaException("Erro ao salvar produtos: " + e.getMessage());
         }
     }
 
@@ -78,7 +78,7 @@ public class DadosProdutos implements IDados<Produto, String>{
             produtoMap.put(lojaAtualizada.getId(), lojaAtualizada);
             salvar();
         } else {
-            throw new LojaNaoAtualizadaException("Loja com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
+            throw new LojaNaoAtualizadaException("Produto com ID " + lojaAtualizada.getId() + " não encontrada para atualização.");
         }
     }
     @Override
@@ -86,7 +86,7 @@ public class DadosProdutos implements IDados<Produto, String>{
         if (produtoMap.remove(id) != null) {
             salvar();
         } else {
-            throw new LojaNaoRemovidaException("Loja com ID " + id + " não encontrada para remoção.");
+            throw new LojaNaoRemovidaException("Produto com ID " + id + " não encontrada para remoção.");
         }
     }
 

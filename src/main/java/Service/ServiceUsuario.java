@@ -104,11 +104,11 @@ public class ServiceUsuario{
         }
     }
 
-    public void atualizarUsuario(Usuario usuarioAtualizado) throws PersistenciaException {
+    public void atualizarUsuario(Usuario usuarioAtualizado) throws UsuarioInvalidoException {
         if (dadosUsuarios.listarMap().containsKey(usuarioAtualizado.getId())) {
             dadosUsuarios.atualizar(usuarioAtualizado);
         } else {
-            throw new PersistenciaException("Usuário '" + usuarioAtualizado.getNome() + "' não encontrado para atualização.");
+            throw new UsuarioInvalidoException("Usuário '" + usuarioAtualizado.getNome() + "' não encontrado para atualização.");
         }
     }
 

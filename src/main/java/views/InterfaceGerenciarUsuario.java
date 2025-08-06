@@ -1,5 +1,7 @@
 package views;
 
+import exception.autenticacao.UsuarioInvalidoException;
+import exception.persistencia.LojaNaoAtualizadaException;
 import model.Franquia;
 import model.Loja;
 import model.Usuario;
@@ -212,15 +214,22 @@ public class InterfaceGerenciarUsuario extends JFrame {
 
             try {
                 serviceManager.getServiceUsuario().adicionar(novoUsuario);
+
                 loja.addUsuarioID(novoUsuario.getId());
                 serviceManager.getServiceLoja().atualizar(loja);
 
                 JOptionPane.showMessageDialog(this, "Usuário '" + nome + "' adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 listModel.addElement(novoUsuario);
 
-            } catch (PersistenciaException | ValidacaoUsuarioException e) {
-                JOptionPane.showMessageDialog(this, "Erro ao adicionar usuário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            } catch (ValidacaoUsuarioException e) {
+                JOptionPane.showMessageDialog(this, "Erro ao adicionar usuário: " + e.getMessage(), "Dados invalidos", JOptionPane.ERROR_MESSAGE);
+            } catch(PersistenciaException e){
+                JOptionPane.showMessageDialog(this, "Erro! Não foi possível salvar o usuario!: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            } catch(Exception e){
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado ao adicionar usuario!", "ERRO", JOptionPane.ERROR_MESSAGE);
             }
+
+
         }
         btnAdicionar.setText("Adicionar");
         btnAdicionar.setEnabled(true);
@@ -257,9 +266,16 @@ public class InterfaceGerenciarUsuario extends JFrame {
                 btnEditar.setEnabled(false);
                 btnAdicionar.setEnabled(true);
 
-            } catch (Exception exception) {
-                JOptionPane.showMessageDialog(this, "Erro ao remover usuário: " + exception.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            } catch (LojaNaoAtualizadaException exception) {
+                JOptionPane.showMessageDialog(this, "Erro! Não foi possível salvar o usuario!: " + exception.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }catch(PersistenciaException e){
+                JOptionPane.showMessageDialog(this, "Erro ao remover usuário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            } catch(Exception e){
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado ao remover usuário!", "ERRO", JOptionPane.ERROR_MESSAGE);
             }
+
+
+
         }
     }
 
@@ -287,8 +303,11 @@ public class InterfaceGerenciarUsuario extends JFrame {
             serviceManager.getServiceUsuario().atualizarUsuario(selecionado);
             JOptionPane.showMessageDialog(this, "Usuário atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             listaUsuarios.repaint();
-        } catch (PersistenciaException ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao editar usuário: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch(UsuarioInvalidoException e){
+            JOptionPane.showMessageDialog(this, "Erro ao editar usuário: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+         catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ineseperado ao editar usuário: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 

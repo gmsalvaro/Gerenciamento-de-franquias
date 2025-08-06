@@ -98,7 +98,7 @@ class ServiceUsuarioTest {
 
     @Test
     @DisplayName("Deve atualizar um usuário com sucesso")
-    void testAtualizarUsuarioComSucesso() throws ValidacaoUsuarioException, PersistenciaException {
+    void testAtualizarUsuarioComSucesso() throws ValidacaoUsuarioException, UsuarioInvalidoException {
         Gerente gerente = new Gerente("Gerente Antigo", "gerente_antigo@teste.com", "Senha123", "12345678901");
         serviceUsuario.adicionar(gerente);
 

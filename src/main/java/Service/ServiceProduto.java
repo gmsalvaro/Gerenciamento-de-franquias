@@ -1,5 +1,6 @@
 package Service;
 
+import exception.produto.ProdutoException;
 import repository.DadosProdutos;
 import model.Loja;
 import model.Produto;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ServiceProduto {
     private final String FILE_PRODUTOS;
@@ -19,11 +21,11 @@ public class ServiceProduto {
         this.dadosProdutos = new DadosProdutos(FILE_PRODUTOS);
     }
 
-    public void adicionar(Produto produto, Loja loja, ServiceLoja serviceLoja) throws PersistenciaException {
+    public void adicionar(Produto produto, Loja loja, ServiceLoja serviceLoja) throws ProdutoException, PersistenciaException {
         List<Produto> produtosDaLoja = listarPorLoja(loja.getId());
         for (Produto p : produtosDaLoja) {
             if (p.getNome().equalsIgnoreCase(produto.getNome())) {
-                throw new PersistenciaException("Já existe um produto com o nome '" + produto.getNome() + "' nesta loja.");
+                throw new ProdutoException("Já existe um produto com o nome '" + produto.getNome() + "' nesta loja.");
             }
         }
         produto.setIdLoja(loja.getId());
@@ -66,5 +68,15 @@ public class ServiceProduto {
         } else {
             throw new PersistenciaException("Produto não encontrado para atualização.");
         }
+    }
+
+    public List<Produto> listarProdutosComEstoqueBaixo(Loja loja, int limite) {
+        if (loja == null) {
+            return new ArrayList<>();
+        }
+
+        return listarPorLoja(loja.getId()).stream()
+                .filter(produto -> produto.getEstoque() > 0 && produto.getEstoque() <= limite)
+                .collect(Collectors.toList());
     }
 }

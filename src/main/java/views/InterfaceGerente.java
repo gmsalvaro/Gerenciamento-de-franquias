@@ -34,6 +34,7 @@ public class InterfaceGerente extends PainelPrincipal {
           setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
           mostrarBoasVindas();
           setVisible(true);
+          verificarEstoqueBaixo();
      }
 
      @Override
@@ -293,6 +294,30 @@ public class InterfaceGerente extends PainelPrincipal {
                          JOptionPane.showMessageDialog(this, "Erro ao remover vendedor: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
                     }
                }
+          }
+     }
+
+     private void verificarEstoqueBaixo() {
+          final int LIMITE_ESTOQUE_BAIXO = 5;
+
+          List<Produto> produtosBaixos = serviceManager.getServiceProduto()
+                  .listarProdutosComEstoqueBaixo(this.lojaDoGerente, LIMITE_ESTOQUE_BAIXO);
+
+          if (!produtosBaixos.isEmpty()) {
+
+               StringBuilder mensagem = new StringBuilder("<html><b>Atenção!</b> Os seguintes produtos estão com estoque baixo:<br><br>");
+               for (Produto p : produtosBaixos) {
+                    mensagem.append("• ").append(p.getNome())
+                            .append(" (<b>Estoque: ").append(p.getEstoque()).append("</b>)<br>");
+               }
+               mensagem.append("</html>");
+
+               JOptionPane.showMessageDialog(
+                       this,
+                       mensagem.toString(),
+                       "Alerta de Estoque Baixo",
+                       JOptionPane.WARNING_MESSAGE
+               );
           }
      }
 }

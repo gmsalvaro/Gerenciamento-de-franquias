@@ -36,6 +36,8 @@ public class  ServiceFranquia {
         for (String idLoja : idsLojas) {
             Loja lojaParaRemover = serviceManager.getServiceLoja().getLojaById(idLoja);
             if (lojaParaRemover != null) {
+                franquiaAtualizada.get().removeIDLoja(idLoja);
+                this.atualizar(franquiaAtualizada.get());
                 serviceManager.getServiceLoja().remover(lojaParaRemover, serviceManager);
             }
         }

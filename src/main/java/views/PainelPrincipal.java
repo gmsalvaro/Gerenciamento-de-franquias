@@ -53,13 +53,4 @@ public abstract class PainelPrincipal extends JFrame {
         painelConteudo.repaint();
     }
 
-    public void adicionarScrollAoConteudo(JScrollPane painelLista){
-        JScrollPane scrollPane = new JScrollPane(painelLista);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        painelConteudo.add(scrollPane, BorderLayout.CENTER);
-        painelConteudo.revalidate();
-        painelConteudo.repaint();
-    }
-
 }

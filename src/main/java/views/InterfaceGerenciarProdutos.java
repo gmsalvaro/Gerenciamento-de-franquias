@@ -1,5 +1,7 @@
 package views;
 
+import exception.persistencia.PersistenciaException;
+import exception.produto.ProdutoException;
 import model.Loja;
 import model.Produto;
 import Service.ServiceManager;
@@ -72,19 +74,34 @@ public class InterfaceGerenciarProdutos extends JFrame {
         if (resultado == JOptionPane.OK_OPTION) {
             try {
                 String nome = txtNomeForm.getText().trim();
-                if (nome.isEmpty()) throw new Exception("O nome do produto é obrigatório.");
-
                 BigDecimal preco = new BigDecimal(txtPrecoForm.getText().trim().replace(",", "."));
                 int estoque = Integer.parseInt(txtEstoqueForm.getText().trim());
                 String descricao = txtDescricaoForm.getText().trim();
+
+                String precoString = txtPrecoForm.getText().replace(",", ".");
+                String estoqueString = String.valueOf(estoque);
+
+                if (nome.isEmpty() || estoqueString.isEmpty() || precoString.isEmpty() || descricao.isEmpty())
+                    throw new ProdutoException("Todos os campos são obrigatórios!");
+
 
                 Produto novoProduto = new Produto(nome, preco, estoque, descricao);
                 serviceManager.getServiceProduto().adicionar(novoProduto, this.loja, serviceManager.getServiceLoja());
 
                 JOptionPane.showMessageDialog(this, "Produto '" + nome + "' adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 carregarProdutos();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Erro de formato: Preço e Estoque devem ser números válidos.", "Erro de Entrada", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "Erro de validação: " + ex.getMessage(), "Dados Incompletos", JOptionPane.ERROR_MESSAGE);
+
+            } catch (ProdutoException ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao salvar produto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao adicionar produto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado: " + ex.getMessage(), "Erro Inesperado", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
             }
         }
     }
@@ -118,11 +135,30 @@ public class InterfaceGerenciarProdutos extends JFrame {
                 produtoParaEditar.setEstoque(Integer.parseInt(txtEstoqueForm.getText().trim()));
                 produtoParaEditar.setDescricao(txtDescricaoForm.getText().trim());
 
+                String nome = txtNomeForm.getText().trim();
+                String precoStr = txtPrecoForm.getText().trim().replace(",", ".");
+                String estoqueStr = txtEstoqueForm.getText().trim();
+                String descricao = txtDescricaoForm.getText().trim();
+
+                if (nome.isEmpty() || precoStr.isEmpty() || estoqueStr.isEmpty()) {
+                    throw new ProdutoException("Todos os campos são obrigatórios.");
+                }
+
                 serviceManager.getServiceProduto().atualizarProduto(produtoParaEditar);
                 JOptionPane.showMessageDialog(this, "Produto atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 carregarProdutos();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Erro de formato: Preço e Estoque devem ser números válidos.", "Erro de Entrada", JOptionPane.ERROR_MESSAGE);
+
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(this, "Erro de validação: " + ex.getMessage(), "Dados Incompletos", JOptionPane.ERROR_MESSAGE);
+
+            } catch (ProdutoException ex) {
+                JOptionPane.showMessageDialog(this, "Não foi possível atualizar: " + ex.getMessage(), "Regra de Negócio Violada", JOptionPane.WARNING_MESSAGE);
+
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao atualizar produto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocorreu um erro inesperado ao atualizar: " + ex.getMessage(), "Erro de Sistema", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
             }
         }
     }
@@ -189,7 +225,7 @@ public class InterfaceGerenciarProdutos extends JFrame {
                 serviceManager.getServiceProduto().remover(produtoParaRemover, this.loja, serviceManager.getServiceLoja());
                 JOptionPane.showMessageDialog(this, "Produto removido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                 carregarProdutos();
-            } catch (Exception ex) {
+            } catch (PersistenciaException ex) {
                 JOptionPane.showMessageDialog(this, "Erro ao remover produto: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
