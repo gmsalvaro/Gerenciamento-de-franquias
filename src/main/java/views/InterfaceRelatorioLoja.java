@@ -3,7 +3,7 @@ package views;
 import model.Loja;
 import model.Pedido;
 import model.Usuario;
-import Service.ServiceManager;
+import service.ServiceManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;

@@ -4,7 +4,7 @@ import exception.persistencia.PersistenciaException;
 import exception.produto.ProdutoException;
 import model.Loja;
 import model.Produto;
-import Service.ServiceManager;
+import service.ServiceManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;

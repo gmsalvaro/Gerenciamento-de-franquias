@@ -1,5 +1,5 @@
 package ValidadorTest;
-import utils.ValidadorEmail;
+import service.ValidadorEmail;
 import exception.usuario.EmailInvalidoException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

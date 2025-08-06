@@ -1,9 +1,5 @@
-package Service;
+package service;
 
-import Service.ServiceLoja;
-import Service.ServicePedido;
-import Service.ServiceProduto;
-import Service.ServiceUsuario;
 import exception.persistencia.PersistenciaException;
 
 public class ServiceManager {

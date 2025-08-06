@@ -1,7 +1,7 @@
 package views;
 
 import model.Usuario;
-import Service.ServiceManager;
+import service.ServiceManager;
 import exception.autenticacao.UsuarioInvalidoException;
 
 import javax.swing.*;

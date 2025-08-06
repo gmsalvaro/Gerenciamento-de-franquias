@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import exception.autenticacao.UsuarioInvalidoException;
 import repository.DadosLojas;

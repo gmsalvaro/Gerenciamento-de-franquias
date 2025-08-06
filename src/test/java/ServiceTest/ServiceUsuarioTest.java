@@ -3,9 +3,9 @@ package ServiceTest;
 
 import exception.usuario.NomeInvalidoException;
 import model.*;
-import Service.ServiceLoja;
-import Service.ServiceManager;
-import Service.ServiceUsuario;
+import service.ServiceLoja;
+import service.ServiceManager;
+import service.ServiceUsuario;
 import exception.autenticacao.UsuarioInvalidoException;
 import exception.persistencia.PersistenciaException;
 import exception.usuario.CPFInvalidoException;

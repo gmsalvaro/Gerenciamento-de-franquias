@@ -1,8 +1,8 @@
 package views;
 
 import model.*;
-import utils.CriaVendedor;
-import Service.ServiceManager;
+import service.CriaVendedor;
+import service.ServiceManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;

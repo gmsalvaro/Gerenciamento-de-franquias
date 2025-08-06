@@ -1,12 +1,11 @@
 package views;
 
-import exception.pedido.PedidoException;
 import exception.pedido.PedidoNaoEncontradoException;
 import model.Loja;
 import model.Pedido;
 import model.Produto;
 import model.StatusPedido;
-import Service.ServiceManager;
+import service.ServiceManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;

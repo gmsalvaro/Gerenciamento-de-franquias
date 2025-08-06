@@ -1,7 +1,7 @@
 package views;
 
 import model.*;
-import Service.ServiceManager;
+import service.ServiceManager;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;

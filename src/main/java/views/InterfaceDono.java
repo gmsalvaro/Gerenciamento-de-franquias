@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 import model.*;
-import Service.*;
-import utils.CriaGerente;
+import service.*;
+import service.CriaGerente;
 
 public class InterfaceDono extends PainelPrincipal {
     private ServiceManager serviceManager;

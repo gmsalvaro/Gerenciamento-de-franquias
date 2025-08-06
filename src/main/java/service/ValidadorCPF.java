@@ -1,4 +1,4 @@
-package utils;
+package service;
 
 import exception.usuario.CPFInvalidoException;
 

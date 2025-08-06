@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import exception.usuario.NomeInvalidoException;
 import repository.*;
@@ -10,10 +10,6 @@ import exception.usuario.CPFInvalidoException;
 import exception.usuario.EmailInvalidoException;
 import exception.usuario.ValidacaoUsuarioException;
 import model.Vendedor;
-import utils.ValidadorCPF;
-import utils.ValidadorEmail;
-import utils.ValidadorNome;
-import utils.ValidadorSenha;
 
 import java.util.*;
 import java.util.stream.Collectors;

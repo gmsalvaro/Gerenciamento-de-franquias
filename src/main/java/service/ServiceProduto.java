@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import exception.produto.ProdutoException;
 import repository.DadosProdutos;

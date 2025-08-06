@@ -4,8 +4,8 @@ import exception.autenticacao.UsuarioInvalidoException;
 import model.Franquia;
 import model.Gerente;
 import model.Loja;
-import utils.CriaGerente;
-import Service.ServiceManager;
+import service.CriaGerente;
+import service.ServiceManager;
 import exception.persistencia.PersistenciaException;
 
 import javax.swing.*;

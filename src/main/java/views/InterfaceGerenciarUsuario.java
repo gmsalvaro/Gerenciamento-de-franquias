@@ -7,7 +7,7 @@ import model.Loja;
 import model.Usuario;
 import model.Vendedor;
 import model.Gerente;
-import Service.ServiceManager;
+import service.ServiceManager;
 import exception.persistencia.PersistenciaException;
 import exception.usuario.ValidacaoUsuarioException;
 

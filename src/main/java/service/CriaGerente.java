@@ -1,6 +1,5 @@
-package utils;
+package service;
 
-import Service.ServiceManager;
 import model.Gerente;
 import model.Loja;
 

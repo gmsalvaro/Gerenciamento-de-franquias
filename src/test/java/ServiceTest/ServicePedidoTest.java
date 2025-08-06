@@ -8,7 +8,7 @@ import model.Loja;
 import model.Pedido;
 import model.StatusPedido;
 import model.Vendedor;
-import Service.*;
+import service.*;
 import exception.ValidacaoException;
 import exception.persistencia.PersistenciaException;
 import exception.usuario.ValidacaoUsuarioException;

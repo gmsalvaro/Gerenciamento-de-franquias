@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import repository.DadosPedidos;
 import model.Pedido;

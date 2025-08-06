@@ -2,8 +2,8 @@ package views;
 
 import model.*;
 import model.FormaDePagamento;
-import Service.ServiceManager;
-import Service.serviceEstoque;
+import service.ServiceManager;
+import service.serviceEstoque;
 import exception.persistencia.PersistenciaException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

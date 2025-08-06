@@ -1,7 +1,7 @@
 package org.example;
 
 import model.*;
-import Service.ServiceManager;
+import service.ServiceManager;
 import views.*;
 import javax.swing.*;
 import java.io.File;

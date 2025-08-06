@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import model.*;
 import model.PerformanceVendedor;
