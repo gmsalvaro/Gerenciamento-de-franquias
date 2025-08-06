@@ -44,8 +44,9 @@ class ServiceFranquiaTest {
         Files.deleteIfExists(Paths.get(FILE_PRODUTOS));
         Files.deleteIfExists(Paths.get(FILE_PEDIDOS));
         Files.deleteIfExists(Paths.get(FILE_FRANQUIAS));
+        Files.deleteIfExists(Paths.get(FILE_CLIENTES));
 
-        this.serviceManager = new ServiceManager(FILE_USUARIO, FILE_LOJA, FILE_PRODUTOS, FILE_PEDIDOS, FILE_FRANQUIAS);
+        this.serviceManager = new ServiceManager(FILE_USUARIO, FILE_LOJA, FILE_PRODUTOS, FILE_PEDIDOS, FILE_FRANQUIAS, FILE_CLIENTE);
 
         this.serviceFranquia = serviceManager.getServiceFranquia();
         this.serviceLoja = serviceManager.getServiceLoja();

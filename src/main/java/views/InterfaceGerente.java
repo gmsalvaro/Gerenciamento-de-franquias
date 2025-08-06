@@ -17,6 +17,9 @@ public class InterfaceGerente extends PainelPrincipal {
      private JPanel painelListaVendedores;
      private final GerenciaFluxoLogin fluxoLogin;
 
+    private JRadioButton radioPorValorCliente, radioPorNumeroCompras; // ADICIONAR: Para clientes
+    private JPanel painelListaClientes;
+
      public InterfaceGerente(ServiceManager serviceManager, Gerente gerenteLogado, GerenciaFluxoLogin fluxoLogin) {
           super("Painel do Gerente - " + gerenteLogado.getNome());
           this.serviceManager = serviceManager;
@@ -50,11 +53,14 @@ public class InterfaceGerente extends PainelPrincipal {
           JButton btnGerenciarProdutos = criarBotaoMenu("Gerenciar Produtos");
           JButton btnVerPedidos = criarBotaoMenu("Ver Pedidos");
           JButton btnRelatorios = criarBotaoMenu("Relatórios da Loja");
+          JButton btnListarClientes = criarBotaoMenu("Listar Clientes");
 
           sidebar.add(btnGerenciarVendedores);
           sidebar.add(btnGerenciarProdutos);
           sidebar.add(btnVerPedidos);
           sidebar.add(btnRelatorios);
+              sidebar.add(btnListarClientes);
+
           sidebar.add(Box.createVerticalGlue());
           JButton btnSair = criarBotaoMenu("Sair");
           sidebar.add(btnSair);
@@ -64,6 +70,7 @@ public class InterfaceGerente extends PainelPrincipal {
           btnVerPedidos.addActionListener(e -> new InterfaceGerenciarPedidos(lojaDoGerente, serviceManager));
           btnSair.addActionListener(e -> fluxoLogin.fazerLogout());
           btnRelatorios.addActionListener(e -> new InterfaceRelatorioLoja(lojaDoGerente, serviceManager));
+         btnListarClientes.addActionListener(e -> mostrarRankingClientes());
      }
 
      private void mostrarBoasVindas() {
@@ -113,6 +120,91 @@ public class InterfaceGerente extends PainelPrincipal {
 
           atualizarListaVendedores();
      }
+
+
+    private void mostrarRankingClientes() {
+        configurarPainelConteudo("Ranking de Clientes");
+        painelConteudo.setLayout(new BorderLayout(10, 10));
+
+        JPanel painelControles = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        radioPorValorCliente = new JRadioButton("Ordenar por Valor Total de Compras");
+        radioPorNumeroCompras = new JRadioButton("Ordenar por Número de Compras");
+        ButtonGroup grupoRadios = new ButtonGroup();
+        grupoRadios.add(radioPorValorCliente);
+        grupoRadios.add(radioPorNumeroCompras);
+        painelControles.add(new JLabel("Critério:"));
+        painelControles.add(radioPorValorCliente);
+        painelControles.add(radioPorNumeroCompras);
+
+        ActionListener listenerRadios = e -> atualizarListaClientes();
+        radioPorValorCliente.addActionListener(listenerRadios);
+        radioPorNumeroCompras.addActionListener(listenerRadios);
+
+        radioPorValorCliente.setSelected(true);
+        painelConteudo.add(painelControles, BorderLayout.NORTH);
+
+        painelListaClientes = new JPanel();
+        painelListaClientes.setLayout(new BoxLayout(painelListaClientes, BoxLayout.Y_AXIS));
+        painelListaClientes.setBackground(Color.WHITE);
+        JScrollPane scrollPane = new JScrollPane(painelListaClientes);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        painelConteudo.add(scrollPane, BorderLayout.CENTER);
+
+        atualizarListaClientes();
+    }
+
+    private void atualizarListaClientes() {
+        if (painelListaClientes == null) return;
+        painelListaClientes.removeAll();
+
+        List<PerformanceCliente> performance = serviceManager.getServiceRelatorio().gerarRankingClientes();
+
+        if (radioPorNumeroCompras.isSelected()) {
+            performance.sort(Comparator.comparingInt(PerformanceCliente::getNumeroDeCompras).reversed());
+        } else {
+            performance.sort(Comparator.comparing(PerformanceCliente::getValorTotalCompras).reversed());
+        }
+
+        if (performance.stream().allMatch(p -> p.getNumeroDeCompras() == 0)) {
+            painelListaClientes.add(new JLabel("Nenhum cliente com compras registradas encontrado."));
+        } else {
+            int rank = 1;
+            for (PerformanceCliente p : performance) {
+                if (p.getNumeroDeCompras() > 0) {
+                    painelListaClientes.add(criarCardCliente(p, rank++));
+                    painelListaClientes.add(Box.createRigidArea(new Dimension(0, 10)));
+                }
+            }
+        }
+        painelListaClientes.revalidate();
+        painelListaClientes.repaint();
+    }
+
+    private JPanel criarCardCliente(PerformanceCliente performance, int rank) {
+        JPanel card = new JPanel(new BorderLayout(10, 10));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 100));
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+
+        JPanel painelInfo = new JPanel();
+        painelInfo.setLayout(new BoxLayout(painelInfo, BoxLayout.Y_AXIS));
+        painelInfo.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel lblNome = new JLabel(String.format("%dº. %s", rank, performance.getCliente().getNome()));
+        lblNome.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        painelInfo.add(lblNome);
+
+        painelInfo.add(new JLabel("CPF: " + performance.getCliente().getCpf()));
+        painelInfo.add(Box.createVerticalStrut(8));
+        painelInfo.add(new JLabel(String.format("Número de Compras: %d", performance.getNumeroDeCompras())));
+        painelInfo.add(new JLabel(String.format("Valor Total Gasto: R$ %.2f", performance.getValorTotalCompras())));
+
+        card.add(painelInfo);
+        return card;
+    }
+
 
      private void atualizarListaVendedores() {
           painelListaVendedores.removeAll();

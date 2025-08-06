@@ -24,7 +24,7 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             try {
                 new File(DATA_PATH).mkdirs(); // Garante que a pasta de dados exista
-                ServiceManager serviceManager = new ServiceManager("usuario.json", "lojas.json", "produtos.json", "pedidos.json", "franquia.json");
+                ServiceManager serviceManager = new ServiceManager("usuario.json", "lojas.json", "produtos.json", "pedidos.json", "franquia.json", "clientes.json");
                 seedInitialData(serviceManager);
 
                 // Cria a implementação do callback de login e logout
