@@ -1,5 +1,6 @@
 package ServiceTest;
 
+import exception.produto.ProdutoException;
 import model.Franquia;
 import model.Gerente;
 import model.Loja;
@@ -81,7 +82,7 @@ class ServiceProdutoTest {
 
     @Test
     @DisplayName("Não deve adicionar um produto com nome duplicado na mesma loja")
-    void testAdicionarProdutoComNomeDuplicado() throws PersistenciaException, ValidacaoUsuarioException {
+    void testAdicionarProdutoComNomeDuplicado() throws PersistenciaException, ValidacaoUsuarioException, ProdutoException {
         Franquia franquia = new Franquia("Franquia Teste", "Endereco Teste", "123456789");
         serviceManager.getServiceFranquia().adicionar(franquia);
         Gerente gerente = new Gerente("Gerente Teste", "gerente@teste.com", "Senha123", "12345678901");
@@ -94,13 +95,13 @@ class ServiceProdutoTest {
 
         serviceProduto.adicionar(produto1, loja, serviceLoja);
 
-        Assertions.assertThrows(PersistenciaException.class, () -> serviceProduto.adicionar(produto2, loja, serviceLoja));
+        Assertions.assertThrows(ProdutoException.class, () -> serviceProduto.adicionar(produto2, loja, serviceLoja));
         Assertions.assertEquals(1, serviceProduto.listarPorLoja(loja.getId()).size());
     }
 
     @Test
     @DisplayName("Deve remover um produto e atualizar a loja")
-    void testRemoverProdutoComSucesso() throws PersistenciaException, ValidacaoUsuarioException {
+    void testRemoverProdutoComSucesso() throws PersistenciaException, ValidacaoUsuarioException,ProdutoException {
         Franquia franquia = new Franquia("Franquia Teste", "Endereco Teste", "123456789");
         serviceManager.getServiceFranquia().adicionar(franquia);
         Gerente gerente = new Gerente("Gerente Teste", "gerente@teste.com", "Senha123", "12345678901");
@@ -123,7 +124,7 @@ class ServiceProdutoTest {
 
     @Test
     @DisplayName("Deve atualizar um produto com sucesso")
-    void testAtualizarProdutoComSucesso() throws PersistenciaException, ValidacaoUsuarioException {
+    void testAtualizarProdutoComSucesso() throws PersistenciaException, ValidacaoUsuarioException,ProdutoException {
         Franquia franquia = new Franquia("Franquia Teste", "Endereco Teste", "123456789");
         serviceManager.getServiceFranquia().adicionar(franquia);
         Gerente gerente = new Gerente("Gerente Teste", "gerente@teste.com", "Senha123", "12345678901");
@@ -148,7 +149,7 @@ class ServiceProdutoTest {
 
     @Test
     @DisplayName("Deve listar todos os produtos")
-    void testListarTodos() throws PersistenciaException, ValidacaoUsuarioException {
+    void testListarTodos() throws PersistenciaException, ValidacaoUsuarioException, ProdutoException{
         Franquia franquia = new Franquia("Franquia Teste", "Endereco Teste", "123456789");
         serviceManager.getServiceFranquia().adicionar(franquia);
         Gerente gerente = new Gerente("Gerente Teste", "gerente@teste.com", "Senha123", "12345678901");
@@ -172,7 +173,7 @@ class ServiceProdutoTest {
 
     @Test
     @DisplayName("Deve retornar um produto por ID")
-    void testGetProdutoPorId() throws PersistenciaException, ValidacaoUsuarioException {
+    void testGetProdutoPorId() throws PersistenciaException, ValidacaoUsuarioException ,ProdutoException{
         Franquia franquia = new Franquia("Franquia Teste", "Endereco Teste", "123456789");
         serviceManager.getServiceFranquia().adicionar(franquia);
         Gerente gerente = new Gerente("Gerente Teste", "gerente@teste.com", "Senha123", "12345678901");

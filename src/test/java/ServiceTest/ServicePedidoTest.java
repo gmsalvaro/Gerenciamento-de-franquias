@@ -134,7 +134,7 @@ class ServicePedidoTest {
     void testListarPorIdLoja() throws PersistenciaException, ValidacaoException, ValidacaoUsuarioException {
         Franquia franquia2 = new Franquia("Franquia2", "End2", "123456789");
         serviceFranquia.adicionar(franquia2);
-        Gerente gerente2 = new Gerente("Gerente2", "gerente2@test.com", "Senha123", "99988877766");
+        Gerente gerente2 = new Gerente("Gerente dois", "gerente2@test.com", "Senha123", "99988877766");
         serviceUsuario.adicionar(gerente2);
 
         Loja loja1 = serviceLoja.listarTodos().get(0);
@@ -162,8 +162,8 @@ class ServicePedidoTest {
     @DisplayName("Deve listar pedidos por ID de vendedor")
     void testListarPorVendedor() throws PersistenciaException, ValidacaoException, ValidacaoUsuarioException {
         Loja loja = serviceLoja.listarTodos().get(0);
-        Vendedor vendedor1 = new Vendedor("Vendedor 1", "vendedor1@test.com", "Senha123", "11111111111");
-        Vendedor vendedor2 = new Vendedor("Vendedor 2", "vendedor2@test.com", "Senha123", "22222222222");
+        Vendedor vendedor1 = new Vendedor("Vendedor um", "vendedor1@test.com", "Senha123", "11111111111");
+        Vendedor vendedor2 = new Vendedor("Vendedor dois", "vendedor2@test.com", "Senha123", "22222222222");
         serviceUsuario.adicionar(vendedor1);
         serviceUsuario.adicionar(vendedor2);
 

@@ -1,5 +1,6 @@
 package Service;
 
+import exception.usuario.NomeInvalidoException;
 import repository.*;
 import model.*;
 import exception.autenticacao.SenhaInvalidaException;
@@ -74,17 +75,18 @@ public class ServiceUsuario{
             validadorCPF.validar(usuario.getCpf());
             validadorEmail.validar(usuario.getEmail());
             validadorSenha.validar(usuario.getSenha());
-        }catch(CPFInvalidoException | EmailInvalidoException | SenhaInvalidaException e){
+        }catch(CPFInvalidoException | EmailInvalidoException | SenhaInvalidaException | NomeInvalidoException e){
             switch(e){
                 case CPFInvalidoException cpfE -> throw new CPFInvalidoException("CPF invalido");
                 case EmailInvalidoException emailE -> throw new EmailInvalidoException("Email invalido");
+                case NomeInvalidoException nomeE -> throw new NomeInvalidoException("Nome invalido");
                 default -> throw new IllegalStateException("ERRO INESPERADO: " + e.getMessage());
             }
         }
 
         for (Usuario u : dadosUsuarios.listarMap().values()) {
             if (u.getNome().equalsIgnoreCase(usuario.getNome())) {
-                throw new ValidacaoUsuarioException("Usuário com o nome '" + usuario.getNome() + "' já existe.");
+                throw new NomeInvalidoException("Usuário com o nome '" + usuario.getNome() + "' já existe.");
             }
             if (u.getEmail().equalsIgnoreCase(usuario.getEmail())) {
                 throw new ValidacaoUsuarioException("Usuário com o email '" + usuario.getEmail() + "' já existe.");

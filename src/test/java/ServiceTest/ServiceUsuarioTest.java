@@ -1,6 +1,7 @@
 package ServiceTest;
 
 
+import exception.usuario.NomeInvalidoException;
 import model.*;
 import Service.ServiceLoja;
 import Service.ServiceManager;
@@ -74,12 +75,12 @@ class ServiceUsuarioTest {
     void testAdicionarUsuarioComDadosDuplicados() throws ValidacaoUsuarioException {
         Vendedor vendedor1 = new Vendedor("Vendedor Teste", "vendedor@teste.com", "Senha123", "12345678901");
         Vendedor vendedor2 = new Vendedor("Vendedor Teste", "vendedor2@teste.com", "Senha123", "11111111111"); // Nome duplicado
-        Vendedor vendedor3 = new Vendedor("Vendedor Teste 3", "vendedor@teste.com", "Senha123", "22222222222"); // Email duplicado
-        Vendedor vendedor4 = new Vendedor("Vendedor Teste 4", "vendedor4@teste.com", "Senha123", "12345678901"); // CPF duplicado
+        Vendedor vendedor3 = new Vendedor("Vendedor Teste tres", "vendedor@teste.com", "Senha123", "22222222222"); // Email duplicado
+        Vendedor vendedor4 = new Vendedor("Vendedor Teste quatro", "vendedor4@teste.com", "Senha123", "12345678901"); // CPF duplicado
 
         serviceUsuario.adicionar(vendedor1);
 
-        Assertions.assertThrows(ValidacaoUsuarioException.class, () -> serviceUsuario.adicionar(vendedor2));
+        Assertions.assertThrows(NomeInvalidoException.class, () -> serviceUsuario.adicionar(vendedor2));
         Assertions.assertThrows(ValidacaoUsuarioException.class, () -> serviceUsuario.adicionar(vendedor3));
         Assertions.assertThrows(CPFInvalidoException.class, () -> serviceUsuario.adicionar(vendedor4));
         Assertions.assertEquals(1, serviceUsuario.getUsuarios().size());
