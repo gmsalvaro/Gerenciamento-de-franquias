@@ -18,9 +18,19 @@
   "senha" : "Senha@123",
   "idloja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
 }, {
+  "tipo" : "gerente",
+  "id" : "96b70178-ce3e-434d-8566-a998669ca27e",
+  "nome" : "loja",
+  "email" : "gerenteloja@email.com",
+  "cpf" : "19191919191",
+  "telefone" : "123456789",
+  "permissao" : 2,
+  "senha" : "Senha@123",
+  "idloja" : null
+}, {
   "tipo" : "vendedor",
   "id" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
-  "nome" : "vendedd",
+  "nome" : "joazinho",
   "email" : "vend2@email.com",
   "cpf" : "11111113344",
   "telefone" : "123456789",
@@ -35,6 +45,16 @@
   "telefone" : "123456789",
   "permissao" : 1,
   "senha" : "Senha@123"
+}, {
+  "tipo" : "gerente",
+  "id" : "8fecfd84-e15f-45e8-a9a1-2f6f6e6a2025",
+  "nome" : "ger",
+  "email" : "ger@email.com",
+  "cpf" : "12332112332",
+  "telefone" : "123456789",
+  "permissao" : 2,
+  "senha" : "Senha@123",
+  "idloja" : "99cfbff4-87bf-4b37-8c42-b7c0ff1b76d9"
 }, {
   "tipo" : "vendedor",
   "id" : "900f2338-1695-4895-af23-efd3b771a3a6",

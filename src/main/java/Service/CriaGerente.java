@@ -11,12 +11,11 @@ public class CriaGerente {
 
 
     public static Gerente criarNovoGerente(Frame parent, ServiceManager serviceManager) {
-        // Chama o metodo privado que mostra o formulário e cria o gerente
         Gerente novoGerente = abrirFormularioCriacao(parent, serviceManager);
 
         // Se um gerente foi criado com sucesso (usuário não cancelou)
         if (novoGerente != null) {
-            // Pergunta se o usuário deseja realizar a vinculação agora
+
             int vincularAgora = JOptionPane.showConfirmDialog(parent,
                     "Deseja vincular este novo gerente a uma loja agora?",
                     "Vincular Gerente",
@@ -24,7 +23,6 @@ public class CriaGerente {
                     JOptionPane.QUESTION_MESSAGE);
 
             if (vincularAgora == JOptionPane.YES_OPTION) {
-                // Se sim, chama o método auxiliar que lida com a vinculação
                 vincularGerenteALoja(parent, serviceManager, novoGerente);
             }
         }
@@ -62,6 +60,11 @@ public class CriaGerente {
             }
         }
         return novoGerente;
+    }
+
+    public static Gerente criaGerenteSemLoja(Frame parent, ServiceManager serviceManager) {
+        Gerente gerente = abrirFormularioCriacao(parent, serviceManager);
+        return gerente;
     }
 
     /**

@@ -1,5 +1,7 @@
 package views;
 
+import exception.pedido.PedidoException;
+import exception.pedido.PedidoNaoEncontradoException;
 import model.Loja;
 import model.Pedido;
 import model.Produto;
@@ -54,7 +56,18 @@ public class InterfaceGerenciarPedidos extends JFrame {
         painelBotoes.add(btnVerJustificativaEAcoes);
         add(painelBotoes, BorderLayout.SOUTH);
 
-        btnAtualizarStatus.addActionListener(e -> acaoAtualizarStatus());
+        btnAtualizarStatus.addActionListener(e -> {
+            try {
+                acaoAtualizarStatus();
+            } catch (PedidoNaoEncontradoException ex) {
+                JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage(), "Pedido Não Encontrado", JOptionPane.ERROR_MESSAGE
+                );
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro inesperado: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
+
         btnVerJustificativaEAcoes.addActionListener(e -> verJustificativaEAcoes());
         tabelaPedidos.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -419,7 +432,7 @@ public class InterfaceGerenciarPedidos extends JFrame {
         }
     }
 
-    private void acaoAtualizarStatus() {
+    private void acaoAtualizarStatus() throws PedidoNaoEncontradoException {
         int linhaSelecionada = tabelaPedidos.getSelectedRow();
         if (linhaSelecionada == -1) {
             JOptionPane.showMessageDialog(this, "Selecione um pedido na tabela para atualizar.", "Aviso", JOptionPane.WARNING_MESSAGE);
@@ -430,8 +443,7 @@ public class InterfaceGerenciarPedidos extends JFrame {
         Pedido pedidoParaAtualizar = serviceManager.getServicePedido().getPedidoById(idPedido);
 
         if (pedidoParaAtualizar == null) {
-            JOptionPane.showMessageDialog(this, "Pedido não encontrado.", "Erro", JOptionPane.ERROR_MESSAGE);
-            return;
+            throw new PedidoNaoEncontradoException("Pedido não encontrado para atualização.");
         }
 
         JComboBox<StatusPedido> comboBoxStatus = new JComboBox<>(StatusPedido.values());

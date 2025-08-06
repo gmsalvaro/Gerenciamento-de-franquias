@@ -1,5 +1,6 @@
 package Service;
 
+import exception.autenticacao.UsuarioInvalidoException;
 import repository.DadosLojas;
 import model.Franquia;
 import model.Gerente;
@@ -125,7 +126,7 @@ public class ServiceLoja {
     }
 
 
-    public void designarGerenteParaLoja(Gerente novoGerente, Loja novaLoja, ServiceUsuario serviceUsuario) throws PersistenciaException {
+    public void designarGerenteParaLoja(Gerente novoGerente, Loja novaLoja, ServiceUsuario serviceUsuario) throws PersistenciaException, UsuarioInvalidoException {
         Optional<Loja> lojaAntigaOpt = buscarLojaPorUsuario(novoGerente);
         if (lojaAntigaOpt.isPresent()) {
             Loja lojaAntiga = lojaAntigaOpt.get();
@@ -151,9 +152,9 @@ public class ServiceLoja {
     }
 
     public List<Loja> listarLojasSemGerente(ServiceManager serviceManager) {
-        return listarTodos().stream()
+        return new ArrayList<>(listarTodos().stream()
                 .filter(loja -> !lojaTemGerente(loja, serviceManager))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     public Optional<Loja> buscarLojaPorUsuario(Usuario usuario) {

@@ -93,13 +93,26 @@ public class ServiceRelatorio {
     }
 
     public BigDecimal calcularFaturamentoFranquia(Franquia franquia) {
+        // 1. Garante que a franquia não é nula para evitar erros
         if (franquia == null) {
             return BigDecimal.ZERO;
         }
+
+        // 2. Obtém a lista de todas as lojas da franquia
         List<Loja> lojasDaFranquia = serviceLoja.listarPorFranquia(franquia.getId());
-        return lojasDaFranquia.stream()
-                .map(this::calcularFaturamentoLoja)
+
+        // 3. Itera sobre as lojas, coleta os pedidos, filtra e soma os valores
+        BigDecimal faturamentoTotal = lojasDaFranquia.stream()
+                // Obtém todos os pedidos de cada loja da franquia
+                .flatMap(loja -> servicePedido.listarPorIDLoja(loja.getId()).stream())
+                // Filtra apenas os pedidos com status ENTREGUE ou CONCLUIDO
+                .filter(pedido -> pedido.getStatus() == StatusPedido.ENTREGUE || pedido.getStatus() == StatusPedido.CONCLUIDO)
+                // Mapeia cada pedido para seu valor total
+                .map(Pedido::getPrecoTotal)
+                // Soma todos os valores, começando de ZERO
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return faturamentoTotal;
     }
 
     public int contarPedidosTotaisFranquia(Franquia franquia) {

@@ -1,5 +1,6 @@
 package views;
 
+import exception.autenticacao.UsuarioInvalidoException;
 import model.Franquia;
 import model.Gerente;
 import model.Loja;
@@ -381,6 +382,9 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
             } catch (PersistenciaException e) {
                 JOptionPane.showMessageDialog(this, "Erro ao designar gerente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             }
+            catch(UsuarioInvalidoException e){
+                JOptionPane.showMessageDialog(this, "Erro ao obter o gerente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -432,7 +436,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
                 }
 
                 if (escolha.equals("Criar Novo Gerente")) {
-                    gerenteDesignado = acaoCriarNovoGerente();
+                    gerenteDesignado = acaoCriarGerenteSemLoja();
                 } else {
                     for (Gerente g : gerentesDisponiveis) {
                         if (g.getNome().equals(escolha)) {
@@ -459,6 +463,12 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
     private Gerente acaoCriarNovoGerente() {
         return CriaGerente.criarNovoGerente(this, serviceManager);
     }
+
+    private Gerente acaoCriarGerenteSemLoja(){
+        return CriaGerente.criaGerenteSemLoja(this, serviceManager);
+    }
+
+
 
     private void acaoRemoverLoja(List<Loja> lojas) {
         if (lojas.isEmpty()) {

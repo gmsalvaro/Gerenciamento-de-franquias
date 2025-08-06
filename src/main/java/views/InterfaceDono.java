@@ -27,6 +27,7 @@ public class InterfaceDono extends PainelPrincipal {
         this.fluxoLogin = fluxoLogin;
         setVisible(true);
 
+        verificarLojasSemGerente();
     }
 
 
@@ -516,4 +517,24 @@ public class InterfaceDono extends PainelPrincipal {
         return card;
     }
 
+    private void verificarLojasSemGerente(){
+        List<Loja> lojasSemGerente = serviceManager.getServiceLoja().listarLojasSemGerente(serviceManager);
+
+        if(!lojasSemGerente.isEmpty()){
+            StringBuilder mensagem = new StringBuilder("<html><b>Atenção!</b> As seguintes lojas estão sem gerente:<br><br>");
+            for (Loja L : lojasSemGerente) {
+                mensagem.append("• ").append(L.getNome())
+                        .append(" (<b>Franquia: ").append(serviceManager.getServiceFranquia().buscarPorId(L.getFranquiaId()).getNome()).append("</b>)<br>");
+            }
+            mensagem.append("</html>");
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    mensagem.toString(),
+                    "Alerta de Falta de Gerente",
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+        }
+    }
 }

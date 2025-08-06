@@ -3,8 +3,15 @@
   "nome" : "Loja Central",
   "endereco" : "Av. B, 2",
   "franquiaId" : "546e5a7c-1b4f-4deb-8d55-2b9931e1e234",
-  "idPedidos" : [ "0dd9004c-8c97-438f-8a97-2c3347da2523", "b5cbdf9e-0311-4373-a717-afdd69f9acbf", "dae527fb-dcfa-4f9c-9fe8-53628d406f48", "578a1307-b74b-4127-8b04-019035bf8363" ],
+  "idPedidos" : [ "0dd9004c-8c97-438f-8a97-2c3347da2523", "b5cbdf9e-0311-4373-a717-afdd69f9acbf", "dae527fb-dcfa-4f9c-9fe8-53628d406f48", "578a1307-b74b-4127-8b04-019035bf8363", "e19dfe2c-56bd-43f7-8bf6-04635036ecab" ],
   "idProdutos" : [ "6705d7c3-f796-4e92-b1fa-4f7de96a4d62", "e8311eb3-36ab-49d3-89d8-867b4285af62", "efab9865-cb48-4401-9e59-098675612cef" ],
   "idsUsuarios" : [ "15d1e1bc-7569-42d7-968c-393ddbfb5086", "41f32fc6-b54a-4908-9792-902cbd6dc035", "9e06f704-e0dd-4aed-a1a2-a9a4e7aeca12", "06cc1987-d5ab-453c-b18f-4de19f41dc3b", "958e63ba-f6c7-437f-ac82-f3e705ed6fbe", "493797a5-2d83-4e5a-a355-2d7067e66fb5", "acdb679f-f383-4feb-8da5-8a1522b61cf1", "b0fb9b62-9f2b-438b-bde7-e7d95bef27b7", "7c8cdad4-1323-41dc-a29a-18e7158ba1e6", "6f16e50e-9a44-49c2-ad45-6e1d602b0e77" ]
-}
-]
+}, {
+  "id" : "99cfbff4-87bf-4b37-8c42-b7c0ff1b76d9",
+  "nome" : "loja teste interface gerente",
+  "endereco" : "aaaaaa",
+  "franquiaId" : "546e5a7c-1b4f-4deb-8d55-2b9931e1e234",
+  "idPedidos" : [ ],
+  "idProdutos" : [ ],
+  "idsUsuarios" : [ "8fecfd84-e15f-45e8-a9a1-2f6f6e6a2025" ]
+} ]
