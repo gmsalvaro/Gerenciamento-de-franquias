@@ -1,7 +1,7 @@
 package views;
 
 import model.*;
-import Service.CriaVendedor;
+import utils.CriaVendedor;
 import Service.ServiceManager;
 import javax.swing.*;
 import java.awt.*;

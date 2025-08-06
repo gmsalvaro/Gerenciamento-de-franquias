@@ -72,27 +72,25 @@ class DadosProdutosTest {
         assertFalse(resultado.isPresent());
     }
 
-//    @Test
-//    @DisplayName("Teste de atualizar: deve atualizar os dados de um produto existente")
-//    void testAtualizarProdutoExistente() throws PersistenciaException {
-//        Produto produtoExistente = new Produto("Produto Antigo", BigDecimal.valueOf(20.00), 20, "Descrição antiga");
-//        dadosProdutos.adicionar(produtoExistente);
-//
-//        // Cria uma nova instância com o mesmo ID, mas com dados atualizados
-//        Produto produtoAtualizado = new Produto("Produto Novo", BigDecimal.valueOf(25.50), 15, "Descrição nova");
-//        produtoAtualizado.setIdLoja("loja-123");
-//
-//        // Use o ID do produto existente
-//        produtoAtualizado.setId(produtoExistente.getId());
-//
-//        dadosProdutos.atualizar(produtoAtualizado);
-//
-//        Optional<Produto> resultado = dadosProdutos.buscarPorId(produtoExistente.getId());
-//        assertTrue(resultado.isPresent());
-//        assertEquals("Produto Novo", resultado.get().getNome());
-//        assertEquals(15, resultado.get().getEstoque());
-//        assertEquals("loja-123", resultado.get().getIdLoja());
-//    }
+    @Test
+    @DisplayName("Teste de atualizar: deve atualizar os dados de um produto existente")
+    void testAtualizarProdutoExistente() throws PersistenciaException {
+        Produto produtoExistente = new Produto("Produto Antigo", BigDecimal.valueOf(20.00), 20, "Descrição antiga");
+        dadosProdutos.adicionar(produtoExistente);
+
+        Produto produtoAtualizado = new Produto("Produto Novo", BigDecimal.valueOf(25.50), 15, "Descrição nova");
+        produtoAtualizado.setIdLoja("loja-123");
+
+        produtoAtualizado.setId(produtoExistente.getId());
+
+        dadosProdutos.atualizar(produtoAtualizado);
+
+        Optional<Produto> resultado = dadosProdutos.buscarPorId(produtoExistente.getId());
+        assertTrue(resultado.isPresent());
+        assertEquals("Produto Novo", resultado.get().getNome());
+        assertEquals(15, resultado.get().getEstoque());
+        assertEquals("loja-123", resultado.get().getIdLoja());
+    }
 
     @Test
     @DisplayName("Teste de atualizar: deve lançar exceção para produto inexistente")

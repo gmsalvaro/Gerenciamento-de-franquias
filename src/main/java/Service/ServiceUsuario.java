@@ -10,6 +10,10 @@ import exception.usuario.CPFInvalidoException;
 import exception.usuario.EmailInvalidoException;
 import exception.usuario.ValidacaoUsuarioException;
 import model.Vendedor;
+import utils.ValidadorCPF;
+import utils.ValidadorEmail;
+import utils.ValidadorNome;
+import utils.ValidadorSenha;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,7 +22,7 @@ public class ServiceUsuario{
     private final String FILE_USUARIOS;
     private final DadosUsuario dadosUsuarios;
     private ValidadorNome validadorNome;
-    private  ValidadorEmail validadorEmail;
+    private ValidadorEmail validadorEmail;
     private ValidadorCPF validadorCPF;
     private ValidadorSenha validadorSenha;
 

@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import model.*;
 import Service.*;
+import utils.CriaGerente;
 
 public class InterfaceDono extends PainelPrincipal {
     private ServiceManager serviceManager;

@@ -1,5 +1,6 @@
-package Service;
+package utils;
 
+import Service.ServiceManager;
 import model.Vendedor;
 
 import javax.swing.*;

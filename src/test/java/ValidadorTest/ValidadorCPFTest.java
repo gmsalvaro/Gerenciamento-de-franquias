@@ -1,6 +1,6 @@
 package ValidadorTest;
 
-import Service.ValidadorCPF;
+import utils.ValidadorCPF;
 import exception.usuario.CPFInvalidoException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

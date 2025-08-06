@@ -1,6 +1,6 @@
 package ValidadorTest;
 
-import Service.ValidadorSenha;
+import utils.ValidadorSenha;
 import exception.autenticacao.SenhaInvalidaException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -78,13 +78,11 @@ class ValidadorSenhaTest {
         Assertions.assertEquals("Senha inválida!", exception.getMessage());
     }
 
-//    @Test
-//    @DisplayName("Teste de validação com senha com caractere especial (que não seja um espaço)")
-//    void testValidarSenhaComCaractereEspecial() {
-//        // O REGEX_SENHA atual não permite caracteres especiais, pois usa \S (não-whitespace) e não permite outros símbolos.
-//        String senhaComEspecial = "Senha#123";
-//        SenhaInvalidaException exception = Assertions.assertThrows(SenhaInvalidaException.class, () -> validadorSenha.validar(senhaComEspecial));
-//        Assertions.assertEquals("Senha inválida!", exception.getMessage());
-//    }
+    @Test
+    @DisplayName("Teste de validação com senha com caractere especial (que não seja um espaço)")
+    void testValidarSenhaComCaractereEspecial() {
+        String senhaComEspecial = "Senha$$123";
+        Assertions.assertDoesNotThrow(() -> validadorSenha.validar(senhaComEspecial));
+    }
 }
 

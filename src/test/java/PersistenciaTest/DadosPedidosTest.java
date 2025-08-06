@@ -57,16 +57,16 @@ class DadosPedidosTest {
         }
     }
 
-//    @Test
-//    @DisplayName("Teste de buscarPorId: deve retornar o pedido correto")
-//    void testBuscarPorIdPedidoExistente() throws PersistenciaException {
-//        Pedido pedido1 = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.APROVADO, "vendedor-1", BigDecimal.valueOf(50.00), FormaDePagamento.CREDITO);
-//        dadosPedidos.adicionar(pedido1);
-//
-//        Optional<Pedido> resultado = dadosPedidos.buscarPorId(pedido1.getId());
-//        assertTrue(resultado.isPresent());
-//        assertEquals(pedido1.getId(), resultado.get().getId());
-//    }
+    @Test
+    @DisplayName("Teste de buscarPorId: deve retornar o pedido correto")
+    void testBuscarPorIdPedidoExistente() throws PersistenciaException {
+        Pedido pedido1 = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.CONCLUIDO, "vendedor-1", BigDecimal.valueOf(50.00), FormaDePagamento.CARTAO_CREDITO);
+        dadosPedidos.adicionar(pedido1);
+
+        Optional<Pedido> resultado = dadosPedidos.buscarPorId(pedido1.getId());
+        assertTrue(resultado.isPresent());
+        assertEquals(pedido1.getId(), resultado.get().getId());
+    }
 
     @Test
     @DisplayName("Teste de buscarPorId: deve retornar Optional vazio para ID inexistente")
@@ -75,36 +75,36 @@ class DadosPedidosTest {
         assertFalse(resultado.isPresent());
     }
 
-//    @Test
-//    @DisplayName("Teste de atualizar: deve atualizar os dados de um pedido existente")
-//    void testAtualizarPedidoExistente() throws PersistenciaException {
-//        Pedido pedidoExistente = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(10.00), FormaDePagamento.PIX);
-//        dadosPedidos.adicionar(pedidoExistente);
-//
-//        Pedido pedidoAtualizado = new Pedido();
-//        pedidoAtualizado.setId(pedidoExistente.getId());
-//        pedidoAtualizado.setStatus(StatusPedido.APROVADO);
-//        pedidoAtualizado.setPrecoTotal(BigDecimal.valueOf(200.00));
-//
-//        dadosPedidos.atualizar(pedidoAtualizado);
-//
-//        Optional<Pedido> resultado = dadosPedidos.buscarPorId(pedidoExistente.getId());
-//        assertTrue(resultado.isPresent());
-//        assertEquals(StatusPedido.APROVADO, resultado.get().getStatus());
-//        assertEquals(BigDecimal.valueOf(200.00), resultado.get().getPrecoTotal());
-//    }
+    @Test
+    @DisplayName("Teste de atualizar: deve atualizar os dados de um pedido existente")
+    void testAtualizarPedidoExistente() throws PersistenciaException {
+        Pedido pedidoExistente = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(10.00), FormaDePagamento.PIX);
+        dadosPedidos.adicionar(pedidoExistente);
 
-//    @Test
-//    @DisplayName("Teste de atualizar: não deve lançar exceção para pedido inexistente e não alterar o estado")
-//    void testAtualizarPedidoInexistente() {
-//        Pedido pedidoInexistente = new Pedido();
-//        pedidoInexistente.setId("id-nao-existe");
-//
-//        // O método 'atualizar' na sua classe DadosPedidos não lança exceção para IDs inexistentes,
-//        // apenas imprime no System.err.
-//        Assertions.assertDoesNotThrow(() -> dadosPedidos.atualizar(pedidoInexistente));
-//        assertTrue(dadosPedidos.listarTodas().isEmpty());
-//    }
+        Pedido pedidoAtualizado = new Pedido();
+        pedidoAtualizado.setId(pedidoExistente.getId());
+        pedidoAtualizado.setStatus(StatusPedido.CONCLUIDO);
+        pedidoAtualizado.setPrecoTotal(BigDecimal.valueOf(200.00));
+
+        dadosPedidos.atualizar(pedidoAtualizado);
+
+        Optional<Pedido> resultado = dadosPedidos.buscarPorId(pedidoExistente.getId());
+        assertTrue(resultado.isPresent());
+        assertEquals(StatusPedido.CONCLUIDO, resultado.get().getStatus());
+        assertEquals(BigDecimal.valueOf(200.00), resultado.get().getPrecoTotal());
+    }
+
+    @Test
+    @DisplayName("Teste de atualizar: não deve lançar exceção para pedido inexistente e não alterar o estado")
+    void testAtualizarPedidoInexistente() {
+        Pedido pedidoInexistente = new Pedido();
+        pedidoInexistente.setId("id-nao-existe");
+
+        // O método 'atualizar' na sua classe DadosPedidos não lança exceção para IDs inexistentes,
+        // apenas imprime no System.err.
+        Assertions.assertDoesNotThrow(() -> dadosPedidos.atualizar(pedidoInexistente));
+        assertTrue(dadosPedidos.listarTodas().isEmpty());
+    }
 
     @Test
     @DisplayName("Teste de remover: deve remover um pedido existente")

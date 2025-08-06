@@ -1,8 +1,8 @@
-package Service;
+package utils;
 
 import exception.autenticacao.SenhaInvalidaException;
 
-public class ValidadorSenha implements Validador<String>{
+public class ValidadorSenha implements Validador<String> {
     private static final String REGEX_SENHA = "^(?=.*\\d)(?=.*[A-Z])(?=.*[a-z])(\\S){8,16}$";
 
     @Override

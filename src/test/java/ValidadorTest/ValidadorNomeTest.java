@@ -1,6 +1,5 @@
 package ValidadorTest;
-import Service.ValidadorNome;
-import exception.usuario.NomeInvalidoException;
+import utils.ValidadorNome;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

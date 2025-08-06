@@ -1,4 +1,4 @@
-package Service;
+package utils;
 
 import exception.autenticacao.SenhaInvalidaException;
 import exception.usuario.ValidacaoUsuarioException;

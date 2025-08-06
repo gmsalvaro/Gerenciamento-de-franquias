@@ -4,7 +4,7 @@ import exception.autenticacao.UsuarioInvalidoException;
 import model.Franquia;
 import model.Gerente;
 import model.Loja;
-import Service.CriaGerente;
+import utils.CriaGerente;
 import Service.ServiceManager;
 import exception.persistencia.PersistenciaException;
 
