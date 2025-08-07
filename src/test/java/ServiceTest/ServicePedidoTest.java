@@ -2,7 +2,7 @@
 package ServiceTest;
 
 import model.*;
-import Service.*;
+import service.*;
 import exception.ValidacaoException;
 import exception.persistencia.PersistenciaException;
 import exception.usuario.ValidacaoUsuarioException;

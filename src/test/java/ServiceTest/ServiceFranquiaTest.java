@@ -1,7 +1,7 @@
 // package para os testes
 package ServiceTest;
 
-import Service.*;
+import service.*;
 import model.Franquia;
 import model.Gerente;
 import model.Loja;

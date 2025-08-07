@@ -62,7 +62,8 @@ class DadosPedidosTest {
     @Test
     @DisplayName("Teste de buscarPorId: deve retornar o pedido correto")
     void testBuscarPorIdPedidoExistente() throws PersistenciaException {
-        Pedido pedido1 = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.CONCLUIDO, "vendedor-1", BigDecimal.valueOf(50.00), FormaDePagamento.CARTAO_CREDITO);
+        Cliente cliente = new Cliente("cliente", "10101010101");
+        Pedido pedido1 = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.CONCLUIDO, "vendedor-1", BigDecimal.valueOf(50.00), FormaDePagamento.CARTAO_CREDITO, cliente);
         dadosPedidos.adicionar(pedido1);
 
         Optional<Pedido> resultado = dadosPedidos.buscarPorId(pedido1.getId());
@@ -80,7 +81,8 @@ class DadosPedidosTest {
     @Test
     @DisplayName("Teste de atualizar: deve atualizar os dados de um pedido existente")
     void testAtualizarPedidoExistente() throws PersistenciaException {
-        Pedido pedidoExistente = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(10.00), FormaDePagamento.PIX);
+        Cliente cliente = new Cliente("cliente", "10101010101");
+        Pedido pedidoExistente = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(10.00), FormaDePagamento.PIX, cliente);
         dadosPedidos.adicionar(pedidoExistente);
 
         Pedido pedidoAtualizado = new Pedido();
