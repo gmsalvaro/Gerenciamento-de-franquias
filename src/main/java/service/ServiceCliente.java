@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import exception.persistencia.PersistenciaException;
 import exception.usuario.CPFInvalidoException;

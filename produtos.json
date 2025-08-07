@@ -10,7 +10,7 @@
   "id" : "e8311eb3-36ab-49d3-89d8-867b4285af62",
   "descricao" : "coca-cola",
   "preco" : 9.90,
-  "estoque" : 7,
+  "estoque" : 2,
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
 }, {
   "nome" : "biscoito",
