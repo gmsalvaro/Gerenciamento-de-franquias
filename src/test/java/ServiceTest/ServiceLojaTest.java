@@ -31,6 +31,7 @@ class ServiceLojaTest {
     private static final String FILE_PRODUTOS = "produtos_test_sl.json";
     private static final String FILE_PEDIDOS = "pedidos_test_sl.json";
     private static final String FILE_FRANQUIAS = "franquias_test_sl.json";
+    private static final String FILE_CLIENTE = "clientes_test_sl.json";
 
     private ServiceManager serviceManager;
     private ServiceLoja serviceLoja;
@@ -44,8 +45,9 @@ class ServiceLojaTest {
         Files.deleteIfExists(Paths.get(FILE_PRODUTOS));
         Files.deleteIfExists(Paths.get(FILE_PEDIDOS));
         Files.deleteIfExists(Paths.get(FILE_FRANQUIAS));
+        Files.deleteIfExists(Paths.get(FILE_CLIENTE));
 
-        this.serviceManager = new ServiceManager(FILE_USUARIO, FILE_LOJA, FILE_PRODUTOS, FILE_PEDIDOS, FILE_FRANQUIAS);
+        this.serviceManager = new ServiceManager(FILE_USUARIO, FILE_LOJA, FILE_PRODUTOS, FILE_PEDIDOS, FILE_FRANQUIAS, FILE_CLIENTE);
 
         this.serviceLoja = serviceManager.getServiceLoja();
         this.serviceFranquia = serviceManager.getServiceFranquia();
@@ -60,6 +62,7 @@ class ServiceLojaTest {
         Files.deleteIfExists(Paths.get(FILE_PRODUTOS));
         Files.deleteIfExists(Paths.get(FILE_PEDIDOS));
         Files.deleteIfExists(Paths.get(FILE_FRANQUIAS));
+        Files.deleteIfExists(Paths.get(FILE_CLIENTE));
     }
 
     @Test

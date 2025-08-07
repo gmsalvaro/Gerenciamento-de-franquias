@@ -32,7 +32,10 @@ public class DadosCliente implements IDados<Cliente, String> {
         File file = new File(CLIENTE_FILE);
         if (!file.exists() || file.length() == 0) {
             try {
-                file.getParentFile().mkdirs();
+                File parentDir = file.getParentFile();
+                if (parentDir != null)
+                    file.getParentFile().mkdirs();
+
                 Files.write(Paths.get(CLIENTE_FILE), "[]".getBytes());
             } catch (IOException e) {
                 throw new ArquivoNaoCriadoException("Erro ao criar arquivo de clientes: " + e.getMessage());
@@ -74,12 +77,14 @@ public class DadosCliente implements IDados<Cliente, String> {
         if (clientesMap.containsKey(cliente.getId())) {
             clientesMap.put(cliente.getId(), cliente);
             salvar();
-        }
+        } else
+            throw new LojaNaoAtualizadaException("Cliente com ID " + cliente.getId() + " não encontrado para atualização.");
     }
     @Override
     public void remover(String id) throws PersistenciaException {
         if (clientesMap.remove(id) != null) {
             salvar();
-        }
+        } else
+            throw new LojaNaoRemovidaException("Cliente com ID " + id + " não encontrado para remoção.");
     }
 }

@@ -1,13 +1,10 @@
 // package para os testes
 package ServiceTest;
 
+import Service.*;
 import model.Franquia;
 import model.Gerente;
 import model.Loja;
-import Service.ServiceFranquia;
-import Service.ServiceLoja;
-import Service.ServiceManager;
-import Service.ServiceUsuario;
 import exception.ValidacaoException;
 import exception.persistencia.LojaInvalidaException;
 import exception.persistencia.PersistenciaException;
@@ -31,11 +28,13 @@ class ServiceFranquiaTest {
     private static final String FILE_PRODUTOS = "produtos_test_sf.json";
     private static final String FILE_PEDIDOS = "pedidos_test_sf.json";
     private static final String FILE_FRANQUIAS = "franquias_test_sf.json";
+    private static final String FILE_CLIENTE = "clientes_test_sf.json";
 
     private ServiceManager serviceManager;
     private ServiceFranquia serviceFranquia;
     private ServiceLoja serviceLoja;
     private ServiceUsuario serviceUsuario;
+    private ServiceCliente serviceCliente;
 
     @BeforeEach
     void setup() throws PersistenciaException, IOException {
@@ -44,13 +43,14 @@ class ServiceFranquiaTest {
         Files.deleteIfExists(Paths.get(FILE_PRODUTOS));
         Files.deleteIfExists(Paths.get(FILE_PEDIDOS));
         Files.deleteIfExists(Paths.get(FILE_FRANQUIAS));
-        Files.deleteIfExists(Paths.get(FILE_CLIENTES));
+        Files.deleteIfExists(Paths.get(FILE_CLIENTE));
 
         this.serviceManager = new ServiceManager(FILE_USUARIO, FILE_LOJA, FILE_PRODUTOS, FILE_PEDIDOS, FILE_FRANQUIAS, FILE_CLIENTE);
 
         this.serviceFranquia = serviceManager.getServiceFranquia();
         this.serviceLoja = serviceManager.getServiceLoja();
         this.serviceUsuario = serviceManager.getServiceUsuario();
+        this.serviceCliente = serviceManager.getServiceCliente();
     }
 
     @AfterEach
@@ -61,6 +61,7 @@ class ServiceFranquiaTest {
         Files.deleteIfExists(Paths.get(FILE_PRODUTOS));
         Files.deleteIfExists(Paths.get(FILE_PEDIDOS));
         Files.deleteIfExists(Paths.get(FILE_FRANQUIAS));
+        Files.deleteIfExists(Paths.get(FILE_CLIENTE));
     }
 
     @Test

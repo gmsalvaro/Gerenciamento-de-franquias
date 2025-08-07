@@ -1,4 +1,5 @@
 package PersistenciaTest;
+import model.Cliente;
 import repository.DadosPedidos;
 import model.FormaDePagamento;
 import model.Pedido;
@@ -44,7 +45,8 @@ class DadosPedidosTest {
     @Test
     @DisplayName("Teste de adicionar: deve adicionar um novo pedido e salvar no arquivo")
     void testAdicionarPedido() throws PersistenciaException {
-        Pedido novoPedido = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(100.00), FormaDePagamento.PIX);
+        Cliente cliente = new Cliente("cliente", "10101010101");
+        Pedido novoPedido = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(100.00), FormaDePagamento.PIX, cliente);
         dadosPedidos.adicionar(novoPedido);
         Optional<Pedido> pedidoAdicionado = dadosPedidos.buscarPorId(novoPedido.getId());
         assertTrue(pedidoAdicionado.isPresent());
@@ -109,7 +111,8 @@ class DadosPedidosTest {
     @Test
     @DisplayName("Teste de remover: deve remover um pedido existente")
     void testRemoverPedidoExistente() throws PersistenciaException {
-        Pedido pedidoParaRemover = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(50.00), FormaDePagamento.PIX);
+        Cliente cliente = new Cliente("cliente", "10101010101");
+        Pedido pedidoParaRemover = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(50.00), FormaDePagamento.PIX, cliente);
         dadosPedidos.adicionar(pedidoParaRemover);
         assertTrue(dadosPedidos.buscarPorId(pedidoParaRemover.getId()).isPresent());
 
@@ -127,8 +130,9 @@ class DadosPedidosTest {
     @Test
     @DisplayName("Teste de listarTodas: deve retornar uma lista com todos os pedidos")
     void testListarTodas() throws PersistenciaException {
-        Pedido p1 = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(10.00), FormaDePagamento.PIX);
-        Pedido p2 = new Pedido("loja-2", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-2", BigDecimal.valueOf(20.00), FormaDePagamento.PIX);
+        Cliente cliente = new Cliente("cliente", "10101010101");
+        Pedido p1 = new Pedido("loja-1", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-1", BigDecimal.valueOf(10.00), FormaDePagamento.PIX, cliente);
+        Pedido p2 = new Pedido("loja-2", new HashMap<>(), new Date(), StatusPedido.PENDENTE, "vendedor-2", BigDecimal.valueOf(20.00), FormaDePagamento.PIX, cliente);
         dadosPedidos.adicionar(p1);
         dadosPedidos.adicionar(p2);
 
