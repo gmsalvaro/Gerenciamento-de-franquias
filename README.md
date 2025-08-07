@@ -1,109 +1,36 @@
 # Gerenciamento de Franquias
 
-## Visão Geral do Funcionamento
+## Introdução
 
-### 1.1 Introdução
+O **Gerenciamento de Franquias** é um sistema desenvolvido em **Java** com **interface gráfica Swing**, voltado para simular e gerenciar uma rede de franquias. A aplicação oferece controle completo sobre **usuários (Dono, Gerente, Vendedor)**, **lojas**, **produtos** e **pedidos**, utilizando arquitetura em camadas, persistência com arquivos **JSON** e organização modular por pacotes.
 
-O Gerenciamento de Franquias é um sistema desenvolvido em Java que simula e gerencia uma rede de franquias de forma centralizada. A aplicação oferece controle sobre lojas, produtos e pedidos, com três perfis de usuário distintos:
+Principais destaques:
 
-- Dono
-- Gerente
-- Vendedor
+- Autenticação com perfis de acesso distintos (Dono, Gerente, Vendedor)
+- Persistência com JSON via biblioteca **Jackson**
+- Interface gráfica em **Swing**
+- Camada de serviços com validações e regras de negócio
+- **Testes automatizados** com JUnit
+- Estrutura modular com pacotes `model`, `repository`, `service`, `views`, `exception` e `test`
 
-A arquitetura do sistema é organizada em camadas, separando interface, regras de negócio e persistência de dados. Os dados são armazenados em arquivos JSON. O fluxo do sistema inicia-se com a autenticação do usuário, que é direcionado para a interface correspondente ao seu perfil.
+## Como executar o projeto
 
-### 1.2 Tópicos Importantes
+### Requisitos
 
-- Sistema de Build: Apache Maven. As dependências (como Jackson e JUnit) são declaradas no `pom.xml`.
-- Execução:
-  - Via IDE (classe `Main` no pacote `org.example`)
-  - Via terminal:
-    ```bash
-    mvn clean package
-    java -jar target/GerenciamentoDeFranquias-1.0-SNAPSHOT-jar-with-dependencies.jar
-    ```
+- **Java 17 ou superior**
+- **Maven** instalado e configurado
 
-## Estrutura de Pacotes
+### Compilar e executar via terminal
 
-O projeto está modularizado para facilitar manutenção e escalabilidade.
+```bash
+# Navegue até o diretório raiz do projeto
+cd Gerenciamento-de-franquias
 
-### 2.1 Detalhamento
+# Limpa e compila o projeto, gerando o JAR com dependências
+mvn clean package
 
-#### repository
+# Executa a aplicação
+java -jar target/GerenciamentoDeFranquias-1.0-SNAPSHOT-jar-with-dependencies.jar
 
-Gerencia persistência e conversão de dados JSON.
-
-- Principais classes: `DadosUsuario`, `DadosLojas`, `DadosPedidos`, `DadosFranquias`, `DadosProdutos`
-- Utiliza a biblioteca Jackson
-
-#### exception
-
-Exceções personalizadas para erros específicos.
-
-- Principais classes: `AutenticacaoException`, `SenhaInvalidaException`, `LojaInvalidaException`, `CPFInvalidoException`
-- Organizado em subpacotes como `autenticacao`, `persistencia`, etc.
-
-#### model
-
-Define as entidades de negócio.
-
-- Principais classes: `Usuario` (abstrata), `Dono`, `Gerente`, `Vendedor`, `Franquia`, `Loja`, `Produto`, `Pedido`
-- Relacionamentos:
-  - Franquia possui várias lojas
-  - Loja pertence a uma franquia e possui funcionários, produtos e pedidos
-  - Pedido é feito por um vendedor e possui produtos
-  - Produto pode ser vendido em várias lojas
-- Serialização com Jackson usando `@JsonTypeInfo` e `@JsonSubTypes`
-
-#### org.example
-
-Pacote principal com a classe `Main`.
-
-- Inicializa diretórios, configura `ServiceManager`, realiza a carga de dados e exibe o login
-
-#### service
-
-Contém a lógica de negócio.
-
-- Principais classes: `ServiceManager`, `ServiceUsuario`, `ServiceLoja`, `ServiceProduto`, `ServicePedido`, `ServiceFranquia`, `ServiceRelatorio`
-- Realiza validações, aplica regras de negócio, coordena operações complexas
-
-#### views
-
-Interface gráfica do usuário utilizando Swing.
-
-- Principais classes: `Login`, `PainelPrincipal`, `InterfaceDono`, `InterfaceGerente`, `InterfaceVendedor`, `InterfaceGerenciarLojas`, `InterfaceGerenciarProdutos`, `InterfaceGerenciarPedidos`, `InterfaceGerenciarUsuario`, `InterfaceGerenciarVendas`, `InterfaceRelatorioLoja`
-- Captura entrada do usuário e delega para os serviços
-
-#### testes
-
-Testes automatizados para garantir o funcionamento do sistema.
-
-- `ServiceTest`: testa regras de negócio
-- `PersistenciaTest`: testa leitura e escrita JSON
-- `ValidacaoTest`: testa validadores como `ValidadorCPF`, `ValidadorEmail`, etc.
-
-## Herança
-
-O projeto utiliza herança para as classes `Dono`, `Gerente` e `Vendedor`, que herdam de `Usuario`. Isso permite o reaproveitamento de atributos e métodos comuns.
-
-## Polimorfismo
-
-O método `getPermissao()` é sobrescrito nas subclasses de `Usuario`:
-
-- Dono: retorna 1
-- Gerente: retorna 2
-- Vendedor: retorna 3
-
-Esse comportamento polimórfico permite tratamento genérico no sistema.
-
-## Encapsulamento
-
-Atributos são privados e acessados/modificados via getters e setters. Isso garante proteção dos dados e controle de acesso.
-
-## Arquivos JSON
-
-Os dados são persistidos em arquivos JSON separados por entidade (`usuarios.json`, `lojas.json`, etc.).
-
-- Serialização/desserialização com Jackson
-- Campo `"tipo"` usado para identificar a subclasse no processo de desserialização
+#Executar testes
+mvn test
