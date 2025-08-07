@@ -9,15 +9,20 @@ public class ServiceManager {
     private final ServicePedido servicePedido;
     private final ServiceFranquia serviceFranquia;
     private final ServiceRelatorio serviceRelatorio;
+    private final ServiceCliente serviceCliente;
 
-    public ServiceManager(String FILE_USUARIO, String FILE_LOJA, String FILE_PRODUTOS, String FILE_PEDIDOS, String FILE_FRANQUIAS) throws PersistenciaException {
+
+    public ServiceManager(String FILE_USUARIO, String FILE_LOJA, String FILE_PRODUTOS, String FILE_PEDIDOS, String FILE_FRANQUIAS, String FILE_CLIENTES) throws PersistenciaException {
         this.serviceUsuario = new ServiceUsuario(FILE_USUARIO);
         this.serviceLoja = new ServiceLoja(FILE_LOJA);
         this.serviceProduto = new ServiceProduto(FILE_PRODUTOS);
         this.servicePedido = new ServicePedido(FILE_PEDIDOS);
         this.serviceFranquia = new ServiceFranquia(FILE_FRANQUIAS);
-        this.serviceRelatorio = new ServiceRelatorio(serviceLoja, servicePedido, serviceUsuario, serviceFranquia);
+        this.serviceCliente = new ServiceCliente(FILE_CLIENTES);
+        this.serviceRelatorio = new ServiceRelatorio(serviceLoja, servicePedido, serviceUsuario, serviceFranquia, serviceCliente);
     }
+
+    public ServiceCliente getServiceCliente() {return serviceCliente;}
 
     public ServiceRelatorio getServiceRelatorio() {return serviceRelatorio;}
 

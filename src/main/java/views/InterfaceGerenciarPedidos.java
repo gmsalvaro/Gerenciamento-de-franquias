@@ -1,16 +1,18 @@
 package views;
 
+import exception.pedido.PedidoException;
 import exception.pedido.PedidoNaoEncontradoException;
 import model.Loja;
 import model.Pedido;
 import model.Produto;
 import model.StatusPedido;
-import service.ServiceManager;
+import service.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ public class InterfaceGerenciarPedidos extends JFrame {
     private final DefaultTableModel modeloTabela;
     private final JTable tabelaPedidos;
     private final JButton btnVerJustificativaEAcoes;
+    private boolean ordemDataRecente = true;
 
     public InterfaceGerenciarPedidos(Loja loja, ServiceManager serviceManager) {
         super("Gerenciar Pedidos da Loja: " + loja.getNome());
@@ -33,6 +36,11 @@ public class InterfaceGerenciarPedidos extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
         getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel painelControles = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton btnOrdenarPorData = new JButton("Ordenar por Data (Mais Antigos)");
+        painelControles.add(btnOrdenarPorData);
+        add(painelControles, BorderLayout.NORTH);
 
         String[] colunas = {"ID Pedido", "Data", "Vendedor", "Valor Total (R$)", "Status"};
         modeloTabela = new DefaultTableModel(colunas, 0) {
@@ -54,6 +62,13 @@ public class InterfaceGerenciarPedidos extends JFrame {
         painelBotoes.add(btnAtualizarStatus);
         painelBotoes.add(btnVerJustificativaEAcoes);
         add(painelBotoes, BorderLayout.SOUTH);
+
+        btnOrdenarPorData.addActionListener(e -> {
+            ordemDataRecente = !ordemDataRecente;
+
+            btnOrdenarPorData.setText(ordemDataRecente ? "Ordenar por Data (Mais Antigos)" : "Ordenar por Data (Mais Recentes)");
+            carregarPedidos();
+        });
 
         btnAtualizarStatus.addActionListener(e -> {
             try {
@@ -93,6 +108,12 @@ public class InterfaceGerenciarPedidos extends JFrame {
         modeloTabela.setRowCount(0);
         try {
             List<Pedido> pedidos = serviceManager.getServicePedido().listarPorIDLoja(loja.getId());
+
+            if( ordemDataRecente )
+                pedidos.sort(Comparator.comparing(Pedido::getDataPedido).reversed());
+            else
+                pedidos.sort(Comparator.comparing(Pedido::getDataPedido));
+
             SimpleDateFormat formatadorData = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
             for (Pedido p : pedidos) {

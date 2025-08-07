@@ -19,6 +19,7 @@ public class InterfaceGerenciarVendas extends JFrame {
     private final serviceEstoque estoqueService;
     private final Loja loja;
     private final Vendedor vendedor;
+    private final Cliente cliente;
 
     private JTable tabelaProdutos;
     private DefaultTableModel modeloTabelaProdutos;
@@ -31,11 +32,13 @@ public class InterfaceGerenciarVendas extends JFrame {
     private final Map<String, Integer> carrinhoDeCompras;
     private final Map<String, Produto> produtosDisponiveisMap;
 
-    public InterfaceGerenciarVendas(ServiceManager serviceManager, Loja loja, Vendedor vendedor) throws PersistenciaException {
+
+    public InterfaceGerenciarVendas(ServiceManager serviceManager, Loja loja, Vendedor vendedor, Cliente cliente) throws PersistenciaException {
         super("Registrar Venda - Loja: " + loja.getNome() + " | Vendedor: " + vendedor.getNome());
         this.serviceManager = serviceManager;
         this.loja = loja;
         this.vendedor = vendedor;
+        this.cliente = cliente;
         this.estoqueService = new serviceEstoque(loja, serviceManager);
         this.carrinhoDeCompras = new HashMap<>();
         this.produtosDisponiveisMap = new HashMap<>();
@@ -47,7 +50,6 @@ public class InterfaceGerenciarVendas extends JFrame {
         initComponents();
         carregarProdutos();
         atualizarCarrinho();
-        setVisible(true);
     }
 
     private void initComponents() {
@@ -205,7 +207,7 @@ public class InterfaceGerenciarVendas extends JFrame {
             try {
                 FormaDePagamento pagamentoSelecionado = (FormaDePagamento) comboFormaPagamento.getSelectedItem();
 
-                Pedido novoPedido = estoqueService.finalizarCompra(carrinhoDeCompras, this.vendedor, pagamentoSelecionado);
+                Pedido novoPedido = estoqueService.finalizarCompra(carrinhoDeCompras, this.vendedor, pagamentoSelecionado, cliente);
 
                 JOptionPane.showMessageDialog(this, "Compra finalizada com sucesso! Pedido ID: " + novoPedido.getId(), "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 

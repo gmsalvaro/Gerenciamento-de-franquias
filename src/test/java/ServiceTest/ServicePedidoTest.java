@@ -1,14 +1,8 @@
 // package para os testes
 package ServiceTest;
 
-import model.FormaDePagamento;
-import model.Franquia;
-import model.Gerente;
-import model.Loja;
-import model.Pedido;
-import model.StatusPedido;
-import model.Vendedor;
-import service.*;
+import model.*;
+import Service.*;
 import exception.ValidacaoException;
 import exception.persistencia.PersistenciaException;
 import exception.usuario.ValidacaoUsuarioException;
@@ -35,6 +29,7 @@ class ServicePedidoTest {
     private static final String FILE_PRODUTOS = "produtos_test_ped.json";
     private static final String FILE_PEDIDOS = "pedidos_test_ped.json";
     private static final String FILE_FRANQUIAS = "franquias_test_ped.json";
+    private static final String FILE_CLIENTES = "clientes_test_ped.json";
 
     private ServiceManager serviceManager;
     private ServicePedido servicePedido;
@@ -42,6 +37,7 @@ class ServicePedidoTest {
     private ServiceUsuario serviceUsuario;
     private ServiceFranquia serviceFranquia;
     private serviceEstoque serviceEstoque;
+    private ServiceCliente serviceCliente;
 
     @BeforeEach
     void setup() throws PersistenciaException, IOException, ValidacaoException, ValidacaoUsuarioException {
@@ -51,7 +47,7 @@ class ServicePedidoTest {
         Files.deleteIfExists(Paths.get(FILE_PEDIDOS));
         Files.deleteIfExists(Paths.get(FILE_FRANQUIAS));
 
-        this.serviceManager = new ServiceManager(FILE_USUARIO, FILE_LOJA, FILE_PRODUTOS, FILE_PEDIDOS, FILE_FRANQUIAS);
+        this.serviceManager = new ServiceManager(FILE_USUARIO, FILE_LOJA, FILE_PRODUTOS, FILE_PEDIDOS, FILE_FRANQUIAS, FILE_CLIENTES);
 
         this.servicePedido = serviceManager.getServicePedido();
         this.serviceLoja = serviceManager.getServiceLoja();
@@ -75,6 +71,7 @@ class ServicePedidoTest {
         Files.deleteIfExists(Paths.get(FILE_PRODUTOS));
         Files.deleteIfExists(Paths.get(FILE_PEDIDOS));
         Files.deleteIfExists(Paths.get(FILE_FRANQUIAS));
+        Files.deleteIfExists(Paths.get(FILE_CLIENTES));
     }
 
     @Test
@@ -82,12 +79,13 @@ class ServicePedidoTest {
     void testAdicionarPedidoComSucesso() throws PersistenciaException, ValidacaoException, ValidacaoUsuarioException {
         Loja loja = serviceLoja.listarTodos().get(0);
         Vendedor vendedor = new Vendedor("Vendedor", "vendedor@test.com", "Senha1233", "11122233344");
+        Cliente cliente = new Cliente("cliente", "10101010101");
         serviceUsuario.adicionar(vendedor);
         serviceLoja.atualizar(loja);
 
         Map<String, Integer> produtosNoPedido = new HashMap<>();
         produtosNoPedido.put("idProduto1", 2);
-        Pedido pedido = new Pedido(loja.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
+        Pedido pedido = new Pedido(loja.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
 
         Assertions.assertDoesNotThrow(() -> servicePedido.adicionar(pedido));
         Assertions.assertEquals(1, servicePedido.listarTodos().size());
@@ -99,13 +97,14 @@ class ServicePedidoTest {
     void testAdicionarPedidoComIdDuplicado() throws PersistenciaException, ValidacaoException, ValidacaoUsuarioException {
         Loja loja = serviceLoja.listarTodos().get(0);
         Vendedor vendedor = new Vendedor("Vendedor", "vendedor@test.com", "Senha123", "11122233344");
+        Cliente cliente = new Cliente("cliente", "10101010101");
         serviceUsuario.adicionar(vendedor);
         serviceLoja.atualizar(loja);
 
         Map<String, Integer> produtosNoPedido = new HashMap<>();
         produtosNoPedido.put("idProduto1", 2);
-        Pedido pedido1 = new Pedido(loja.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
-        Pedido pedido2 = new Pedido(loja.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
+        Pedido pedido1 = new Pedido(loja.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
+        Pedido pedido2 = new Pedido(loja.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
         pedido2.setId(pedido1.getId());
 
         servicePedido.adicionar(pedido1);
@@ -117,12 +116,13 @@ class ServicePedidoTest {
     void testRemoverPedidoComSucesso() throws PersistenciaException, ValidacaoException, ValidacaoUsuarioException {
         Loja loja = serviceLoja.listarTodos().get(0);
         Vendedor vendedor = new Vendedor("Vendedor", "vendedor@test.com", "Senha123", "11122233344");
+        Cliente cliente = new Cliente("cliente", "10101010101");
         serviceUsuario.adicionar(vendedor);
         serviceLoja.atualizar(loja);
 
         Map<String, Integer> produtosNoPedido = new HashMap<>();
         produtosNoPedido.put("idProduto1", 2);
-        Pedido pedido = new Pedido(loja.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
+        Pedido pedido = new Pedido(loja.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
         servicePedido.adicionar(pedido);
 
         Assertions.assertDoesNotThrow(() -> servicePedido.remover(pedido));
@@ -141,12 +141,13 @@ class ServicePedidoTest {
         Loja loja2 = new Loja("Loja 2", "End 2", franquia2.getId());
         serviceLoja.adicionar(loja2, franquia2, gerente2);
 
+        Cliente cliente = new Cliente("cliente", "10101010101");
         Vendedor vendedor = new Vendedor("Vendedor", "vendedor@test.com", "Senha123", "11122233344");
         serviceUsuario.adicionar(vendedor);
 
-        Pedido pedido1 = new Pedido(loja1.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
-        Pedido pedido2 = new Pedido(loja1.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
-        Pedido pedido3 = new Pedido(loja2.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
+        Pedido pedido1 = new Pedido(loja1.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
+        Pedido pedido2 = new Pedido(loja1.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
+        Pedido pedido3 = new Pedido(loja2.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
         servicePedido.adicionar(pedido1);
         servicePedido.adicionar(pedido2);
         servicePedido.adicionar(pedido3);
@@ -164,12 +165,13 @@ class ServicePedidoTest {
         Loja loja = serviceLoja.listarTodos().get(0);
         Vendedor vendedor1 = new Vendedor("Vendedor um", "vendedor1@test.com", "Senha123", "11111111111");
         Vendedor vendedor2 = new Vendedor("Vendedor dois", "vendedor2@test.com", "Senha123", "22222222222");
+        Cliente cliente = new Cliente("cliente", "10101010101");
         serviceUsuario.adicionar(vendedor1);
         serviceUsuario.adicionar(vendedor2);
 
-        Pedido pedido1 = new Pedido(loja.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor1.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
-        Pedido pedido2 = new Pedido(loja.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor1.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
-        Pedido pedido3 = new Pedido(loja.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor2.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
+        Pedido pedido1 = new Pedido(loja.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor1.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
+        Pedido pedido2 = new Pedido(loja.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor1.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
+        Pedido pedido3 = new Pedido(loja.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor2.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
         servicePedido.adicionar(pedido1);
         servicePedido.adicionar(pedido2);
         servicePedido.adicionar(pedido3);
@@ -188,8 +190,10 @@ class ServicePedidoTest {
         Vendedor vendedor = new Vendedor("Vendedor", "vendedor@test.com", "Senha123", "11122233344");
         serviceUsuario.adicionar(vendedor);
 
-        Pedido pedidoPendente = new Pedido(loja.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
-        Pedido pedidoConcluido = new Pedido(loja.getId(), new HashMap<>(), new Date(), StatusPedido.CONCLUIDO, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
+        Cliente cliente = new Cliente("cliente", "10101010101");
+
+        Pedido pedidoPendente = new Pedido(loja.getId(), new HashMap<>(), new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
+        Pedido pedidoConcluido = new Pedido(loja.getId(), new HashMap<>(), new Date(), StatusPedido.CONCLUIDO, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
         servicePedido.adicionar(pedidoPendente);
         servicePedido.adicionar(pedidoConcluido);
 
@@ -208,9 +212,11 @@ class ServicePedidoTest {
         Vendedor vendedor = new Vendedor("Vendedor", "vendedor@test.com", "Senha123", "11122233344");
         serviceUsuario.adicionar(vendedor);
 
+        Cliente cliente = new Cliente("cliente", "10101010101");
+
         Map<String, Integer> produtosNoPedido = new HashMap<>();
         produtosNoPedido.put("idProduto1", 2);
-        Pedido pedido = new Pedido(loja.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO);
+        Pedido pedido = new Pedido(loja.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), BigDecimal.TEN, FormaDePagamento.CARTAO_CREDITO, cliente);
         servicePedido.adicionar(pedido);
 
         Assertions.assertEquals(StatusPedido.PENDENTE, servicePedido.getPedidoById(pedido.getId()).getStatus());

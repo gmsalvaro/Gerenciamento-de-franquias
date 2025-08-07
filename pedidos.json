@@ -8,7 +8,20 @@
   "status" : "Entregue",
   "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
   "precoTotal" : 5.98,
-  "justificativa" : null
+  "justificativa" : null,
+  "cliente" : null
+}, {
+  "id" : "a8987325-4616-41ce-b317-e9eb09e9ad44",
+  "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
+  "produtosNoPedido" : {
+    "efab9865-cb48-4401-9e59-098675612cef" : 2
+  },
+  "dataPedido" : 1754519996288,
+  "status" : "Concluído",
+  "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
+  "precoTotal" : 4.60,
+  "justificativa" : null,
+  "cliente" : null
 }, {
   "id" : "eedf8ec3-3d50-472a-8636-12cfdd0ea7ea",
   "idLoja" : "c71aa16c-63ca-407c-b736-a3ff21c8a07b",
@@ -19,7 +32,24 @@
   "status" : "Entregue",
   "idVendedor" : "5ff1333b-4bd0-46e5-b4dd-14aa900f68b3",
   "precoTotal" : 200,
-  "justificativa" : null
+  "justificativa" : null,
+  "cliente" : null
+}, {
+  "id" : "4c392345-e925-41dd-8813-e3551ea7afe5",
+  "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
+  "produtosNoPedido" : {
+    "e8311eb3-36ab-49d3-89d8-867b4285af62" : 2
+  },
+  "dataPedido" : 1754521108859,
+  "status" : "Concluído",
+  "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
+  "precoTotal" : 19.80,
+  "justificativa" : null,
+  "cliente" : {
+    "id" : "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+    "nome" : "Bruno Costa",
+    "cpf" : "55566677788"
+  }
 }, {
   "id" : "578a1307-b74b-4127-8b04-019035bf8363",
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
@@ -30,7 +60,8 @@
   "status" : "Concluído",
   "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
   "precoTotal" : 9.90,
-  "justificativa" : null
+  "justificativa" : null,
+  "cliente" : null
 }, {
   "id" : "b5cbdf9e-0311-4373-a717-afdd69f9acbf",
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
@@ -43,7 +74,8 @@
   "status" : "Concluído",
   "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
   "precoTotal" : 17.49,
-  "justificativa" : null
+  "justificativa" : null,
+  "cliente" : null
 }, {
   "id" : "e19dfe2c-56bd-43f7-8bf6-04635036ecab",
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
@@ -54,7 +86,25 @@
   "status" : "Análise de Alteração",
   "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
   "precoTotal" : 9.20,
-  "justificativa" : "Alterar o Valor\n"
+  "justificativa" : "Alterar o Valor\n",
+  "cliente" : null
+}, {
+  "id" : "c19b9afe-0c08-4f98-8e55-388e9b231719",
+  "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
+  "produtosNoPedido" : {
+    "efab9865-cb48-4401-9e59-098675612cef" : 1,
+    "6705d7c3-f796-4e92-b1fa-4f7de96a4d62" : 5
+  },
+  "dataPedido" : 1754521530506,
+  "status" : "Entregue",
+  "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
+  "precoTotal" : 17.25,
+  "justificativa" : null,
+  "cliente" : {
+    "id" : "97fd9737-aa2e-4232-94ab-004a8d5982c6",
+    "nome" : "cliente",
+    "cpf" : "10101010101"
+  }
 }, {
   "id" : "3d7b4a46-28fe-4e86-a700-4c9d6f08803e",
   "idLoja" : "c42fde73-9a94-4391-893a-9878620452ab",
@@ -65,7 +115,8 @@
   "status" : "Análise de Alteração",
   "idVendedor" : "bd4f65d0-95f3-4e54-8c60-5e4b083a2f02",
   "precoTotal" : 199.00,
-  "justificativa" : "Alterar quantidade\n"
+  "justificativa" : "Alterar quantidade\n",
+  "cliente" : null
 }, {
   "id" : "dae527fb-dcfa-4f9c-9fe8-53628d406f48",
   "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
@@ -76,5 +127,22 @@
   "status" : "Concluído",
   "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
   "precoTotal" : 8.97,
-  "justificativa" : null
+  "justificativa" : null,
+  "cliente" : null
+}, {
+  "id" : "cf3f5dcc-6bd3-4594-ba90-08931d66e43b",
+  "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8",
+  "produtosNoPedido" : {
+    "e8311eb3-36ab-49d3-89d8-867b4285af62" : 1
+  },
+  "dataPedido" : 1754522369290,
+  "status" : "Entregue",
+  "idVendedor" : "7c8cdad4-1323-41dc-a29a-18e7158ba1e6",
+  "precoTotal" : 9.90,
+  "justificativa" : null,
+  "cliente" : {
+    "id" : "97fd9737-aa2e-4232-94ab-004a8d5982c6",
+    "nome" : "cliente",
+    "cpf" : "10101010101"
+  }
 } ]

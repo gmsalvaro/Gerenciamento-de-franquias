@@ -28,7 +28,7 @@ public class serviceEstoque {
     }
 
 
-    public Pedido finalizarCompra(Map<String, Integer> itensComprados, Vendedor vendedor, FormaDePagamento formaDePagamento)  throws PersistenciaException {
+    public Pedido finalizarCompra(Map<String, Integer> itensComprados, Vendedor vendedor, FormaDePagamento formaDePagamento, Cliente cliente)  throws PersistenciaException {
         if (itensComprados == null || itensComprados.isEmpty()) {
             throw new PersistenciaException("Nenhum item selecionado para a compra.");
         }
@@ -64,7 +64,7 @@ public class serviceEstoque {
             totalComprado = totalComprado.add(calcularSubtotalItem(produto, quantidadeDesejada));
         }
 
-        Pedido novoPedido = new Pedido(lojaAssociada.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), totalComprado, formaDePagamento);
+        Pedido novoPedido = new Pedido(lojaAssociada.getId(), produtosNoPedido, new Date(), StatusPedido.PENDENTE, vendedor.getId(), totalComprado, formaDePagamento, cliente);
         novoPedido.setIdLoja(lojaAssociada.getId());
 
         serviceManager.getServicePedido().adicionar(novoPedido);

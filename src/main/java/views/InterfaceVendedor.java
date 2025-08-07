@@ -3,6 +3,8 @@ package views;
 import model.*;
 import service.ServiceManager;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.SimpleDateFormat;
@@ -13,9 +15,17 @@ public class InterfaceVendedor extends PainelPrincipal {
     private final Vendedor vendedorLogado;
     private final Loja lojaDoVendedor;
     private final GerenciaFluxoLogin fluxoLogin;
-
     private JTable tabelaPedidos;
     private DefaultTableModel modeloTabela;
+
+    private CardLayout cardLayout;
+    private JComboBox<Cliente> comboClientesExistentes;
+    private JTextField txtNomeNovoCliente, txtCpfNovoCliente;
+    private JRadioButton radioClienteExistente, radioNovoCliente;
+    private JPanel painelCards;
+
+    private static final String CARD_EXISTENTE = "Card com clientes existentes";
+    private static final String CARD_NOVO = "Card para novo cliente";
 
     public InterfaceVendedor(ServiceManager serviceManager, Vendedor vendedorLogado, GerenciaFluxoLogin fluxoLogin) {
         super("Painel do Vendedor - " + vendedorLogado.getNome());
@@ -54,13 +64,7 @@ public class InterfaceVendedor extends PainelPrincipal {
         JButton btnSair = criarBotaoMenu("Sair");
         sidebar.add(btnSair);
 
-        btnRegistrarVenda.addActionListener(e -> {
-            try {
-                new InterfaceGerenciarVendas(serviceManager, lojaDoVendedor, vendedorLogado);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro ao abrir a tela de vendas: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+        btnRegistrarVenda.addActionListener(e -> mostrarSelecaoCliente());
         btnMeusPedidos.addActionListener(e -> mostrarMeusPedidos(false));
         btnSair.addActionListener(e -> fluxoLogin.fazerLogout());
     }
@@ -71,6 +75,141 @@ public class InterfaceVendedor extends PainelPrincipal {
         painelConteudo.revalidate();
         painelConteudo.repaint();
     }
+
+
+    private void mostrarSelecaoCliente() {
+        configurarPainelConteudo("Passo 1: Identificar o Cliente");
+        painelConteudo.setLayout(new BorderLayout(10, 10));
+
+        // 1. Painel Superior com os botões de rádio
+        radioClienteExistente = new JRadioButton("Selecionar Cliente Existente", true);
+        radioNovoCliente = new JRadioButton("Cadastrar Novo Cliente");
+        ButtonGroup grupoRadios = new ButtonGroup();
+        grupoRadios.add(radioClienteExistente);
+        grupoRadios.add(radioNovoCliente);
+
+        JPanel painelRadios = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        painelRadios.add(radioClienteExistente);
+        painelRadios.add(radioNovoCliente);
+        painelConteudo.add(painelRadios, BorderLayout.NORTH);
+
+        // 2. Painel Central com CardLayout
+        cardLayout = new CardLayout();
+        painelCards = new JPanel(cardLayout);
+
+        // --- Card 1: Selecionar Cliente Existente ---
+        JPanel painelExistente = new JPanel(new BorderLayout(10,10));
+        painelExistente.setBorder(new EmptyBorder(15, 10, 15, 10));
+
+        JPanel painelConteudoExistente = new JPanel();
+        painelConteudoExistente.setLayout(new BoxLayout(painelConteudoExistente, BoxLayout.Y_AXIS));
+        comboClientesExistentes = new JComboBox<>();
+        carregarClientesNoComboBox();
+
+        JLabel instrucao = new JLabel("Selecione um cliente na lista:");
+        instrucao.setAlignmentX(Component.LEFT_ALIGNMENT);
+        comboClientesExistentes.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        comboClientesExistentes.setMaximumSize(new Dimension(Integer.MAX_VALUE,comboClientesExistentes.getPreferredSize().height));
+
+        painelConteudoExistente.add(instrucao);
+        painelConteudoExistente.add(Box.createRigidArea(new Dimension(0, 5)));
+        painelConteudoExistente.add(comboClientesExistentes);
+
+        painelExistente.add(painelConteudoExistente, BorderLayout.NORTH);
+
+        // --- Card 2: Cadastrar Novo Cliente ---
+        JPanel painelNovo = new JPanel(new GridBagLayout());
+        painelNovo.setBorder(BorderFactory.createTitledBorder("Dados do Novo Cliente"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.EAST;
+        painelNovo.add(new JLabel("Nome:"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 0; gbc.weightx = 1.0;
+        txtNomeNovoCliente = new JTextField(20);
+        painelNovo.add(txtNomeNovoCliente, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
+        painelNovo.add(new JLabel("CPF:"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 1;
+        txtCpfNovoCliente = new JTextField(20);
+        painelNovo.add(txtCpfNovoCliente, gbc);
+
+        // Adiciona os cards ao painel principal
+        painelCards.add(painelExistente, CARD_EXISTENTE);
+        painelCards.add(painelNovo, CARD_NOVO);
+        painelConteudo.add(painelCards, BorderLayout.CENTER);
+
+        // 3. Painel Inferior com o botão de continuar
+        JPanel painelAcao = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnContinuar = new JButton("Continuar para a Venda ->");
+        painelAcao.add(btnContinuar);
+        painelConteudo.add(painelAcao, BorderLayout.SOUTH);
+
+        // Action Listeners para trocar os cards
+        radioClienteExistente.addActionListener(e -> cardLayout.show(painelCards, CARD_EXISTENTE));
+        radioNovoCliente.addActionListener(e -> cardLayout.show(painelCards, CARD_NOVO));
+        btnContinuar.addActionListener(e -> acaoContinuarParaVenda());
+
+        painelConteudo.revalidate();
+        painelConteudo.repaint();
+    }
+
+
+    private void carregarClientesNoComboBox() {
+        try {
+            List<Cliente> clientes = serviceManager.getServiceCliente().listarTodos();
+            comboClientesExistentes.removeAllItems();
+            if (clientes.isEmpty()) {
+                // Adiciona um item informativo se não houver clientes
+                radioNovoCliente.setSelected(true);
+                cardLayout.show(painelCards, CARD_NOVO);
+            } else {
+                for (Cliente c : clientes) {
+                    comboClientesExistentes.addItem(c);
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar clientes: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void acaoContinuarParaVenda() {
+        Cliente clienteSelecionado = null;
+
+        if (radioClienteExistente.isSelected()) {
+            if (comboClientesExistentes.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(this, "Nenhum cliente selecionado. Por favor, cadastre um novo cliente.", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            clienteSelecionado = (Cliente) comboClientesExistentes.getSelectedItem();
+        } else { // Novo cliente
+            String nome = txtNomeNovoCliente.getText().trim();
+            String cpf = txtCpfNovoCliente.getText().trim();
+            try {
+                Cliente novoCliente = new Cliente(nome, cpf);
+                serviceManager.getServiceCliente().adicionar(novoCliente);
+                clienteSelecionado = novoCliente;
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao cadastrar cliente: " + ex.getMessage(), "Erro de Validação", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        if (clienteSelecionado != null) {
+            try {
+                new InterfaceGerenciarVendas(serviceManager, lojaDoVendedor, vendedorLogado, clienteSelecionado).setVisible(true);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao abrir a tela de vendas: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+
 
     private void mostrarMeusPedidos(boolean incluirConcluidos) {
         String titulo = incluirConcluidos ? "Histórico Completo de Pedidos" : "Meus Pedidos em Andamento";

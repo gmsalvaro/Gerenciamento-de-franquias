@@ -14,12 +14,14 @@ public class ServiceRelatorio {
     private final ServicePedido servicePedido;
     private final ServiceUsuario serviceUsuario;
     private final ServiceFranquia serviceFranquia;
+    private final ServiceCliente serviceCliente;
 
-    public ServiceRelatorio(ServiceLoja sl, ServicePedido sp, ServiceUsuario su, ServiceFranquia sf) {
+    public ServiceRelatorio(ServiceLoja sl, ServicePedido sp, ServiceUsuario su, ServiceFranquia sf, ServiceCliente sc) {
         this.serviceLoja = sl;
         this.servicePedido = sp;
         this.serviceUsuario = su;
         this.serviceFranquia = sf;
+        this.serviceCliente = sc;
     }
 
     public BigDecimal calcularFaturamentoLoja(Loja loja) {
@@ -123,6 +125,28 @@ public class ServiceRelatorio {
         return lojasDaFranquia.stream()
                 .mapToInt(loja -> loja.getIdPedidos() != null ? loja.getIdPedidos().size() : 0)
                 .sum();
+    }
+
+
+    public List<PerformanceCliente> gerarRankingClientes() {
+        List<PerformanceCliente> performance = new ArrayList<>();
+        List<Cliente> todosClientes = serviceCliente.listarTodos();
+        List<Pedido> todosPedidos = servicePedido.listarTodos();
+
+        for (Cliente cliente : todosClientes) {
+            List<Pedido> pedidosDoCliente = todosPedidos.stream()
+                    .filter(pedido -> pedido.getCliente() != null && cliente.equals(pedido.getCliente()))
+                    .filter(p -> p.getStatus() == StatusPedido.ENTREGUE || p.getStatus() == StatusPedido.CONCLUIDO)
+                    .collect(Collectors.toList());
+
+            int numeroDeCompras = pedidosDoCliente.size();
+            BigDecimal valorTotal = pedidosDoCliente.stream()
+                    .map(Pedido::getPrecoTotal)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            performance.add(new PerformanceCliente(cliente, numeroDeCompras, valorTotal));
+        }
+        return performance;
     }
 
 }
