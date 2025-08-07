@@ -220,7 +220,7 @@ public class InterfaceGerenciarLojas extends PainelPrincipal {
         botoesPanel.setOpaque(false);
 
         JButton btnGerenciarUsuarios = new JButton("Gerenciar Usuários");
-        btnGerenciarUsuarios.addActionListener(e -> new InterfaceGerenciarUsuario(loja, serviceManager, franquia).setVisible(true));
+        btnGerenciarUsuarios.addActionListener(e -> new InterfaceGerenciarUsuario(serviceManager, loja, franquia).setVisible(true));
 
         JButton btnDesignarGerente = new JButton("Designar Gerente");
         btnDesignarGerente.addActionListener(e -> acaoDesignarGerente(loja));

@@ -38,7 +38,7 @@ public class InterfaceGerenciarUsuario extends JFrame {
     private Loja loja;
     private ServiceManager serviceManager;
 
-    public InterfaceGerenciarUsuario(ServiceManager serviceManager, Loja loja) {
+    public InterfaceGerenciarUsuario(ServiceManager serviceManager, Loja loja, Franquia franquia) {
         super("Gerenciar Usuários");
         this.loja = loja;
         this.serviceManager = serviceManager;
