@@ -22,7 +22,6 @@ A arquitetura do sistema é organizada em camadas, separando interface, regras d
     mvn clean package
     java -jar target/GerenciamentoDeFranquias-1.0-SNAPSHOT-jar-with-dependencies.jar
     ```
-- Repositório GitHub: https://github.com/gmsalvaro/Gerenciamento-de-franquias
 
 ## Estrutura de Pacotes
 
