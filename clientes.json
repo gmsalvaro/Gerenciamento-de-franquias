@@ -1,0 +1,14 @@
+[ {
+  "id" : "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+  "nome" : "Bruno Costa",
+  "cpf" : "55566677788"
+}, {
+  "id" : "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+  "nome" : "Ana Silva",
+  "cpf" : "11122233344"
+}, {
+  "id" : "97fd9737-aa2e-4232-94ab-004a8d5982c6",
+  "nome" : "cliente",
+  "cpf" : "10101010101"
+} ]
+

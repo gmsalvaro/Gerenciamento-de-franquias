@@ -1,0 +1,29 @@
+[ {
+  "nome" : "agua",
+  "id" : "0008d280-8253-4490-92bd-5623c9a24e39",
+  "descricao" : "agua mineral",
+  "preco" : 1.99,
+  "estoque" : 0,
+  "idLoja" : "c42fde73-9a94-4391-893a-9878620452ab"
+}, {
+  "nome" : "refri",
+  "id" : "e8311eb3-36ab-49d3-89d8-867b4285af62",
+  "descricao" : "coca-cola",
+  "preco" : 9.90,
+  "estoque" : 2,
+  "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
+}, {
+  "nome" : "biscoito",
+  "id" : "efab9865-cb48-4401-9e59-098675612cef",
+  "descricao" : "biscoito maizena",
+  "preco" : 2.30,
+  "estoque" : 9,
+  "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
+}, {
+  "nome" : "agua",
+  "id" : "6705d7c3-f796-4e92-b1fa-4f7de96a4d62",
+  "descricao" : "agua mineral sem gás",
+  "preco" : 2.99,
+  "estoque" : 5,
+  "idLoja" : "8de46f6e-8f87-4ce4-bd67-a3f02ed1c1d8"
+} ]
