@@ -1,3 +1,7 @@
+//Álvaro José Souza Gomes 202465095A
+//Heitor Coelho Costa 202465508B
+//Pedro Nalon Moraes 202465507B
+
 package repository;
 
 import model.*;
@@ -31,7 +35,7 @@ public class DadosUsuario implements IDados<Usuario, String>{
 
         carregar();
     }
-
+    //metodos para manipular os arquivos JSON corretamente
     private void carregar() {
         File file = new File(USUARIO_FILE);
         if (!file.exists() || file.length() == 0) {

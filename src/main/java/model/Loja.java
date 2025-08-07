@@ -1,9 +1,19 @@
+//Álvaro José Souza Gomes 202465095A
+//Heitor Coelho Costa 202465508B
+//Pedro Nalon Moraes 202465507B
+
 package model;
 import exception.persistencia.PersistenciaException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+
+//Álvaro José Souza Gomes 202465095A
+//Heitor Coelho Costa 202465508B
+//Pedro Nalon Moraes 202465507B
+
 
 public class Loja {
     private String id;
@@ -37,7 +47,7 @@ public class Loja {
     public void removeUsuario(String id){
         idUsuario.remove(id);
     }
-
+//getters e setters
     public String getId() {
         return id;
     }

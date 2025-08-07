@@ -1,3 +1,7 @@
+//Álvaro José Souza Gomes 202465095A
+//Heitor Coelho Costa 202465508B
+//Pedro Nalon Moraes 202465507B
+
 package org.example;
 
 import model.*;
@@ -12,7 +16,7 @@ public class Main {
     private static JFrame frameAtual;
 
     public static void main(String[] args) {
-        // A aplicação agora é iniciada por este metodo
+
         iniciarAplicacao();
     }
 
@@ -35,7 +39,7 @@ public class Main {
                             frameAtual.dispose();
                         }
 
-                        // Abre a janela correta e GUARDA a referência dela
+                        // Abre a janela correta e guarda a referência dela
                         switch (usuarioLogado.getPermissao()) {
                             case 1 -> frameAtual = new InterfaceDono(serviceManager, usuarioLogado, this);
                             case 2 -> frameAtual = new InterfaceGerente(serviceManager, (Gerente) usuarioLogado, this);
@@ -63,7 +67,7 @@ public class Main {
             }
         });
     }
-
+    //instancia os objetos iniciais para o sistema
     private static void seedInitialData(ServiceManager serviceManager) {
         System.out.println("  [Dentro de seedInitialData] Verificando se a base de usuários está vazia...");
 

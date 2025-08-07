@@ -1,3 +1,7 @@
+//Álvaro José Souza Gomes 202465095A
+//Heitor Coelho Costa 202465508B
+//Pedro Nalon Moraes 202465507B
+
 package model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -17,7 +21,7 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = Vendedor.class, name = "vendedor")
 })
 
-public abstract class Usuario {
+public abstract class Usuario { //classe abstrata usuario
     private String id;
     private String nome;
     private String email;
@@ -36,7 +40,7 @@ public abstract class Usuario {
         this.senha = senha;
         this.telefone = "123456789";
         this.cpf = cpf;
-        this.id = UUID.randomUUID().toString();; // criar uma logica para gerar id aleatorio !
+        this.id = UUID.randomUUID().toString(); // criar uma logica para gerar id aleatorio
     }
 
     // Getters e Setters

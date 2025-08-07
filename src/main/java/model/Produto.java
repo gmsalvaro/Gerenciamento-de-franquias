@@ -1,3 +1,7 @@
+//Álvaro José Souza Gomes 202465095A
+//Heitor Coelho Costa 202465508B
+//Pedro Nalon Moraes 202465507B
+
 package model;
 
 import java.math.BigDecimal;
@@ -22,6 +26,7 @@ public class Produto {
         this.id = UUID.randomUUID().toString();
     }
 
+    //getters e setters
     /// id loja
     public void setIdLoja(String idLoja) {
         this.idLoja = idLoja;

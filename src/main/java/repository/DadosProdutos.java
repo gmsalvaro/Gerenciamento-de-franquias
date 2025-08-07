@@ -1,3 +1,7 @@
+//Álvaro José Souza Gomes 202465095A
+//Heitor Coelho Costa 202465508B
+//Pedro Nalon Moraes 202465507B
+
 package repository;
 import model.Produto;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,7 +30,7 @@ public class DadosProdutos implements IDados<Produto, String>{
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         carregar();
     }
-
+    //metodos para manipular os arquivos JSON corretamente
     private void carregar() throws PersistenciaException {
         File file = new File(LOJAS_FILE);
         if (!file.exists() || file.length() == 0) {

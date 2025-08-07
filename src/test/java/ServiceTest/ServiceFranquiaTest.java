@@ -1,4 +1,7 @@
-// package para os testes
+//Álvaro José Souza Gomes 202465095A
+//Heitor Coelho Costa 202465508B
+//Pedro Nalon Moraes 202465507B
+
 package ServiceTest;
 
 import service.*;

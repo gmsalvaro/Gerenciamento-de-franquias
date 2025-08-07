@@ -7,6 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+
+//Álvaro José Souza Gomes 202465095A
+//Heitor Coelho Costa 202465508B
+//Pedro Nalon Moraes 202465507B
+
+
 public class Pedido implements Serializable {
 
     private String id;
@@ -22,7 +28,7 @@ public class Pedido implements Serializable {
 
     public Pedido(){
         this.produtosNoPedido = new HashMap<>();
-    }
+    } //contrutor pro JSON
 
     public Pedido(String idLoja, Map<String, Integer> produtosNoPedido, Date dataPedido, StatusPedido status, String idVendedor,  BigDecimal precoTotal, FormaDePagamento formaDePagamento, Cliente cliente) {
         this.id = UUID.randomUUID().toString();
@@ -35,6 +41,7 @@ public class Pedido implements Serializable {
         this.formaDePagamento = formaDePagamento;
         this.cliente = cliente;
     }
+    //getters e setters
 
     public void setIdLoja(String idLoja) {
         this.idLoja = idLoja;
